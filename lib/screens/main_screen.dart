@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../features/character/screens/character_screen.dart';
-import '../features/fairytale_create/screens/fairytale_create_screen.dart';
-import '../features/home/screens/home_screen.dart';
-import '../features/favorites/screens/favorites_screen.dart';
-import '../features/my/screens/my_screen.dart';
+import 'package:csa_frontend/features/character/screens/character_screen.dart';
+import 'package:csa_frontend/features/fairytale_create/screens/fairytale_create_screen.dart';
+import 'package:csa_frontend/features/home/screens/home_screen.dart';
+import 'package:csa_frontend/features/favorites/screens/favorites_screen.dart';
+import 'package:csa_frontend/features/my/screens/my_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

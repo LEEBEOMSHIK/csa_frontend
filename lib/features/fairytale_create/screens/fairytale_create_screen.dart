@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../shared/widgets/app_top_bar.dart';
-import '../../../utils/app_colors.dart';
+import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
+import 'package:csa_frontend/utils/app_colors.dart';
 
 class FairytaleCreateScreen extends StatefulWidget {
   const FairytaleCreateScreen({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/main_screen.dart';
+import 'package:csa_frontend/screens/main_screen.dart';
 
 class FairyTaleApp extends StatelessWidget {
   const FairyTaleApp({super.key});

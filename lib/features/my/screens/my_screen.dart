@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../shared/widgets/app_top_bar.dart';
+import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 
 class MyScreen extends StatelessWidget {
   const MyScreen({super.key});

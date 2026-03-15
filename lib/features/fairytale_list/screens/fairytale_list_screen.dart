@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../utils/app_colors.dart';
+import 'package:csa_frontend/utils/app_colors.dart';
 
 class FairytaleListScreen extends StatelessWidget {
   const FairytaleListScreen({super.key});
