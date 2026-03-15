@@ -1,0 +1,1157 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "PPLPg",
+      "x": 0,
+      "y": 0,
+      "name": "Component/SearchBar",
+      "reusable": true,
+      "width": 340,
+      "height": 44,
+      "fill": "#FFFFFF",
+      "cornerRadius": 22,
+      "stroke": {
+        "align": "inside",
+        "thickness": 1,
+        "fill": "#E0E0E0"
+      },
+      "padding": [
+        0,
+        12
+      ],
+      "justifyContent": "space_between",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "icon_font",
+          "id": "wzmZk",
+          "name": "backIcon",
+          "width": 24,
+          "height": 24,
+          "iconFontName": "chevron_left",
+          "iconFontFamily": "Material Symbols Rounded",
+          "fill": "#333333"
+        },
+        {
+          "type": "text",
+          "id": "KQ8cL",
+          "name": "searchText",
+          "fill": "#333333",
+          "content": "모두의 동화",
+          "fontFamily": "Inter",
+          "fontSize": 16,
+          "fontWeight": "600"
+        },
+        {
+          "type": "icon_font",
+          "id": "skHE3",
+          "name": "searchIcon",
+          "width": 24,
+          "height": 24,
+          "iconFontName": "search",
+          "iconFontFamily": "Material Symbols Rounded",
+          "fill": "#333333"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "slxKW",
+      "x": 0,
+      "y": 60,
+      "name": "Component/Tab/Active",
+      "reusable": true,
+      "height": 40,
+      "layout": "vertical",
+      "padding": [
+        0,
+        20
+      ],
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "9Y4eJ",
+          "name": "tabLabel",
+          "fill": "#FF8A65",
+          "content": "이야기",
+          "fontFamily": "Inter",
+          "fontSize": 15,
+          "fontWeight": "700"
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 2,
+          "id": "2ZlTI",
+          "name": "tabLine",
+          "fill": "#FF8A65",
+          "width": "fill_container",
+          "height": 3
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "yg54k",
+      "x": 200,
+      "y": 60,
+      "name": "Component/Tab/Inactive",
+      "reusable": true,
+      "height": 40,
+      "layout": "vertical",
+      "padding": [
+        0,
+        20
+      ],
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "Jzmah",
+          "name": "tabLabelI",
+          "fill": "#999999",
+          "content": "그림조각",
+          "fontFamily": "Inter",
+          "fontSize": 15,
+          "fontWeight": "500"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "AnRju",
+      "x": 0,
+      "y": 120,
+      "name": "Component/HashtagChip",
+      "reusable": true,
+      "height": 32,
+      "fill": "#FFFFFF",
+      "cornerRadius": 16,
+      "stroke": {
+        "align": "inside",
+        "thickness": 1,
+        "fill": "#E0E0E0"
+      },
+      "padding": [
+        0,
+        14
+      ],
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "UaeG1",
+          "name": "chipText",
+          "fill": "#333333",
+          "content": "#꽃",
+          "fontFamily": "Inter",
+          "fontSize": 13,
+          "fontWeight": "500"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ng0yh",
+      "x": 0,
+      "y": 170,
+      "name": "Component/SectionHeader",
+      "reusable": true,
+      "width": "fill_container(360)",
+      "height": 30,
+      "justifyContent": "space_between",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "kXZcD",
+          "name": "sectionTitle",
+          "fill": "#FF7043",
+          "content": "신규 출시 목록",
+          "fontFamily": "Inter",
+          "fontSize": 16,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "h0PTh",
+          "name": "sectionMore",
+          "fill": "#999999",
+          "content": "더보기 >",
+          "fontFamily": "Inter",
+          "fontSize": 13,
+          "fontWeight": "500"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "aP8jB",
+      "x": 0,
+      "y": 220,
+      "name": "Component/StoryCard",
+      "reusable": true,
+      "width": 80,
+      "layout": "vertical",
+      "gap": 4,
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "5rg82",
+          "name": "storyThumb",
+          "width": 72,
+          "height": 72,
+          "fill": "#F5F5F5",
+          "cornerRadius": 12
+        },
+        {
+          "type": "text",
+          "id": "DXkys",
+          "name": "storyTitle",
+          "fill": "#333333",
+          "textGrowth": "fixed-width",
+          "width": 72,
+          "content": "가마솥",
+          "textAlign": "center",
+          "fontFamily": "Inter",
+          "fontSize": 11,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "yk5PW",
+          "name": "storyRating",
+          "gap": 2,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon_font",
+              "id": "3ffMK",
+              "name": "starIcon",
+              "width": 12,
+              "height": 12,
+              "iconFontName": "star",
+              "iconFontFamily": "Material Symbols Rounded",
+              "fill": "#FFD700"
+            },
+            {
+              "type": "text",
+              "id": "KFG7Z",
+              "name": "ratingText",
+              "fill": "#999999",
+              "content": "5.0",
+              "fontFamily": "Inter",
+              "fontSize": 10,
+              "fontWeight": "500"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "RyhgR",
+      "x": 0,
+      "y": 350,
+      "name": "Component/ThemeCard",
+      "reusable": true,
+      "clip": true,
+      "width": 160,
+      "height": 100,
+      "fill": "#E8F5E9",
+      "cornerRadius": 12,
+      "layout": "vertical",
+      "padding": 10,
+      "justifyContent": "end",
+      "children": [
+        {
+          "type": "text",
+          "id": "sLwb8",
+          "name": "themeTitle",
+          "fill": "#FFFFFF",
+          "content": "여름은 인디디비",
+          "fontFamily": "Inter",
+          "fontSize": 13,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "vIOEV",
+          "name": "themeSubtitle",
+          "fill": "#FFFFFFCC",
+          "content": "#해변가",
+          "fontFamily": "Inter",
+          "fontSize": 11,
+          "fontWeight": "500"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wg1mg",
+      "x": 0,
+      "y": 480,
+      "name": "Component/NavItem",
+      "reusable": true,
+      "width": "fill_container(72)",
+      "height": 56,
+      "layout": "vertical",
+      "gap": 2,
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "icon_font",
+          "id": "kKspF",
+          "name": "navIcon",
+          "width": 24,
+          "height": 24,
+          "iconFontName": "home",
+          "iconFontFamily": "Material Symbols Rounded",
+          "fill": "#999999"
+        },
+        {
+          "type": "text",
+          "id": "FHoNE",
+          "name": "navLabel",
+          "fill": "#999999",
+          "content": "홈",
+          "fontFamily": "Inter",
+          "fontSize": 10,
+          "fontWeight": "500"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "jUSYh",
+      "x": 100,
+      "y": 480,
+      "name": "Component/NavItem/Active",
+      "reusable": true,
+      "width": "fill_container(72)",
+      "height": 56,
+      "layout": "vertical",
+      "gap": 2,
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "icon_font",
+          "id": "6i3ZG",
+          "name": "navIconA",
+          "width": 24,
+          "height": 24,
+          "iconFontName": "home",
+          "iconFontFamily": "Material Symbols Rounded",
+          "fill": "#FFA7A7"
+        },
+        {
+          "type": "text",
+          "id": "RJY1K",
+          "name": "navLabelA",
+          "fill": "#FFA7A7",
+          "content": "홈",
+          "fontFamily": "Inter",
+          "fontSize": 10,
+          "fontWeight": "700"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "NvJdh",
+      "x": 0,
+      "y": 560,
+      "name": "Component/SectionTitleOnly",
+      "reusable": true,
+      "width": "fill_container(360)",
+      "height": 30,
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "e6ZbE",
+          "name": "titleText",
+          "fill": "#FF7043",
+          "content": "주제별 모음",
+          "fontFamily": "Inter",
+          "fontSize": 16,
+          "fontWeight": "700"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "OGh5v",
+      "x": 460,
+      "y": 0,
+      "name": "동화제작소 - 메인화면",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#FFFDF5",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "UGEca",
+          "name": "header",
+          "width": "fill_container",
+          "fill": "#fe9ec7",
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            12,
+            16,
+            0,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "cQoc4",
+              "name": "headerRow",
+              "width": "fill_container",
+              "height": 44,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "kv8Qc",
+                  "name": "backArrow",
+                  "width": 28,
+                  "height": 28,
+                  "iconFontName": "chevron_left",
+                  "iconFontFamily": "Material Symbols Rounded",
+                  "fill": "#FFFFFF"
+                },
+                {
+                  "type": "text",
+                  "id": "sXdpA",
+                  "name": "titleText",
+                  "fill": "#f9f6c4",
+                  "content": "동화제작소",
+                  "fontFamily": "Inter",
+                  "fontSize": 20,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "absSu",
+                  "name": "searchBtn",
+                  "width": 24,
+                  "height": 24,
+                  "iconFontName": "search",
+                  "iconFontFamily": "Material Symbols Rounded",
+                  "fill": "#FFFFFF"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "y3G30",
+              "name": "tabRow",
+              "width": "fill_container",
+              "justifyContent": "center",
+              "children": [
+                {
+                  "id": "g8ypM",
+                  "type": "ref",
+                  "ref": "slxKW",
+                  "name": "tab1",
+                  "descendants": {
+                    "9Y4eJ": {
+                      "fill": "#44acff"
+                    },
+                    "2ZlTI": {
+                      "fill": "#44acff"
+                    }
+                  }
+                },
+                {
+                  "id": "ei5c8",
+                  "type": "ref",
+                  "ref": "yg54k",
+                  "name": "tab2",
+                  "descendants": {
+                    "Jzmah": {
+                      "fill": "#999999"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "V7uUn",
+          "name": "chipRow",
+          "width": "fill_container",
+          "fill": "#FFF9E6",
+          "gap": 8,
+          "padding": [
+            10,
+            16
+          ],
+          "children": [
+            {
+              "id": "YNQNA",
+              "type": "ref",
+              "ref": "AnRju",
+              "name": "chip1",
+              "descendants": {
+                "UaeG1": {
+                  "content": "#프렌치스타일"
+                }
+              }
+            },
+            {
+              "id": "zuW2Y",
+              "type": "ref",
+              "ref": "AnRju",
+              "name": "chip2",
+              "descendants": {
+                "UaeG1": {
+                  "content": "#꽃"
+                }
+              }
+            },
+            {
+              "id": "GEV5J",
+              "type": "ref",
+              "ref": "AnRju",
+              "name": "chip3",
+              "descendants": {
+                "UaeG1": {
+                  "content": "#빵"
+                }
+              }
+            },
+            {
+              "id": "i41lb",
+              "type": "ref",
+              "ref": "AnRju",
+              "name": "chip4",
+              "descendants": {
+                "UaeG1": {
+                  "content": "#개미"
+                }
+              }
+            },
+            {
+              "id": "VIqM4",
+              "type": "ref",
+              "ref": "AnRju",
+              "name": "chip5",
+              "descendants": {
+                "UaeG1": {
+                  "content": "#구름"
+                }
+              }
+            },
+            {
+              "id": "ldQ7i",
+              "type": "ref",
+              "ref": "AnRju",
+              "name": "chip6",
+              "descendants": {
+                "UaeG1": {
+                  "content": "#딸기"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "YWhUv",
+          "name": "themeSection",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            12,
+            16
+          ],
+          "children": [
+            {
+              "id": "LEvTY",
+              "type": "ref",
+              "ref": "NvJdh",
+              "name": "themeTitleInst",
+              "descendants": {
+                "e6ZbE": {
+                  "content": "주제별 모음"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "BgHWS",
+              "name": "themeCardsRow",
+              "width": "fill_container",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "vcafd",
+                  "type": "ref",
+                  "ref": "RyhgR",
+                  "width": "fill_container",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1593810659067-3abb9b4dfa4c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1ODI3ODJ8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  },
+                  "name": "tc1",
+                  "descendants": {
+                    "sLwb8": {
+                      "content": "여름은 인디디비"
+                    },
+                    "vIOEV": {
+                      "content": "#해변가"
+                    }
+                  }
+                },
+                {
+                  "id": "88LRt",
+                  "type": "ref",
+                  "ref": "RyhgR",
+                  "width": "fill_container",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1698298836213-f721f3f40e0a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1ODI3ODZ8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  },
+                  "name": "tc2",
+                  "descendants": {
+                    "sLwb8": {
+                      "content": "아니아니네도"
+                    },
+                    "vIOEV": {
+                      "content": "#먹거리"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Ra3OV",
+          "name": "newSection",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            12,
+            16
+          ],
+          "children": [
+            {
+              "id": "4Wgne",
+              "type": "ref",
+              "ref": "ng0yh",
+              "name": "newHeader",
+              "descendants": {
+                "kXZcD": {
+                  "content": "신규 출시 목록"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "OZpVq",
+              "name": "newCardsRow",
+              "width": "fill_container",
+              "gap": 16,
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "id": "qAV3d",
+                  "type": "ref",
+                  "ref": "aP8jB",
+                  "name": "sc1",
+                  "descendants": {
+                    "5rg82": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1683755770454-3f1f12bcdc63?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1ODI3OTJ8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    },
+                    "DXkys": {
+                      "content": "가마솥"
+                    },
+                    "KFG7Z": {
+                      "content": "5.0"
+                    }
+                  }
+                },
+                {
+                  "id": "QHXBX",
+                  "type": "ref",
+                  "ref": "aP8jB",
+                  "name": "sc2",
+                  "descendants": {
+                    "5rg82": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1667896563421-3f9750ecb0a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1ODI3OTZ8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    },
+                    "DXkys": {
+                      "content": "나무바닥"
+                    },
+                    "KFG7Z": {
+                      "content": "3.0"
+                    }
+                  }
+                },
+                {
+                  "id": "U6RZ4",
+                  "type": "ref",
+                  "ref": "aP8jB",
+                  "name": "sc3",
+                  "descendants": {
+                    "5rg82": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1600106934167-33368aef1532?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1ODI4MDF8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    },
+                    "DXkys": {
+                      "content": "울면서 도망가는..."
+                    },
+                    "KFG7Z": {
+                      "content": "5.0"
+                    }
+                  }
+                },
+                {
+                  "id": "LxHCr",
+                  "type": "ref",
+                  "ref": "aP8jB",
+                  "name": "sc4",
+                  "descendants": {
+                    "5rg82": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1650503553122-2c0bc7f12c82?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1ODI4MDV8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    },
+                    "DXkys": {
+                      "content": "놀란 아기토"
+                    },
+                    "KFG7Z": {
+                      "content": "5.0"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "fg9oa",
+          "name": "recSection",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            12,
+            16
+          ],
+          "children": [
+            {
+              "id": "kGHYK",
+              "type": "ref",
+              "ref": "ng0yh",
+              "name": "recHeader",
+              "descendants": {
+                "kXZcD": {
+                  "content": "추천 목록"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "6cLiH",
+              "name": "recCardsRow",
+              "width": "fill_container",
+              "gap": 16,
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "id": "3rJWK",
+                  "type": "ref",
+                  "ref": "aP8jB",
+                  "name": "rc1",
+                  "descendants": {
+                    "5rg82": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1677740929672-ca339cb58e72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1ODI4MTF8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    },
+                    "DXkys": {
+                      "content": "사과나무"
+                    },
+                    "KFG7Z": {
+                      "content": "4.5"
+                    }
+                  }
+                },
+                {
+                  "id": "KQc8W",
+                  "type": "ref",
+                  "ref": "aP8jB",
+                  "name": "rc2",
+                  "descendants": {
+                    "5rg82": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1698273552939-35c8cce2c0bb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1ODI4MTZ8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    },
+                    "DXkys": {
+                      "content": "바구니"
+                    },
+                    "KFG7Z": {
+                      "content": "4.0"
+                    }
+                  }
+                },
+                {
+                  "id": "pWnXA",
+                  "type": "ref",
+                  "ref": "aP8jB",
+                  "name": "rc3",
+                  "descendants": {
+                    "5rg82": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1608100742430-b8c4b9bf1276?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1ODI4MjB8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    },
+                    "DXkys": {
+                      "content": "바게트빵"
+                    },
+                    "KFG7Z": {
+                      "content": "5.0"
+                    }
+                  }
+                },
+                {
+                  "id": "ATkya",
+                  "type": "ref",
+                  "ref": "aP8jB",
+                  "name": "rc4",
+                  "descendants": {
+                    "5rg82": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1653565083204-cfea945a5dd5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1ODI4MjR8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    },
+                    "DXkys": {
+                      "content": "핫도그"
+                    },
+                    "KFG7Z": {
+                      "content": "4.8"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "bDq3I",
+          "name": "spacer",
+          "width": "fill_container",
+          "height": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "up23V",
+          "name": "bottomNav",
+          "width": "fill_container",
+          "height": 80,
+          "fill": "#FFFFFF",
+          "stroke": {
+            "align": "inside",
+            "thickness": {
+              "top": 1
+            },
+            "fill": "#E0E0E0"
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "frame",
+              "id": "8QWh2",
+              "x": 0,
+              "y": 16,
+              "name": "navBar",
+              "width": 390,
+              "height": 64,
+              "fill": "#FFFFFF",
+              "stroke": {
+                "align": "inside",
+                "thickness": {
+                  "top": 1
+                },
+                "fill": "#E8E8E8"
+              },
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "kFQJv",
+                  "type": "ref",
+                  "ref": "wg1mg",
+                  "name": "nav1",
+                  "descendants": {
+                    "kKspF": {
+                      "iconFontName": "person",
+                      "width": 28,
+                      "height": 28
+                    },
+                    "FHoNE": {
+                      "content": "내 캐릭터"
+                    }
+                  }
+                },
+                {
+                  "id": "sfiXN",
+                  "type": "ref",
+                  "ref": "wg1mg",
+                  "name": "nav2",
+                  "descendants": {
+                    "kKspF": {
+                      "iconFontName": "auto_stories",
+                      "width": 28,
+                      "height": 28
+                    },
+                    "FHoNE": {
+                      "content": "동화만들기"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "m3gJw",
+                  "name": "centerSpacer",
+                  "width": "fill_container",
+                  "height": 56,
+                  "layout": "vertical",
+                  "justifyContent": "end",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "j1WCI",
+                      "name": "centerLabel",
+                      "fill": "#fe9ec7",
+                      "content": "홈",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "id": "rEivL",
+                  "type": "ref",
+                  "ref": "wg1mg",
+                  "name": "nav4",
+                  "descendants": {
+                    "kKspF": {
+                      "iconFontName": "favorite",
+                      "width": 28,
+                      "height": 28
+                    },
+                    "FHoNE": {
+                      "content": "찜 목록"
+                    }
+                  }
+                },
+                {
+                  "id": "qAuAc",
+                  "type": "ref",
+                  "ref": "wg1mg",
+                  "name": "nav5",
+                  "descendants": {
+                    "kKspF": {
+                      "iconFontName": "account_circle",
+                      "width": 28,
+                      "height": 28
+                    },
+                    "FHoNE": {
+                      "content": "My"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "iuQJM",
+              "x": 165,
+              "y": 0,
+              "name": "circleBtn",
+              "width": 60,
+              "height": 60,
+              "fill": "#fe9ec7",
+              "cornerRadius": 30,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#00000020",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "ijsko",
+                  "name": "homeIcon",
+                  "width": 30,
+                  "height": 30,
+                  "iconFontName": "home",
+                  "iconFontFamily": "Material Symbols Rounded",
+                  "fill": "#FFFFFF"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "background": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "border": {
+      "type": "color",
+      "value": "#E0E0E0"
+    },
+    "card-bg": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "font-main": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "header-bg": {
+      "type": "color",
+      "value": "#FFD54F"
+    },
+    "nav-bg": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "primary": {
+      "type": "color",
+      "value": "#FFA7A7"
+    },
+    "radius-lg": {
+      "type": "number",
+      "value": 16
+    },
+    "radius-md": {
+      "type": "number",
+      "value": 12
+    },
+    "radius-pill": {
+      "type": "number",
+      "value": 20
+    },
+    "radius-sm": {
+      "type": "number",
+      "value": 8
+    },
+    "secondary": {
+      "type": "color",
+      "value": "#6799FF"
+    },
+    "section-title": {
+      "type": "color",
+      "value": "#FF7043"
+    },
+    "star-color": {
+      "type": "color",
+      "value": "#FFD700"
+    },
+    "surface": {
+      "type": "color",
+      "value": "#FFF9E6"
+    },
+    "surface-light": {
+      "type": "color",
+      "value": "#FFF3CC"
+    },
+    "tab-active": {
+      "type": "color",
+      "value": "#FF8A65"
+    },
+    "tag-bg": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "text-muted": {
+      "type": "color",
+      "value": "#999999"
+    },
+    "text-primary": {
+      "type": "color",
+      "value": "#333333"
+    },
+    "text-secondary": {
+      "type": "color",
+      "value": "#666666"
+    },
+    "text-white": {
+      "type": "color",
+      "value": "#FFFFFF"
+    }
+  }
+}

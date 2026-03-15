@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../shared/widgets/app_top_bar.dart';
 import '../../../utils/app_colors.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -9,7 +10,6 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  // 더미 찜 데이터 (실제 구현 시 상태관리로 교체)
   final List<_FavoriteItem> _items = const [
     _FavoriteItem(emoji: '👸', title: '신데렐라', category: '유명 동화', color: Color(0xFF9B5DE5)),
     _FavoriteItem(emoji: '🚀', title: '우주를 여행한 토끼', category: 'AI 동화', color: Color(0xFF073B4C)),
@@ -20,39 +20,34 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.favorites,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          '찜한 동화',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
-        ),
-        actions: [
-          if (_items.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Center(
-                child: Container(
+      body: Column(
+        children: [
+          AppTopBar(
+            title: '찜목록',
+            actions: [
+              if (_items.isNotEmpty)
+                Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.25),
+                    color: Colors.white.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '${_items.length}권',
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: Color(0xFF333333),
                       fontWeight: FontWeight.w700,
                       fontSize: 13,
                     ),
                   ),
                 ),
-              ),
-            ),
+            ],
+          ),
+          Expanded(
+            child: _items.isEmpty ? _buildEmpty() : _buildList(),
+          ),
         ],
       ),
-      body: _items.isEmpty ? _buildEmpty() : _buildList(),
     );
   }
 
@@ -87,11 +82,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.favorites,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14)),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
             icon: const Icon(Icons.menu_book_rounded),
-            label: const Text('동화 보러 가기', style: TextStyle(fontWeight: FontWeight.w700)),
+            label: const Text('동화 보러 가기',
+                style: TextStyle(fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -118,7 +115,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             ],
           ),
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             leading: Container(
               width: 56,
               height: 56,
@@ -126,7 +124,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 color: item.color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: Center(child: Text(item.emoji, style: const TextStyle(fontSize: 28))),
+              child: Center(
+                  child: Text(item.emoji,
+                      style: const TextStyle(fontSize: 28))),
             ),
             title: Text(
               item.title,
@@ -141,7 +141,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: item.color.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(8),
@@ -169,7 +170,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 ),
                 GestureDetector(
                   onTap: () => setState(() => _items.removeAt(index)),
-                  child: const Icon(Icons.favorite_rounded, color: AppColors.favorites, size: 22),
+                  child: const Icon(Icons.favorite_rounded,
+                      color: AppColors.favorites, size: 22),
                 ),
               ],
             ),

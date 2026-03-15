@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../shared/widgets/app_top_bar.dart';
 import '../../../utils/app_colors.dart';
 
 class CharacterScreen extends StatefulWidget {
@@ -25,29 +26,40 @@ class _CharacterScreenState extends State<CharacterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.character,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          '내 캐릭터',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
-        ),
-        actions: [
-          TextButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.save_alt_rounded, color: Colors.white, size: 18),
-            label: const Text('저장', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
-          ),
-        ],
-      ),
       body: Column(
         children: [
+          AppTopBar(
+            title: '내 캐릭터',
+            actions: [
+              GestureDetector(
+                onTap: () {},
+                child: const Padding(
+                  padding: EdgeInsets.only(right: 4),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.save_alt_rounded,
+                          color: Color(0xFF333333), size: 18),
+                      SizedBox(width: 4),
+                      Text(
+                        '저장',
+                        style: TextStyle(
+                          color: Color(0xFF333333),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
           // 캐릭터 미리보기
           Container(
             color: AppColors.character,
             width: double.infinity,
-            padding: const EdgeInsets.only(bottom: 24),
+            padding: const EdgeInsets.only(bottom: 24, top: 16),
             child: Column(
               children: [
                 Container(
@@ -83,15 +95,20 @@ class _CharacterScreenState extends State<CharacterScreen> {
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 180),
                       margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColors.character : AppColors.divider,
+                        color: isSelected
+                            ? AppColors.character
+                            : AppColors.divider,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         _parts[index].label,
                         style: TextStyle(
-                          color: isSelected ? Colors.white : AppColors.textSecondary,
+                          color: isSelected
+                              ? Colors.white
+                              : AppColors.textSecondary,
                           fontWeight: FontWeight.w700,
                           fontSize: 13,
                         ),
@@ -128,9 +145,11 @@ class _CharacterScreenState extends State<CharacterScreen> {
                     children: List.generate(
                       _parts[_selectedPartIndex].variants.length,
                       (index) {
-                        final isSelected = _selectedVariants[_selectedPartIndex] == index;
+                        final isSelected =
+                            _selectedVariants[_selectedPartIndex] == index;
                         return GestureDetector(
-                          onTap: () => setState(() => _selectedVariants[_selectedPartIndex] = index),
+                          onTap: () => setState(() =>
+                              _selectedVariants[_selectedPartIndex] = index),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 180),
                             width: 72,
@@ -141,7 +160,9 @@ class _CharacterScreenState extends State<CharacterScreen> {
                                   : AppColors.background,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: isSelected ? AppColors.character : AppColors.divider,
+                                color: isSelected
+                                    ? AppColors.character
+                                    : AppColors.divider,
                                 width: isSelected ? 2.5 : 1,
                               ),
                             ),
@@ -172,7 +193,8 @@ class _CharacterScreenState extends State<CharacterScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.character,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
                   elevation: 0,
                 ),
                 icon: const Icon(Icons.add_circle_outline),
@@ -236,5 +258,6 @@ class _PartCategory {
   final String label;
   final String emoji;
   final List<String> variants;
-  const _PartCategory({required this.label, required this.emoji, required this.variants});
+  const _PartCategory(
+      {required this.label, required this.emoji, required this.variants});
 }

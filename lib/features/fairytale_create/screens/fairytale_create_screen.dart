@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../shared/widgets/app_top_bar.dart';
 import '../../../utils/app_colors.dart';
 
 class FairytaleCreateScreen extends StatefulWidget {
@@ -26,17 +27,9 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.create,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          '동화 만들기',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
-        ),
-      ),
       body: Column(
         children: [
+          const AppTopBar(title: '동화 만들기'),
           // 헤더 배너
           Container(
             width: double.infinity,
