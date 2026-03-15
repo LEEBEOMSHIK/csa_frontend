@@ -14,6 +14,7 @@
 | [code-guidelines.md](claude-config/code-guidelines.md) | 코드 기본 룰 |
 | [style-guidelines.md](claude-config/style-guidelines.md) | 스타일 기본 룰 |
 | [project-overview.md](claude-config/project-overview.md) | 프로젝트 현황 및 설명 |
+| [non-touch.md](claude-config/non-touch.md) | 분석 및 수정 금지 목록 |
 
 ## 핵심 원칙
 1. 요청된 것만 변경한다 — 과도한 리팩터링 금지

@@ -43,3 +43,34 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Environment & Secrets
+.env
+.env.*
+*.env
+dart_defines/
+
+# Flutter Secure Storage (local only)
+flutter_secure_storage/
+
+# Generated & Cache files
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+
+# Test coverage
+/coverage/
+lcov.info
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Assets (large / generated)
+assets/audio/
+assets/character_parts/generated/
