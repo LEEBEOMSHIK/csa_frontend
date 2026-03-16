@@ -63,29 +63,6 @@ class _HomeScreenState extends State<HomeScreen>
                 ],
               ),
             ),
-            // 탭바
-            Container(
-              color: Colors.white,
-              height: 40,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _TabItem(
-                      label: '이야기',
-                      isActive: _tabController.index == 0,
-                      onTap: () => _tabController.animateTo(0),
-                    ),
-                  ),
-                  Expanded(
-                    child: _TabItem(
-                      label: '그림조각',
-                      isActive: _tabController.index == 1,
-                      onTap: () => _tabController.animateTo(1),
-                    ),
-                  ),
-                ],
-              ),
-            ),
             // 콘텐츠
             Expanded(
               child: TabBarView(
@@ -106,49 +83,6 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ],
         ),
-    );
-  }
-}
-
-class _TabItem extends StatelessWidget {
-  final String label;
-  final bool isActive;
-  final VoidCallback onTap;
-
-  const _TabItem({
-    required this.label,
-    required this.isActive,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: isActive
-                  ? const Color(0xFFFF8C69)
-                  : const Color(0xFFE0E0E0),
-              width: isActive ? 3 : 1,
-            ),
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight:
-                isActive ? FontWeight.w700 : FontWeight.w500,
-            color: isActive
-                ? const Color(0xFFFF8C69)
-                : const Color(0xFFAAAAAA),
-          ),
-        ),
-      ),
     );
   }
 }
