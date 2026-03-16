@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
-import 'package:csa_frontend/utils/app_colors.dart';
 
 class CharacterScreen extends StatefulWidget {
   const CharacterScreen({super.key});
@@ -10,22 +9,32 @@ class CharacterScreen extends StatefulWidget {
 }
 
 class _CharacterScreenState extends State<CharacterScreen> {
-  int _selectedPartIndex = 0;
-  final List<int> _selectedVariants = [0, 0, 0, 0, 0, 0];
+  int _selectedTabIndex = 0;
+  final List<int> _selectedVariants = [0, 0, 0, 0, 0];
 
-  static const List<_PartCategory> _parts = [
-    _PartCategory(label: '머리형', emoji: '🟡', variants: ['🟡', '🟤', '⬜', '🟠']),
-    _PartCategory(label: '눈', emoji: '👁️', variants: ['😊', '😄', '🥺', '😎']),
-    _PartCategory(label: '코', emoji: '👃', variants: ['작은코', '보통코', '오뚝코', '귀여운코']),
-    _PartCategory(label: '입', emoji: '😄', variants: ['😁', '🙂', '😊', '😆']),
-    _PartCategory(label: '헤어', emoji: '💇', variants: ['단발', '긴머리', '곱슬', '빡빡이']),
-    _PartCategory(label: '의상', emoji: '👕', variants: ['👕', '👗', '🥼', '🧥']),
+  static const _tabs = [
+    _TabItem(label: '기본형', icon: Icons.face_rounded),
+    _TabItem(label: '머리', icon: Icons.content_cut_rounded),
+    _TabItem(label: '눈', icon: Icons.visibility_rounded),
+    _TabItem(label: '코', icon: Icons.air_rounded),
+    _TabItem(label: '입', icon: Icons.mood_rounded),
   ];
+
+  static const _options = [
+    ['둥근형', '각진형', '역삼각형', '하트형', '계란형', '육각형'],
+    ['단발', '긴머리', '곱슬', '빡빡이', '포니테일', '모히칸'],
+    ['기본눈', '큰눈', '졸린눈', '반달눈', '별눈', '동그란눈'],
+    ['작은코', '보통코', '오뚝코', '귀여운코'],
+    ['웃음', '미소', '벌린입', '삐침'],
+  ];
+
+  static const _activeColor = Color(0xFFFF7043);
+  static const _inactiveColor = Color(0xFF999999);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFFFFFDF5),
       body: Column(
         children: [
           AppTopBar(
@@ -35,174 +44,167 @@ class _CharacterScreenState extends State<CharacterScreen> {
                 onTap: () {},
                 child: const Padding(
                   padding: EdgeInsets.only(right: 4),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.save_alt_rounded,
-                          color: Color(0xFF333333), size: 18),
-                      SizedBox(width: 4),
-                      Text(
-                        '저장',
-                        style: TextStyle(
-                          color: Color(0xFF333333),
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: Icon(Icons.check_rounded, color: Colors.white, size: 24),
                 ),
               ),
             ],
           ),
           // 캐릭터 미리보기
           Container(
-            color: AppColors.character,
+            color: const Color(0xFFFFF9E6),
             width: double.infinity,
-            padding: const EdgeInsets.only(bottom: 24, top: 16),
+            height: 200,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 40),
-                  padding: const EdgeInsets.all(20),
+                  width: 140,
+                  height: 140,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(24),
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: const Color(0xFFFFE0B2), width: 3),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _CharacterPreview(selectedVariants: _selectedVariants),
-                    ],
+                  child: const Center(
+                    child: Text('😊', style: TextStyle(fontSize: 72)),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  '나의 캐릭터',
+                  style: TextStyle(
+                    color: Color(0xFF333333),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
                   ),
                 ),
               ],
             ),
           ),
-
-          // 파츠 카테고리 탭
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: List.generate(_parts.length, (index) {
-                  final isSelected = _selectedPartIndex == index;
-                  return GestureDetector(
-                    onTap: () => setState(() => _selectedPartIndex = index),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
-                      margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppColors.character
-                            : AppColors.divider,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        _parts[index].label,
-                        style: TextStyle(
-                          color: isSelected
-                              ? Colors.white
-                              : AppColors.textSecondary,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ),
-          ),
-
-          const Divider(height: 1, color: AppColors.divider),
-
-          // 파츠 변형 선택
+          // 커스터마이즈 패널
           Expanded(
-            child: Container(
-              color: Colors.white,
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${_parts[_selectedPartIndex].label} 선택',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: List.generate(
-                      _parts[_selectedPartIndex].variants.length,
-                      (index) {
-                        final isSelected =
-                            _selectedVariants[_selectedPartIndex] == index;
-                        return GestureDetector(
-                          onTap: () => setState(() =>
-                              _selectedVariants[_selectedPartIndex] = index),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 180),
-                            width: 72,
-                            height: 72,
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? AppColors.character.withValues(alpha: 0.15)
-                                  : AppColors.background,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: isSelected
-                                    ? AppColors.character
-                                    : AppColors.divider,
-                                width: isSelected ? 2.5 : 1,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // 왼쪽 파츠 탭
+                Container(
+                  width: 72,
+                  color: const Color(0xFFFFF3E0),
+                  child: Column(
+                    children: List.generate(_tabs.length, (index) {
+                      final isActive = _selectedTabIndex == index;
+                      return GestureDetector(
+                        onTap: () => setState(() => _selectedTabIndex = index),
+                        child: Container(
+                          height: 64,
+                          width: double.infinity,
+                          color: isActive ? Colors.white : Colors.transparent,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                _tabs[index].icon,
+                                size: 28,
+                                color: isActive ? _activeColor : _inactiveColor,
                               ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                _parts[_selectedPartIndex].variants[index],
-                                style: const TextStyle(fontSize: 28),
+                              const SizedBox(height: 4),
+                              Text(
+                                _tabs[index].label,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+                                  color: isActive ? _activeColor : _inactiveColor,
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        );
-                      },
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+                // 오른쪽 옵션 영역
+                Expanded(
+                  child: Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${_tabs[_selectedTabIndex].label} 옵션',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF333333),
+                              ),
+                            ),
+                            Text(
+                              '1 / ${((_options[_selectedTabIndex].length + 3) ~/ 4)}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF999999),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Expanded(
+                          child: GridView.builder(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                            ),
+                            itemCount: _options[_selectedTabIndex].length,
+                            itemBuilder: (context, index) {
+                              final isSelected =
+                                  _selectedVariants[_selectedTabIndex] == index;
+                              return GestureDetector(
+                                onTap: () => setState(
+                                  () => _selectedVariants[_selectedTabIndex] = index,
+                                ),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 180),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? _activeColor.withValues(alpha: 0.1)
+                                        : const Color(0xFFF5F5F5),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? _activeColor
+                                          : Colors.transparent,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      _options[_selectedTabIndex][index],
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: isSelected
+                                            ? FontWeight.w700
+                                            : FontWeight.w500,
+                                        color: isSelected
+                                            ? _activeColor
+                                            : const Color(0xFF555555),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-
-          // 새 캐릭터 버튼
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-            child: SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.character,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                  elevation: 0,
                 ),
-                icon: const Icon(Icons.add_circle_outline),
-                label: const Text(
-                  '새 캐릭터 만들기',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
-                ),
-              ),
+              ],
             ),
           ),
         ],
@@ -211,53 +213,8 @@ class _CharacterScreenState extends State<CharacterScreen> {
   }
 }
 
-class _CharacterPreview extends StatelessWidget {
-  final List<int> selectedVariants;
-  const _CharacterPreview({required this.selectedVariants});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-            ),
-            const Text('😊', style: TextStyle(fontSize: 64)),
-          ],
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          '나만의 캐릭터',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-            fontSize: 14,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _PartCategory {
+class _TabItem {
   final String label;
-  final String emoji;
-  final List<String> variants;
-  const _PartCategory(
-      {required this.label, required this.emoji, required this.variants});
+  final IconData icon;
+  const _TabItem({required this.label, required this.icon});
 }
