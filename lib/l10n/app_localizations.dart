@@ -637,6 +637,54 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'개인정보처리방침'**
   String get settingsPrivacy;
+
+  /// No description provided for @loginAppTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'이야기 숲'**
+  String get loginAppTitle;
+
+  /// No description provided for @loginAppSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'Children Story Adventure'**
+  String get loginAppSubtitle;
+
+  /// No description provided for @loginWithGoogle.
+  ///
+  /// In ko, this message translates to:
+  /// **'Google로 시작'**
+  String get loginWithGoogle;
+
+  /// No description provided for @loginWithKakao.
+  ///
+  /// In ko, this message translates to:
+  /// **'카카오톡으로 시작'**
+  String get loginWithKakao;
+
+  /// No description provided for @loginWithApple.
+  ///
+  /// In ko, this message translates to:
+  /// **'Apple로 시작'**
+  String get loginWithApple;
+
+  /// No description provided for @loginWithYahoo.
+  ///
+  /// In ko, this message translates to:
+  /// **'Yahoo! JAPANで始める'**
+  String get loginWithYahoo;
+
+  /// No description provided for @loginTestSkip.
+  ///
+  /// In ko, this message translates to:
+  /// **'테스트 (홈으로 이동)'**
+  String get loginTestSkip;
+
+  /// No description provided for @loginFooter.
+  ///
+  /// In ko, this message translates to:
+  /// **'시작과 동시에 이야기 숲의 서비스 약관, 개인정보 취급 방침에 동의하게 됩니다.'**
+  String get loginFooter;
 }
 
 class _AppLocalizationsDelegate

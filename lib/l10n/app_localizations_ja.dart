@@ -285,4 +285,28 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get settingsPrivacy => 'プライバシーポリシー';
+
+  @override
+  String get loginAppTitle => '物語の森';
+
+  @override
+  String get loginAppSubtitle => 'Children Story Adventure';
+
+  @override
+  String get loginWithGoogle => 'Googleで始める';
+
+  @override
+  String get loginWithKakao => 'カカオトークで始める';
+
+  @override
+  String get loginWithApple => 'Appleで始める';
+
+  @override
+  String get loginWithYahoo => 'Yahoo! JAPANで始める';
+
+  @override
+  String get loginTestSkip => 'テスト（ホームへ）';
+
+  @override
+  String get loginFooter => '利用を開始することで、物語の森のサービス利用規約・プライバシーポリシーに同意したものとみなします。';
 }

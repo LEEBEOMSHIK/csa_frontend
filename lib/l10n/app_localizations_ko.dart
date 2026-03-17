@@ -285,4 +285,28 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settingsPrivacy => '개인정보처리방침';
+
+  @override
+  String get loginAppTitle => '이야기 숲';
+
+  @override
+  String get loginAppSubtitle => 'Children Story Adventure';
+
+  @override
+  String get loginWithGoogle => 'Google로 시작';
+
+  @override
+  String get loginWithKakao => '카카오톡으로 시작';
+
+  @override
+  String get loginWithApple => 'Apple로 시작';
+
+  @override
+  String get loginWithYahoo => 'Yahoo! JAPANで始める';
+
+  @override
+  String get loginTestSkip => '테스트 (홈으로 이동)';
+
+  @override
+  String get loginFooter => '시작과 동시에 이야기 숲의 서비스 약관, 개인정보 취급 방침에 동의하게 됩니다.';
 }

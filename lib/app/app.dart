@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
-import 'package:csa_frontend/screens/main_screen.dart';
+import 'package:csa_frontend/features/auth/screens/login_screen.dart';
 import 'package:csa_frontend/utils/locale_provider.dart';
 
 class FairyTaleApp extends StatelessWidget {
@@ -40,7 +40,7 @@ class FairyTaleApp extends StatelessWidget {
               ),
             ),
           ),
-          home: const MainScreen(),
+          home: const LoginScreen(),
         );
       },
     );

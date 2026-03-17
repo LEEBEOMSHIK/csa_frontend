@@ -123,5 +123,14 @@
   "settingsSectionPolicy": "약관 및 정책",
   "settingsTerms": "서비스 이용약관",
   "settingsFinanceTerms": "전자금융거래 이용약관",
-  "settingsPrivacy": "개인정보처리방침"
+  "settingsPrivacy": "개인정보처리방침",
+
+  "loginAppTitle": "이야기 숲",
+  "loginAppSubtitle": "Children Story Adventure",
+  "loginWithGoogle": "Google로 시작",
+  "loginWithKakao": "카카오톡으로 시작",
+  "loginWithApple": "Apple로 시작",
+  "loginWithYahoo": "Yahoo! JAPANで始める",
+  "loginTestSkip": "테스트 (홈으로 이동)",
+  "loginFooter": "시작과 동시에 이야기 숲의 서비스 약관, 개인정보 취급 방침에 동의하게 됩니다."
 }
