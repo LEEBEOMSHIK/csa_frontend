@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/utils/app_colors.dart';
 
 class FairytaleListScreen extends StatelessWidget {
@@ -6,6 +7,7 @@ class FairytaleListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -14,20 +16,22 @@ class FairytaleListScreen extends StatelessWidget {
           backgroundColor: AppColors.library,
           foregroundColor: Colors.white,
           elevation: 0,
-          title: const Text(
-            '기본 동화',
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
+          title: Text(
+            l10n.fairytaleListTitle,
+            style: const TextStyle(
+                fontWeight: FontWeight.w800, fontSize: 20),
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white60,
             indicatorColor: Colors.white,
             indicatorWeight: 3,
-            labelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+            labelStyle: const TextStyle(
+                fontWeight: FontWeight.w700, fontSize: 13),
             tabs: [
-              Tab(text: '📚 유명 동화'),
-              Tab(text: '🤖 AI 동화'),
-              Tab(text: '🌟 공유 동화'),
+              Tab(text: l10n.fairytaleTabClassic),
+              Tab(text: l10n.fairytaleTabAi),
+              Tab(text: l10n.fairytaleTabShared),
             ],
           ),
         ),
@@ -49,6 +53,7 @@ class _FairytaleGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: items.length,
@@ -77,31 +82,34 @@ class _FairytaleGrid extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 표지 영역
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
                       color: item.color.withValues(alpha: 0.18),
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+                      borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(18)),
                     ),
                     width: double.infinity,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(item.emoji, style: const TextStyle(fontSize: 52)),
+                        Text(item.emoji,
+                            style: const TextStyle(fontSize: 52)),
                         const SizedBox(height: 4),
-                        // 목소리 선택 아이콘
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _VoiceBadge(label: '아빠', color: item.color),
+                            _VoiceBadge(
+                              label: l10n.voiceDad,
+                              badgeText: l10n.voiceBadge(l10n.voiceDad),
+                              color: item.color,
+                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
                 ),
-                // 제목 영역
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
@@ -146,8 +154,13 @@ class _FairytaleGrid extends StatelessWidget {
 
 class _VoiceBadge extends StatelessWidget {
   final String label;
+  final String badgeText;
   final Color color;
-  const _VoiceBadge({required this.label, required this.color});
+  const _VoiceBadge({
+    required this.label,
+    required this.badgeText,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -163,8 +176,9 @@ class _VoiceBadge extends StatelessWidget {
           Icon(Icons.record_voice_over_rounded, size: 11, color: color),
           const SizedBox(width: 3),
           Text(
-            '$label 목소리',
-            style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w700),
+            badgeText,
+            style: TextStyle(
+                fontSize: 10, color: color, fontWeight: FontWeight.w700),
           ),
         ],
       ),

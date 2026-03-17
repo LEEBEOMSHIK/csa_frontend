@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 
 class CharacterScreen extends StatefulWidget {
@@ -14,24 +15,27 @@ class _CharacterScreenState extends State<CharacterScreen>
   final List<int> _selectedVariants = [0, 0, 0, 0, 0];
   late final TabController _contentTabController;
 
-  static const _tabs = [
-    _TabItem(label: '기본형', icon: Icons.face_rounded),
-    _TabItem(label: '머리', icon: Icons.content_cut_rounded),
-    _TabItem(label: '눈', icon: Icons.visibility_rounded),
-    _TabItem(label: '코', icon: Icons.air_rounded),
-    _TabItem(label: '입', icon: Icons.mood_rounded),
-  ];
-
-  static const _options = [
-    ['둥근형', '각진형', '역삼각형', '하트형', '계란형', '육각형'],
-    ['단발', '긴머리', '곱슬', '빡빡이', '포니테일', '모히칸'],
-    ['기본눈', '큰눈', '졸린눈', '반달눈', '별눈', '동그란눈'],
-    ['작은코', '보통코', '오뚝코', '귀여운코'],
-    ['웃음', '미소', '벌린입', '삐침'],
-  ];
-
   static const _activeColor = Color(0xFFFF7043);
   static const _inactiveColor = Color(0xFF999999);
+
+  List<_TabItem> _buildTabs(AppLocalizations l10n) => [
+    _TabItem(label: l10n.characterTabBasic, icon: Icons.face_rounded),
+    _TabItem(label: l10n.characterTabHair, icon: Icons.content_cut_rounded),
+    _TabItem(label: l10n.characterTabEyes, icon: Icons.visibility_rounded),
+    _TabItem(label: l10n.characterTabNose, icon: Icons.air_rounded),
+    _TabItem(label: l10n.characterTabMouth, icon: Icons.mood_rounded),
+  ];
+
+  List<List<String>> _buildOptions(AppLocalizations l10n) => [
+    [l10n.faceRound, l10n.faceSquare, l10n.faceInvTriangle,
+     l10n.faceHeart, l10n.faceEgg, l10n.faceHex],
+    [l10n.hairBob, l10n.hairLong, l10n.hairCurly,
+     l10n.hairBuzz, l10n.hairPony, l10n.hairMohawk],
+    [l10n.eyeDefault, l10n.eyeBig, l10n.eyeSleepy,
+     l10n.eyeCrescent, l10n.eyeStar, l10n.eyeRound],
+    [l10n.noseSmall, l10n.noseNormal, l10n.noseHigh, l10n.noseCute],
+    [l10n.mouthSmile, l10n.mouthGrin, l10n.mouthOpen, l10n.mouthPout],
+  ];
 
   @override
   void initState() {
@@ -48,23 +52,27 @@ class _CharacterScreenState extends State<CharacterScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final tabs = _buildTabs(l10n);
+    final options = _buildOptions(l10n);
+
     return Scaffold(
       backgroundColor: const Color(0xFFFFFDF5),
       body: Column(
         children: [
           AppTopBar(
-            title: '내 캐릭터',
+            title: l10n.characterTitle,
             actions: [
               GestureDetector(
                 onTap: () {},
                 child: const Padding(
                   padding: EdgeInsets.only(right: 4),
-                  child: Icon(Icons.check_rounded, color: Colors.white, size: 24),
+                  child: Icon(Icons.check_rounded,
+                      color: Colors.white, size: 24),
                 ),
               ),
             ],
           ),
-          // 콘텐츠 탭바
           Container(
             color: Colors.white,
             height: 40,
@@ -72,14 +80,14 @@ class _CharacterScreenState extends State<CharacterScreen>
               children: [
                 Expanded(
                   child: _ContentTabItem(
-                    label: '이야기',
+                    label: l10n.homeTabStory,
                     isActive: _contentTabController.index == 0,
                     onTap: () => _contentTabController.animateTo(0),
                   ),
                 ),
                 Expanded(
                   child: _ContentTabItem(
-                    label: '그림조각',
+                    label: l10n.homeTabPicture,
                     isActive: _contentTabController.index == 1,
                     onTap: () => _contentTabController.animateTo(1),
                   ),
@@ -91,10 +99,8 @@ class _CharacterScreenState extends State<CharacterScreen>
             child: TabBarView(
               controller: _contentTabController,
               children: [
-                // 이야기 탭: 캐릭터 미리보기 + 커스터마이즈 패널
                 Column(
                   children: [
-                    // 캐릭터 미리보기
                     Container(
                       color: const Color(0xFFFFF9E6),
                       width: double.infinity,
@@ -108,16 +114,18 @@ class _CharacterScreenState extends State<CharacterScreen>
                             decoration: BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle,
-                              border: Border.all(color: const Color(0xFFFFE0B2), width: 3),
+                              border: Border.all(
+                                  color: const Color(0xFFFFE0B2), width: 3),
                             ),
                             child: const Center(
-                              child: Text('😊', style: TextStyle(fontSize: 72)),
+                              child: Text('😊',
+                                  style: TextStyle(fontSize: 72)),
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            '나의 캐릭터',
-                            style: TextStyle(
+                          Text(
+                            l10n.characterMyCharacter,
+                            style: const TextStyle(
                               color: Color(0xFF333333),
                               fontWeight: FontWeight.w700,
                               fontSize: 16,
@@ -126,39 +134,47 @@ class _CharacterScreenState extends State<CharacterScreen>
                         ],
                       ),
                     ),
-                    // 커스터마이즈 패널
                     Expanded(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // 왼쪽 파츠 탭
                           Container(
                             width: 72,
                             color: const Color(0xFFFFF3E0),
                             child: Column(
-                              children: List.generate(_tabs.length, (index) {
+                              children: List.generate(tabs.length, (index) {
                                 final isActive = _selectedTabIndex == index;
                                 return GestureDetector(
-                                  onTap: () => setState(() => _selectedTabIndex = index),
+                                  onTap: () => setState(
+                                      () => _selectedTabIndex = index),
                                   child: Container(
                                     height: 64,
                                     width: double.infinity,
-                                    color: isActive ? Colors.white : Colors.transparent,
+                                    color: isActive
+                                        ? Colors.white
+                                        : Colors.transparent,
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(
-                                          _tabs[index].icon,
+                                          tabs[index].icon,
                                           size: 28,
-                                          color: isActive ? _activeColor : _inactiveColor,
+                                          color: isActive
+                                              ? _activeColor
+                                              : _inactiveColor,
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          _tabs[index].label,
+                                          tabs[index].label,
                                           style: TextStyle(
                                             fontSize: 11,
-                                            fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                                            color: isActive ? _activeColor : _inactiveColor,
+                                            fontWeight: isActive
+                                                ? FontWeight.w700
+                                                : FontWeight.w500,
+                                            color: isActive
+                                                ? _activeColor
+                                                : _inactiveColor,
                                           ),
                                         ),
                                       ],
@@ -168,7 +184,6 @@ class _CharacterScreenState extends State<CharacterScreen>
                               }),
                             ),
                           ),
-                          // 오른쪽 옵션 영역
                           Expanded(
                             child: Container(
                               color: Colors.white,
@@ -177,10 +192,12 @@ class _CharacterScreenState extends State<CharacterScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        '${_tabs[_selectedTabIndex].label} 옵션',
+                                        l10n.characterOptionTitle(
+                                            tabs[_selectedTabIndex].label),
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w700,
@@ -188,7 +205,7 @@ class _CharacterScreenState extends State<CharacterScreen>
                                         ),
                                       ),
                                       Text(
-                                        '1 / ${((_options[_selectedTabIndex].length + 3) ~/ 4)}',
+                                        '1 / ${((options[_selectedTabIndex].length + 3) ~/ 4)}',
                                         style: const TextStyle(
                                           fontSize: 12,
                                           color: Color(0xFF999999),
@@ -199,26 +216,34 @@ class _CharacterScreenState extends State<CharacterScreen>
                                   const SizedBox(height: 12),
                                   Expanded(
                                     child: GridView.builder(
-                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
                                         crossAxisSpacing: 10,
                                         mainAxisSpacing: 10,
                                       ),
-                                      itemCount: _options[_selectedTabIndex].length,
+                                      itemCount:
+                                          options[_selectedTabIndex].length,
                                       itemBuilder: (context, index) {
                                         final isSelected =
-                                            _selectedVariants[_selectedTabIndex] == index;
+                                            _selectedVariants[
+                                                    _selectedTabIndex] ==
+                                                index;
                                         return GestureDetector(
                                           onTap: () => setState(
-                                            () => _selectedVariants[_selectedTabIndex] = index,
+                                            () => _selectedVariants[
+                                                _selectedTabIndex] = index,
                                           ),
                                           child: AnimatedContainer(
-                                            duration: const Duration(milliseconds: 180),
+                                            duration: const Duration(
+                                                milliseconds: 180),
                                             decoration: BoxDecoration(
                                               color: isSelected
-                                                  ? _activeColor.withValues(alpha: 0.1)
+                                                  ? _activeColor.withValues(
+                                                      alpha: 0.1)
                                                   : const Color(0xFFF5F5F5),
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                               border: Border.all(
                                                 color: isSelected
                                                     ? _activeColor
@@ -228,7 +253,8 @@ class _CharacterScreenState extends State<CharacterScreen>
                                             ),
                                             child: Center(
                                               child: Text(
-                                                _options[_selectedTabIndex][index],
+                                                options[_selectedTabIndex]
+                                                    [index],
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: isSelected
@@ -236,7 +262,8 @@ class _CharacterScreenState extends State<CharacterScreen>
                                                       : FontWeight.w500,
                                                   color: isSelected
                                                       ? _activeColor
-                                                      : const Color(0xFF555555),
+                                                      : const Color(
+                                                          0xFF555555),
                                                 ),
                                               ),
                                             ),
@@ -254,7 +281,6 @@ class _CharacterScreenState extends State<CharacterScreen>
                     ),
                   ],
                 ),
-                // 그림조각 탭
                 const Center(
                   child: Text(
                     'To be added later',
@@ -299,7 +325,9 @@ class _ContentTabItem extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: isActive ? const Color(0xFFFF8C69) : const Color(0xFFE0E0E0),
+              color: isActive
+                  ? const Color(0xFFFF8C69)
+                  : const Color(0xFFE0E0E0),
               width: isActive ? 3 : 1,
             ),
           ),
@@ -309,7 +337,8 @@ class _ContentTabItem extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-            color: isActive ? const Color(0xFFFF8C69) : const Color(0xFFAAAAAA),
+            color:
+                isActive ? const Color(0xFFFF8C69) : const Color(0xFFAAAAAA),
           ),
         ),
       ),

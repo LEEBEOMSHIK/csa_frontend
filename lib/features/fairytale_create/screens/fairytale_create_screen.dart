@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 import 'package:csa_frontend/utils/app_colors.dart';
 
@@ -12,25 +13,27 @@ class FairytaleCreateScreen extends StatefulWidget {
 class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
   int? _selectedCategory;
 
-  static const List<_Category> _categories = [
-    _Category(emoji: '🏰', label: '모험', color: Color(0xFFFF6B6B)),
-    _Category(emoji: '👨‍👩‍👧', label: '가족', color: Color(0xFFFFAA5E)),
-    _Category(emoji: '✨', label: '판타지', color: Color(0xFF9B5DE5)),
-    _Category(emoji: '🤝', label: '우정', color: Color(0xFF06D6A0)),
-    _Category(emoji: '🦁', label: '동물', color: Color(0xFFFFD166)),
-    _Category(emoji: '🌊', label: '바다', color: Color(0xFF118AB2)),
-    _Category(emoji: '🚀', label: '우주', color: Color(0xFF073B4C)),
-    _Category(emoji: '🧙', label: '마법', color: Color(0xFFEF476F)),
+  List<_Category> _buildCategories(AppLocalizations l10n) => [
+    _Category(emoji: '🏰', label: l10n.categoryAdventure, color: const Color(0xFFFF6B6B)),
+    _Category(emoji: '👨‍👩‍👧', label: l10n.categoryFamily, color: const Color(0xFFFFAA5E)),
+    _Category(emoji: '✨', label: l10n.categoryFantasy, color: const Color(0xFF9B5DE5)),
+    _Category(emoji: '🤝', label: l10n.categoryFriendship, color: const Color(0xFF06D6A0)),
+    _Category(emoji: '🦁', label: l10n.categoryAnimal, color: const Color(0xFFFFD166)),
+    _Category(emoji: '🌊', label: l10n.categorySea, color: const Color(0xFF118AB2)),
+    _Category(emoji: '🚀', label: l10n.categorySpace, color: const Color(0xFF073B4C)),
+    _Category(emoji: '🧙', label: l10n.categoryMagic, color: const Color(0xFFEF476F)),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final categories = _buildCategories(l10n);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Column(
         children: [
-          const AppTopBar(title: '동화 만들기'),
-          // 헤더 배너
+          AppTopBar(title: l10n.createTitle),
           Container(
             width: double.infinity,
             color: AppColors.create,
@@ -38,9 +41,9 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  '어떤 동화를 만들까요? 📖',
-                  style: TextStyle(
+                Text(
+                  l10n.createQuestion,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
@@ -48,7 +51,7 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '카테고리를 선택하면 AI가 특별한 동화를 만들어줘요!',
+                  l10n.createDesc,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.85),
                     fontSize: 13,
@@ -57,13 +60,11 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
               ],
             ),
           ),
-
-          // 카테고리 그리드
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: GridView.builder(
-                itemCount: _categories.length,
+                itemCount: categories.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 14,
@@ -71,10 +72,11 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
                   childAspectRatio: 1.2,
                 ),
                 itemBuilder: (context, index) {
-                  final cat = _categories[index];
+                  final cat = categories[index];
                   final isSelected = _selectedCategory == index;
                   return GestureDetector(
-                    onTap: () => setState(() => _selectedCategory = index),
+                    onTap: () =>
+                        setState(() => _selectedCategory = index),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       decoration: BoxDecoration(
@@ -97,14 +99,17 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(cat.emoji, style: const TextStyle(fontSize: 40)),
+                          Text(cat.emoji,
+                              style: const TextStyle(fontSize: 40)),
                           const SizedBox(height: 8),
                           Text(
                             cat.label,
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w800,
-                              color: isSelected ? Colors.white : AppColors.textPrimary,
+                              color: isSelected
+                                  ? Colors.white
+                                  : AppColors.textPrimary,
                             ),
                           ),
                         ],
@@ -115,8 +120,6 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
               ),
             ),
           ),
-
-          // 동화 만들기 버튼
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
             child: SizedBox(
@@ -128,7 +131,8 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
                   backgroundColor: AppColors.create,
                   foregroundColor: Colors.white,
                   disabledBackgroundColor: AppColors.divider,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18)),
                   elevation: 0,
                 ),
                 child: Row(
@@ -138,9 +142,11 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
                     const SizedBox(width: 10),
                     Text(
                       _selectedCategory != null
-                          ? '${_categories[_selectedCategory!].label} 동화 만들기!'
-                          : '카테고리를 먼저 선택해주세요',
-                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+                          ? l10n.createBtnWithCategory(
+                              categories[_selectedCategory!].label)
+                          : l10n.createBtnNoCategory,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w800, fontSize: 16),
                     ),
                   ],
                 ),
@@ -157,5 +163,6 @@ class _Category {
   final String emoji;
   final String label;
   final Color color;
-  const _Category({required this.emoji, required this.label, required this.color});
+  const _Category(
+      {required this.emoji, required this.label, required this.color});
 }

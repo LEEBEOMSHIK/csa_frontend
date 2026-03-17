@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/character/screens/character_screen.dart';
 import 'package:csa_frontend/features/fairytale_create/screens/fairytale_create_screen.dart';
 import 'package:csa_frontend/features/home/screens/home_screen.dart';
@@ -49,6 +50,7 @@ class _BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -64,7 +66,7 @@ class _BottomNav extends StatelessWidget {
             children: [
               _NavItem(
                 icon: Icons.face_retouching_natural_rounded,
-                label: '내 캐릭터',
+                label: l10n.navCharacter,
                 index: 0,
                 currentIndex: currentIndex,
                 onTap: onTap,
@@ -73,7 +75,7 @@ class _BottomNav extends StatelessWidget {
               ),
               _NavItem(
                 icon: Icons.auto_stories_rounded,
-                label: '동화',
+                label: l10n.navFairytale,
                 index: 1,
                 currentIndex: currentIndex,
                 onTap: onTap,
@@ -110,7 +112,7 @@ class _BottomNav extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '홈',
+                        l10n.navHome,
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: currentIndex == 2
@@ -125,7 +127,7 @@ class _BottomNav extends StatelessWidget {
               ),
               _NavItem(
                 icon: Icons.favorite_rounded,
-                label: '찜목록',
+                label: l10n.navFavorites,
                 index: 3,
                 currentIndex: currentIndex,
                 onTap: onTap,
@@ -134,7 +136,7 @@ class _BottomNav extends StatelessWidget {
               ),
               _NavItem(
                 icon: Icons.person_rounded,
-                label: '마이',
+                label: l10n.navMy,
                 index: 4,
                 currentIndex: currentIndex,
                 onTap: onTap,

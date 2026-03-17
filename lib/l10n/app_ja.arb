@@ -1,0 +1,127 @@
+{
+  "@@locale": "ja",
+
+  "appTitle": "わたしたちのどうわ",
+
+  "navCharacter": "マイキャラ",
+  "navFairytale": "どうわ",
+  "navHome": "ホーム",
+  "navFavorites": "お気に入り",
+  "navMy": "マイページ",
+
+  "homeTitle": "みんなのどうわ工房",
+  "homeTabStory": "ストーリー",
+  "homeTabPicture": "えピース",
+  "homeSectionTheme": "テーマ別",
+  "homeSectionNew": "新着リスト",
+  "homeSectionReco": "おすすめ",
+  "homeMoreBtn": "もっと見る",
+
+  "characterTitle": "マイキャラ",
+  "characterMyCharacter": "わたしのキャラ",
+  "characterOptionTitle": "{part}のオプション",
+  "@characterOptionTitle": {
+    "placeholders": {
+      "part": { "type": "String" }
+    }
+  },
+  "characterTabBasic": "ベース",
+  "characterTabHair": "かみ",
+  "characterTabEyes": "め",
+  "characterTabNose": "はな",
+  "characterTabMouth": "くち",
+
+  "faceRound": "まるがお",
+  "faceSquare": "かくがお",
+  "faceInvTriangle": "さかさんかく",
+  "faceHeart": "ハートがお",
+  "faceEgg": "たまごがお",
+  "faceHex": "ろっかくがお",
+
+  "hairBob": "ショートボブ",
+  "hairLong": "ロングヘア",
+  "hairCurly": "カーリー",
+  "hairBuzz": "バリカン",
+  "hairPony": "ポニーテール",
+  "hairMohawk": "モヒカン",
+
+  "eyeDefault": "ふつうのめ",
+  "eyeBig": "おおきいめ",
+  "eyeSleepy": "ねむいめ",
+  "eyeCrescent": "はんげつめ",
+  "eyeStar": "ほしめ",
+  "eyeRound": "まるいめ",
+
+  "noseSmall": "ちいさいはな",
+  "noseNormal": "ふつうはな",
+  "noseHigh": "たかいはな",
+  "noseCute": "かわいいはな",
+
+  "mouthSmile": "わらい",
+  "mouthGrin": "えがお",
+  "mouthOpen": "あけたくち",
+  "mouthPout": "ふくれっつら",
+
+  "createTitle": "どうわをつくる",
+  "createQuestion": "どんなどうわをつくりますか？📖",
+  "createDesc": "カテゴリーを選ぶとAIが特別などうわを作ってくれるよ！",
+  "createBtnWithCategory": "{category}のどうわをつくる！",
+  "@createBtnWithCategory": {
+    "placeholders": {
+      "category": { "type": "String" }
+    }
+  },
+  "createBtnNoCategory": "カテゴリーを先に選んでください",
+
+  "categoryAdventure": "ぼうけん",
+  "categoryFamily": "かぞく",
+  "categoryFantasy": "ファンタジー",
+  "categoryFriendship": "ゆうじょう",
+  "categoryAnimal": "どうぶつ",
+  "categorySea": "うみ",
+  "categorySpace": "うちゅう",
+  "categoryMagic": "まほう",
+
+  "favoritesTitle": "お気に入り",
+  "favoritesCountBadge": "{count}冊",
+  "@favoritesCountBadge": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "favoritesEmpty": "まだお気に入りのどうわはありません",
+  "favoritesEmptyDesc": "好きなどうわに\nハートを押してみてね！",
+  "favoritesGoBtn": "どうわを見に行く",
+
+  "fairytaleListTitle": "きほんどうわ",
+  "fairytaleTabClassic": "📚 めいさくどうわ",
+  "fairytaleTabAi": "🤖 AIどうわ",
+  "fairytaleTabShared": "🌟 みんなのどうわ",
+  "voiceBadge": "{name}のこえ",
+  "@voiceBadge": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "voiceDad": "パパ",
+
+  "settingsTitle": "せってい",
+  "settingsVersion": "現在のバージョン",
+  "settingsProfile": "プロフィールとアカウント",
+  "settingsSectionActivity": "活動履歴",
+  "settingsPurchaseHistory": "購入履歴",
+  "settingsFavoriteHistory": "お気に入り履歴",
+  "settingsFairytaleConfig": "どうわ設定",
+  "settingsSectionNoti": "特典とイベント通知",
+  "settingsTextNoti": "テキスト通知",
+  "settingsPushNoti": "プッシュ通知",
+  "settingsSectionApp": "アプリ設定",
+  "settingsLanguage": "言語設定",
+  "settingsLanguageTitle": "言語を選択",
+  "settingsSectionDevice": "デバイス設定",
+  "settingsCameraAccess": "カメラアクセス",
+  "settingsSectionPolicy": "利用規約とポリシー",
+  "settingsTerms": "サービス利用規約",
+  "settingsFinanceTerms": "電子金融取引利用規約",
+  "settingsPrivacy": "プライバシーポリシー"
+}

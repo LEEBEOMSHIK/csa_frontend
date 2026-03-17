@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,59 +31,76 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-        backgroundColor: const Color(0xFFFFFDF5),
-        body: Column(
-          children: [
-            // 상태바 영역
-            Container(
-              color: const Color(0xFFFE9EC7),
-              height: MediaQuery.of(context).padding.top,
-            ),
-            // 앱바
-            Container(
-              color: const Color(0xFFFE9EC7),
-              height: 48,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  const Icon(Icons.chevron_left,
-                      color: Color(0xFF333333), size: 24),
-                  const Spacer(),
-                  const Text(
-                    '모두의 동화제작소',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
-                      color: Color(0xFF333333),
-                    ),
+      backgroundColor: const Color(0xFFFFFDF5),
+      body: Column(
+        children: [
+          Container(
+            color: const Color(0xFFFE9EC7),
+            height: MediaQuery.of(context).padding.top,
+          ),
+          Container(
+            color: const Color(0xFFFE9EC7),
+            height: 48,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                const Icon(Icons.chevron_left,
+                    color: Color(0xFF333333), size: 24),
+                const Spacer(),
+                Text(
+                  l10n.homeTitle,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                    color: Color(0xFF333333),
                   ),
-                  const Spacer(),
-                  const Icon(Icons.search,
-                      color: Color(0xFF333333), size: 20),
-                ],
-              ),
+                ),
+                const Spacer(),
+                const Icon(Icons.search,
+                    color: Color(0xFF333333), size: 20),
+              ],
             ),
-            // 콘텐츠
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _StoryTab(tags: _tags),
-                  const Center(
-                    child: Text(
-                      '그림조각',
-                      style: TextStyle(
-                          color: Color(0xFFAAAAAA),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500),
-                    ),
+          ),
+          // 탭바
+          Container(
+            color: const Color(0xFFFE9EC7),
+            child: TabBar(
+              controller: _tabController,
+              labelColor: const Color(0xFF333333),
+              unselectedLabelColor: const Color(0xFF333333),
+              indicatorColor: const Color(0xFF333333),
+              indicatorWeight: 2,
+              labelStyle: const TextStyle(
+                  fontWeight: FontWeight.w700, fontSize: 14),
+              unselectedLabelStyle: const TextStyle(
+                  fontWeight: FontWeight.w500, fontSize: 14),
+              tabs: [
+                Tab(text: l10n.homeTabStory),
+                Tab(text: l10n.homeTabPicture),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _StoryTab(tags: _tags),
+                Center(
+                  child: Text(
+                    l10n.homeTabPicture,
+                    style: const TextStyle(
+                        color: Color(0xFFAAAAAA),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -94,11 +112,11 @@ class _StoryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 태그 행
           SizedBox(
             height: 50,
             child: ListView.separated(
@@ -110,15 +128,14 @@ class _StoryTab extends StatelessWidget {
               itemBuilder: (context, i) => _TagChip(label: tags[i]),
             ),
           ),
-          // 주제별 모음
           _SectionPadding(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _SectionHeader(title: '주제별 모음'),
+                _SectionHeader(title: l10n.homeSectionTheme),
                 const SizedBox(height: 12),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Expanded(
                       child: _ThemeCard(
                         title: '여름은 인디머쉬',
@@ -139,13 +156,13 @@ class _StoryTab extends StatelessWidget {
               ],
             ),
           ),
-          // 신규 출시 목록
           _SectionPadding(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _SectionHeader(
-                    title: '신규 출시 목록', showMore: true),
+                    title: l10n.homeSectionNew, showMore: true,
+                    moreLabel: l10n.homeMoreBtn),
                 const SizedBox(height: 12),
                 Row(
                   children: List.generate(
@@ -153,8 +170,7 @@ class _StoryTab extends StatelessWidget {
                     (i) => Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(
-                            right:
-                                i < _newItems.length - 1 ? 12 : 0),
+                            right: i < _newItems.length - 1 ? 12 : 0),
                         child: _StoryCard(item: _newItems[i]),
                       ),
                     ),
@@ -163,12 +179,13 @@ class _StoryTab extends StatelessWidget {
               ],
             ),
           ),
-          // 추천 목록
           _SectionPadding(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _SectionHeader(title: '추천 목록', showMore: true),
+                _SectionHeader(
+                    title: l10n.homeSectionReco, showMore: true,
+                    moreLabel: l10n.homeMoreBtn),
                 const SizedBox(height: 12),
                 Row(
                   children: List.generate(
@@ -176,9 +193,7 @@ class _StoryTab extends StatelessWidget {
                     (i) => Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(
-                            right: i < _recoItems.length - 1
-                                ? 10
-                                : 0),
+                            right: i < _recoItems.length - 1 ? 10 : 0),
                         child: _RecoCard(item: _recoItems[i]),
                       ),
                     ),
@@ -194,11 +209,8 @@ class _StoryTab extends StatelessWidget {
   }
 }
 
-// ─── 공통 위젯 ───────────────────────────────────────────────
-
 class _TagChip extends StatelessWidget {
   final String label;
-
   const _TagChip({required this.label});
 
   @override
@@ -212,8 +224,7 @@ class _TagChip extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: const TextStyle(
-            fontSize: 12, color: Color(0xFF333333)),
+        style: const TextStyle(fontSize: 12, color: Color(0xFF333333)),
       ),
     );
   }
@@ -222,8 +233,13 @@ class _TagChip extends StatelessWidget {
 class _SectionHeader extends StatelessWidget {
   final String title;
   final bool showMore;
+  final String moreLabel;
 
-  const _SectionHeader({required this.title, this.showMore = false});
+  const _SectionHeader({
+    required this.title,
+    this.showMore = false,
+    this.moreLabel = '',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -239,10 +255,9 @@ class _SectionHeader extends StatelessWidget {
           ),
         ),
         if (showMore)
-          const Text(
-            '더보기',
-            style: TextStyle(
-                fontSize: 12, color: Color(0xFFAAAAAA)),
+          Text(
+            moreLabel,
+            style: const TextStyle(fontSize: 12, color: Color(0xFFAAAAAA)),
           ),
       ],
     );
@@ -251,7 +266,6 @@ class _SectionHeader extends StatelessWidget {
 
 class _SectionPadding extends StatelessWidget {
   final Widget child;
-
   const _SectionPadding({required this.child});
 
   @override
@@ -288,8 +302,7 @@ class _ThemeCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(tag,
-              style: const TextStyle(
-                  fontSize: 10, color: Colors.white70)),
+              style: const TextStyle(fontSize: 10, color: Colors.white70)),
           const SizedBox(height: 2),
           Text(
             title,
@@ -307,7 +320,6 @@ class _ThemeCard extends StatelessWidget {
 
 class _StoryCard extends StatelessWidget {
   final _StoryItem item;
-
   const _StoryCard({required this.item});
 
   @override
@@ -352,7 +364,6 @@ class _StoryCard extends StatelessWidget {
 
 class _RecoCard extends StatelessWidget {
   final _RecoItem item;
-
   const _RecoCard({required this.item});
 
   @override
@@ -383,35 +394,24 @@ class _RecoCard extends StatelessWidget {
   }
 }
 
-// ─── 더미 데이터 ─────────────────────────────────────────────
-
 class _StoryItem {
   final String title;
   final double rating;
   final Color color;
-
-  const _StoryItem(
-      {required this.title,
-      required this.rating,
-      required this.color});
+  const _StoryItem({required this.title, required this.rating, required this.color});
 }
 
 class _RecoItem {
   final String title;
   final Color color;
-
   const _RecoItem({required this.title, required this.color});
 }
 
 const _newItems = [
-  _StoryItem(
-      title: '가마솥', rating: 5.0, color: Color(0xFFFFD6A5)),
-  _StoryItem(
-      title: '나무바닥', rating: 3.0, color: Color(0xFFA8D8EA)),
-  _StoryItem(
-      title: '울면서 도망가는...', rating: 5.0, color: Color(0xFFFFB7B2)),
-  _StoryItem(
-      title: '놀란 아기도', rating: 5.0, color: Color(0xFFB5EAD7)),
+  _StoryItem(title: '가마솥', rating: 5.0, color: Color(0xFFFFD6A5)),
+  _StoryItem(title: '나무바닥', rating: 3.0, color: Color(0xFFA8D8EA)),
+  _StoryItem(title: '울면서 도망가는...', rating: 5.0, color: Color(0xFFFFB7B2)),
+  _StoryItem(title: '놀란 아기도', rating: 5.0, color: Color(0xFFB5EAD7)),
 ];
 
 const _recoItems = [

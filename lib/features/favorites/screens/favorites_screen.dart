@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 import 'package:csa_frontend/utils/app_colors.dart';
 
@@ -18,22 +19,24 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Column(
         children: [
           AppTopBar(
-            title: '찜목록',
+            title: l10n.favoritesTitle,
             actions: [
               if (_items.isNotEmpty)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${_items.length}권',
+                    l10n.favoritesCountBadge(_items.length),
                     style: const TextStyle(
                       color: Color(0xFF333333),
                       fontWeight: FontWeight.w700,
@@ -44,23 +47,25 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             ],
           ),
           Expanded(
-            child: _items.isEmpty ? _buildEmpty() : _buildList(),
+            child: _items.isEmpty
+                ? _buildEmpty(l10n)
+                : _buildList(),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildEmpty() {
+  Widget _buildEmpty(AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text('🌟', style: TextStyle(fontSize: 72)),
           const SizedBox(height: 20),
-          const Text(
-            '아직 찜한 동화가 없어요',
-            style: TextStyle(
+          Text(
+            l10n.favoritesEmpty,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
               color: AppColors.textPrimary,
@@ -68,9 +73,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            '마음에 드는 동화에\n하트를 눌러보세요!',
+            l10n.favoritesEmptyDesc,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               color: AppColors.textSecondary,
               height: 1.6,
@@ -84,11 +89,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14)),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 24, vertical: 12),
             ),
             icon: const Icon(Icons.menu_book_rounded),
-            label: const Text('동화 보러 가기',
-                style: TextStyle(fontWeight: FontWeight.w700)),
+            label: Text(l10n.favoritesGoBtn,
+                style: const TextStyle(fontWeight: FontWeight.w700)),
           ),
         ],
       ),

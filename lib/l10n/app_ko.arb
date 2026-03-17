@@ -1,0 +1,127 @@
+{
+  "@@locale": "ko",
+
+  "appTitle": "우리들의 동화",
+
+  "navCharacter": "내 캐릭터",
+  "navFairytale": "동화",
+  "navHome": "홈",
+  "navFavorites": "찜목록",
+  "navMy": "마이",
+
+  "homeTitle": "모두의 동화제작소",
+  "homeTabStory": "이야기",
+  "homeTabPicture": "그림조각",
+  "homeSectionTheme": "주제별 모음",
+  "homeSectionNew": "신규 출시 목록",
+  "homeSectionReco": "추천 목록",
+  "homeMoreBtn": "더보기",
+
+  "characterTitle": "내 캐릭터",
+  "characterMyCharacter": "나의 캐릭터",
+  "characterOptionTitle": "{part} 옵션",
+  "@characterOptionTitle": {
+    "placeholders": {
+      "part": { "type": "String" }
+    }
+  },
+  "characterTabBasic": "기본형",
+  "characterTabHair": "머리",
+  "characterTabEyes": "눈",
+  "characterTabNose": "코",
+  "characterTabMouth": "입",
+
+  "faceRound": "둥근형",
+  "faceSquare": "각진형",
+  "faceInvTriangle": "역삼각형",
+  "faceHeart": "하트형",
+  "faceEgg": "계란형",
+  "faceHex": "육각형",
+
+  "hairBob": "단발",
+  "hairLong": "긴머리",
+  "hairCurly": "곱슬",
+  "hairBuzz": "빡빡이",
+  "hairPony": "포니테일",
+  "hairMohawk": "모히칸",
+
+  "eyeDefault": "기본눈",
+  "eyeBig": "큰눈",
+  "eyeSleepy": "졸린눈",
+  "eyeCrescent": "반달눈",
+  "eyeStar": "별눈",
+  "eyeRound": "동그란눈",
+
+  "noseSmall": "작은코",
+  "noseNormal": "보통코",
+  "noseHigh": "오뚝코",
+  "noseCute": "귀여운코",
+
+  "mouthSmile": "웃음",
+  "mouthGrin": "미소",
+  "mouthOpen": "벌린입",
+  "mouthPout": "삐침",
+
+  "createTitle": "동화 만들기",
+  "createQuestion": "어떤 동화를 만들까요? 📖",
+  "createDesc": "카테고리를 선택하면 AI가 특별한 동화를 만들어줘요!",
+  "createBtnWithCategory": "{category} 동화 만들기!",
+  "@createBtnWithCategory": {
+    "placeholders": {
+      "category": { "type": "String" }
+    }
+  },
+  "createBtnNoCategory": "카테고리를 먼저 선택해주세요",
+
+  "categoryAdventure": "모험",
+  "categoryFamily": "가족",
+  "categoryFantasy": "판타지",
+  "categoryFriendship": "우정",
+  "categoryAnimal": "동물",
+  "categorySea": "바다",
+  "categorySpace": "우주",
+  "categoryMagic": "마법",
+
+  "favoritesTitle": "찜목록",
+  "favoritesCountBadge": "{count}권",
+  "@favoritesCountBadge": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "favoritesEmpty": "아직 찜한 동화가 없어요",
+  "favoritesEmptyDesc": "마음에 드는 동화에\n하트를 눌러보세요!",
+  "favoritesGoBtn": "동화 보러 가기",
+
+  "fairytaleListTitle": "기본 동화",
+  "fairytaleTabClassic": "📚 유명 동화",
+  "fairytaleTabAi": "🤖 AI 동화",
+  "fairytaleTabShared": "🌟 공유 동화",
+  "voiceBadge": "{name} 목소리",
+  "@voiceBadge": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "voiceDad": "아빠",
+
+  "settingsTitle": "설정",
+  "settingsVersion": "현재 버전",
+  "settingsProfile": "프로필 및 계정",
+  "settingsSectionActivity": "활동 내역",
+  "settingsPurchaseHistory": "구매 내역",
+  "settingsFavoriteHistory": "찜 목록 내역",
+  "settingsFairytaleConfig": "동화 설정",
+  "settingsSectionNoti": "혜택 및 이벤트 알림",
+  "settingsTextNoti": "문자 알림",
+  "settingsPushNoti": "푸시 알림",
+  "settingsSectionApp": "앱 설정",
+  "settingsLanguage": "언어 설정",
+  "settingsLanguageTitle": "언어 선택",
+  "settingsSectionDevice": "기기 설정",
+  "settingsCameraAccess": "카메라 접근",
+  "settingsSectionPolicy": "약관 및 정책",
+  "settingsTerms": "서비스 이용약관",
+  "settingsFinanceTerms": "전자금융거래 이용약관",
+  "settingsPrivacy": "개인정보처리방침"
+}
