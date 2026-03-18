@@ -1,14 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/screens/main_screen.dart';
+import 'package:csa_frontend/shared/services/api_client.dart';
+
+const _testEmail = 'test@test.com';
+const _testPassword = 'test1234';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
-  void _navigateToHome(BuildContext context) {
+  void _navigateToHome(BuildContext context, {Map<String, dynamic>? debugData}) {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const MainScreen()),
+      MaterialPageRoute(builder: (_) => MainScreen(debugLoginData: debugData)),
     );
+  }
+
+  Future<void> _testJwt(BuildContext context) async {
+    const storage = FlutterSecureStorage();
+
+    // 1) 회원가입 (이미 존재하면 무시)
+    try {
+      await ApiClient.instance.post('/auth/signup', data: {
+        'email': _testEmail,
+        'password': _testPassword,
+      });
+    } catch (_) {}
+
+    // 2) 로그인 → 토큰 수령
+    Map<String, dynamic> tokens;
+    try {
+      tokens = await ApiClient.instance.post('/auth/login', data: {
+        'email': _testEmail,
+        'password': _testPassword,
+      }) as Map<String, dynamic>;
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed: $e')),
+      );
+      return;
+    }
+
+    final accessToken = tokens['accessToken'] as String?;
+    if (accessToken == null) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login failed: no token received')),
+      );
+      return;
+    }
+
+    // 토큰 저장 → 이후 요청에 자동 주입됨
+    await storage.write(key: 'access_token', value: accessToken);
+
+    // 3) /users/me — 토큰 인증 확인
+    try {
+      final me = await ApiClient.instance.get('/users/me') as Map<String, dynamic>;
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('JWT OK — ${me['email']}')),
+      );
+      _navigateToHome(context, debugData: {
+        ...tokens,
+        'me_email': me['email'],
+        'me_id': me['id'] ?? me['userId'],
+      });
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Token verify failed: $e')),
+      );
+    }
   }
 
   @override
@@ -189,7 +252,7 @@ class LoginScreen extends StatelessWidget {
 
                 // Test button
                 _LoginButton(
-                  onTap: () => _navigateToHome(context),
+                  onTap: () => _testJwt(context),
                   backgroundColor: Colors.white.withValues(alpha: 0.25),
                   foregroundColor: Colors.white,
                   icon: const Icon(Icons.skip_next_rounded,

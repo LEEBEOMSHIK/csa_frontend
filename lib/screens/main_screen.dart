@@ -7,7 +7,9 @@ import 'package:csa_frontend/features/favorites/screens/favorites_screen.dart';
 import 'package:csa_frontend/features/my/screens/my_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({super.key, this.debugLoginData});
+
+  final Map<String, dynamic>? debugLoginData;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -15,6 +17,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 2;
+  bool _debugPanelVisible = true;
 
   static const List<Widget> _screens = [
     CharacterScreen(),
@@ -31,9 +34,19 @@ class _MainScreenState extends State<MainScreen> {
         index: _currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: _BottomNav(
-        currentIndex: _currentIndex,
-        onTap: (i) => setState(() => _currentIndex = i),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (widget.debugLoginData != null && _debugPanelVisible)
+            _DebugDataPanel(
+              data: widget.debugLoginData!,
+              onClose: () => setState(() => _debugPanelVisible = false),
+            ),
+          _BottomNav(
+            currentIndex: _currentIndex,
+            onTap: (i) => setState(() => _currentIndex = i),
+          ),
+        ],
       ),
     );
   }
@@ -148,6 +161,80 @@ class _BottomNav extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _DebugDataPanel extends StatelessWidget {
+  final Map<String, dynamic> data;
+  final VoidCallback onClose;
+
+  const _DebugDataPanel({required this.data, required this.onClose});
+
+  @override
+  Widget build(BuildContext context) {
+    final entries = data.entries.toList();
+    return Container(
+      width: double.infinity,
+      color: const Color(0xFF1A1A2E),
+      padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text(
+                '[DEBUG] /auth/login response',
+                style: TextStyle(
+                  color: Color(0xFF00FF88),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'monospace',
+                ),
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: onClose,
+                child: const Icon(Icons.close, color: Color(0xFF888888), size: 16),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          ...entries.map((e) => Padding(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${e.key}: ',
+                        style: const TextStyle(
+                          color: Color(0xFF82AAFF),
+                          fontSize: 11,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
+                      TextSpan(
+                        text: _format(e.value),
+                        style: const TextStyle(
+                          color: Color(0xFFFFCB6B),
+                          fontSize: 11,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
+                    ],
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+
+  String _format(dynamic value) {
+    if (value is String && value.length > 40) {
+      return '${value.substring(0, 40)}…';
+    }
+    return '$value';
   }
 }
 

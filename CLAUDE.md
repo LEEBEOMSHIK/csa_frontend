@@ -16,6 +16,7 @@
 | [project-overview.md](claude-config/project-overview.md) | 프로젝트 현황 및 설명 |
 | [non-touch.md](claude-config/non-touch.md) | 분석 및 수정 금지 목록 |
 | [db-guideline.md](claude-config/db-guideline.md) | 데이터 저장 규칙 (로컬/서버 DB) |
+| [api-guidelines.md](claude-config/api-guidelines.md) | 서버 통신 규칙 (API 클라이언트) |
 
 ## 핵심 원칙
 1. 요청된 것만 변경한다 — 과도한 리팩터링 금지
