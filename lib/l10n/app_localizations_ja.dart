@@ -155,10 +155,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get createTitle => 'どうわをつくる';
 
   @override
-  String get createQuestion => 'どんなどうわをつくりますか？📖';
+  String get createQuestion => 'じぶんだけのどうわをつくろう！📖';
 
   @override
-  String get createDesc => 'カテゴリーを選ぶとAIが特別などうわを作ってくれるよ！';
+  String get createDesc => 'えらんだら、AIがどうわをつくってくれるよ！';
 
   @override
   String createBtnWithCategory(String category) {
@@ -167,6 +167,48 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get createBtnNoCategory => 'カテゴリーを先に選んでください';
+
+  @override
+  String get createBtnReady => 'どうわをつくる！';
+
+  @override
+  String get createBtnNotReady => 'ぜんぶえらんでね';
+
+  @override
+  String get createSectionSetting => '舞台・背景';
+
+  @override
+  String get createSectionSettingMax => '最大3つ';
+
+  @override
+  String get createSectionGenre => 'ジャンル';
+
+  @override
+  String get createSectionTheme => 'テーマ';
+
+  @override
+  String get createSectionChapter => 'チャプター数';
+
+  @override
+  String get createSectionFormat => 'かたち';
+
+  @override
+  String get createSectionCharacter => 'マイキャラ';
+
+  @override
+  String get createCharacterUse => 'つかう';
+
+  @override
+  String get createCharacterUseDesc => 'わたしのキャラが主人公になるよ';
+
+  @override
+  String get createCharacterSkip => 'つかわない';
+
+  @override
+  String get createCharacterSkipDesc => 'AIがキャラをつくるよ';
+
+  @override
+  String get createSectionVoice => 'よんでくれるこえ';
 
   @override
   String get categoryAdventure => 'ぼうけん';
@@ -191,6 +233,114 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get categoryMagic => 'まほう';
+
+  @override
+  String get categoryForest => 'もり・しぜん';
+
+  @override
+  String get categoryKingdom => 'おうこく・おしろ';
+
+  @override
+  String get categorySchool => 'がっこう';
+
+  @override
+  String get categoryCity => 'まち';
+
+  @override
+  String get genreClassic => 'クラシック';
+
+  @override
+  String get genreFolklore => 'むかしばなし';
+
+  @override
+  String get genreComedy => 'コメディ';
+
+  @override
+  String get genreMystery => 'ミステリー';
+
+  @override
+  String get genreScifi => 'SF・みらい';
+
+  @override
+  String get genreMusical => 'ミュージカル';
+
+  @override
+  String get genreQuiz => 'なぞなぞ';
+
+  @override
+  String get genreDaily => 'にちじょう';
+
+  @override
+  String get genreDream => 'ゆめ・そうぞう';
+
+  @override
+  String get genreHorror => 'こわい';
+
+  @override
+  String get themeMoral => 'きょうくん';
+
+  @override
+  String get themeFriendship => 'ともだち';
+
+  @override
+  String get themeFamilyLove => 'かぞくあい';
+
+  @override
+  String get themeCourage => 'ゆうき';
+
+  @override
+  String get themeGrowth => 'せいちょう';
+
+  @override
+  String get themeSharing => 'おもいやり';
+
+  @override
+  String get themeSelfExpression => 'じこひょうげん';
+
+  @override
+  String get themeEnvironment => 'しぜんあい';
+
+  @override
+  String get themeGratitude => 'かんしゃ';
+
+  @override
+  String get themeProblemSolving => 'もんだいかいけつ';
+
+  @override
+  String get themeCuriosity => 'こうきしん';
+
+  @override
+  String get themeForgiveness => 'ゆるし・なかなおり';
+
+  @override
+  String get chapter3 => '3チャプター';
+
+  @override
+  String get chapter3Desc => 'みじかいおはなし';
+
+  @override
+  String get chapter5 => '5チャプター';
+
+  @override
+  String get chapter5Desc => 'ふつうのおはなし';
+
+  @override
+  String get chapter7 => '7チャプター';
+
+  @override
+  String get chapter7Desc => 'ながいおはなし';
+
+  @override
+  String get formatText => 'テキスト';
+
+  @override
+  String get formatTextDesc => 'よんで楽しむどうわ';
+
+  @override
+  String get formatImage => 'えほん';
+
+  @override
+  String get formatImageDesc => 'みて楽しむどうわ';
 
   @override
   String get favoritesTitle => 'お気に入り';
@@ -228,6 +378,15 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get voiceDad => 'パパ';
+
+  @override
+  String get voiceMom => 'ママ';
+
+  @override
+  String get voiceGrandma => 'おばあちゃん';
+
+  @override
+  String get voiceGrandpa => 'おじいちゃん';
 
   @override
   String get settingsTitle => 'せってい';

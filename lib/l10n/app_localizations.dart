@@ -389,13 +389,13 @@ abstract class AppLocalizations {
   /// No description provided for @createQuestion.
   ///
   /// In ko, this message translates to:
-  /// **'어떤 동화를 만들까요? 📖'**
+  /// **'나만의 동화를 만들어봐요! 📖'**
   String get createQuestion;
 
   /// No description provided for @createDesc.
   ///
   /// In ko, this message translates to:
-  /// **'카테고리를 선택하면 AI가 특별한 동화를 만들어줘요!'**
+  /// **'배경, 장르, 성격을 골라주면 AI가 동화를 만들어요!'**
   String get createDesc;
 
   /// No description provided for @createBtnWithCategory.
@@ -409,6 +409,90 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'카테고리를 먼저 선택해주세요'**
   String get createBtnNoCategory;
+
+  /// No description provided for @createBtnReady.
+  ///
+  /// In ko, this message translates to:
+  /// **'동화 만들기!'**
+  String get createBtnReady;
+
+  /// No description provided for @createBtnNotReady.
+  ///
+  /// In ko, this message translates to:
+  /// **'항목을 모두 선택해주세요'**
+  String get createBtnNotReady;
+
+  /// No description provided for @createSectionSetting.
+  ///
+  /// In ko, this message translates to:
+  /// **'구성 배경'**
+  String get createSectionSetting;
+
+  /// No description provided for @createSectionSettingMax.
+  ///
+  /// In ko, this message translates to:
+  /// **'최대 3개'**
+  String get createSectionSettingMax;
+
+  /// No description provided for @createSectionGenre.
+  ///
+  /// In ko, this message translates to:
+  /// **'장르'**
+  String get createSectionGenre;
+
+  /// No description provided for @createSectionTheme.
+  ///
+  /// In ko, this message translates to:
+  /// **'이야기 성격'**
+  String get createSectionTheme;
+
+  /// No description provided for @createSectionChapter.
+  ///
+  /// In ko, this message translates to:
+  /// **'챕터 수'**
+  String get createSectionChapter;
+
+  /// No description provided for @createSectionFormat.
+  ///
+  /// In ko, this message translates to:
+  /// **'형식'**
+  String get createSectionFormat;
+
+  /// No description provided for @createSectionCharacter.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 캐릭터'**
+  String get createSectionCharacter;
+
+  /// No description provided for @createCharacterUse.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용'**
+  String get createCharacterUse;
+
+  /// No description provided for @createCharacterUseDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 캐릭터가 주인공이 돼요'**
+  String get createCharacterUseDesc;
+
+  /// No description provided for @createCharacterSkip.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용 안함'**
+  String get createCharacterSkip;
+
+  /// No description provided for @createCharacterSkipDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'AI가 캐릭터를 만들어요'**
+  String get createCharacterSkipDesc;
+
+  /// No description provided for @createSectionVoice.
+  ///
+  /// In ko, this message translates to:
+  /// **'읽어줄 목소리'**
+  String get createSectionVoice;
 
   /// No description provided for @categoryAdventure.
   ///
@@ -457,6 +541,222 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'마법'**
   String get categoryMagic;
+
+  /// No description provided for @categoryForest.
+  ///
+  /// In ko, this message translates to:
+  /// **'숲·자연'**
+  String get categoryForest;
+
+  /// No description provided for @categoryKingdom.
+  ///
+  /// In ko, this message translates to:
+  /// **'왕국·성'**
+  String get categoryKingdom;
+
+  /// No description provided for @categorySchool.
+  ///
+  /// In ko, this message translates to:
+  /// **'학교'**
+  String get categorySchool;
+
+  /// No description provided for @categoryCity.
+  ///
+  /// In ko, this message translates to:
+  /// **'도시·마을'**
+  String get categoryCity;
+
+  /// No description provided for @genreClassic.
+  ///
+  /// In ko, this message translates to:
+  /// **'클래식'**
+  String get genreClassic;
+
+  /// No description provided for @genreFolklore.
+  ///
+  /// In ko, this message translates to:
+  /// **'전래동화'**
+  String get genreFolklore;
+
+  /// No description provided for @genreComedy.
+  ///
+  /// In ko, this message translates to:
+  /// **'코미디'**
+  String get genreComedy;
+
+  /// No description provided for @genreMystery.
+  ///
+  /// In ko, this message translates to:
+  /// **'미스터리'**
+  String get genreMystery;
+
+  /// No description provided for @genreScifi.
+  ///
+  /// In ko, this message translates to:
+  /// **'SF·미래'**
+  String get genreScifi;
+
+  /// No description provided for @genreMusical.
+  ///
+  /// In ko, this message translates to:
+  /// **'뮤지컬'**
+  String get genreMusical;
+
+  /// No description provided for @genreQuiz.
+  ///
+  /// In ko, this message translates to:
+  /// **'수수께끼'**
+  String get genreQuiz;
+
+  /// No description provided for @genreDaily.
+  ///
+  /// In ko, this message translates to:
+  /// **'일상'**
+  String get genreDaily;
+
+  /// No description provided for @genreDream.
+  ///
+  /// In ko, this message translates to:
+  /// **'꿈·상상'**
+  String get genreDream;
+
+  /// No description provided for @genreHorror.
+  ///
+  /// In ko, this message translates to:
+  /// **'으스스'**
+  String get genreHorror;
+
+  /// No description provided for @themeMoral.
+  ///
+  /// In ko, this message translates to:
+  /// **'교훈·도덕'**
+  String get themeMoral;
+
+  /// No description provided for @themeFriendship.
+  ///
+  /// In ko, this message translates to:
+  /// **'우정'**
+  String get themeFriendship;
+
+  /// No description provided for @themeFamilyLove.
+  ///
+  /// In ko, this message translates to:
+  /// **'가족사랑'**
+  String get themeFamilyLove;
+
+  /// No description provided for @themeCourage.
+  ///
+  /// In ko, this message translates to:
+  /// **'용기·도전'**
+  String get themeCourage;
+
+  /// No description provided for @themeGrowth.
+  ///
+  /// In ko, this message translates to:
+  /// **'성장'**
+  String get themeGrowth;
+
+  /// No description provided for @themeSharing.
+  ///
+  /// In ko, this message translates to:
+  /// **'나눔·배려'**
+  String get themeSharing;
+
+  /// No description provided for @themeSelfExpression.
+  ///
+  /// In ko, this message translates to:
+  /// **'자기표현'**
+  String get themeSelfExpression;
+
+  /// No description provided for @themeEnvironment.
+  ///
+  /// In ko, this message translates to:
+  /// **'환경사랑'**
+  String get themeEnvironment;
+
+  /// No description provided for @themeGratitude.
+  ///
+  /// In ko, this message translates to:
+  /// **'감사'**
+  String get themeGratitude;
+
+  /// No description provided for @themeProblemSolving.
+  ///
+  /// In ko, this message translates to:
+  /// **'문제해결'**
+  String get themeProblemSolving;
+
+  /// No description provided for @themeCuriosity.
+  ///
+  /// In ko, this message translates to:
+  /// **'호기심'**
+  String get themeCuriosity;
+
+  /// No description provided for @themeForgiveness.
+  ///
+  /// In ko, this message translates to:
+  /// **'용서·화해'**
+  String get themeForgiveness;
+
+  /// No description provided for @chapter3.
+  ///
+  /// In ko, this message translates to:
+  /// **'3챕터'**
+  String get chapter3;
+
+  /// No description provided for @chapter3Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'짧은 이야기'**
+  String get chapter3Desc;
+
+  /// No description provided for @chapter5.
+  ///
+  /// In ko, this message translates to:
+  /// **'5챕터'**
+  String get chapter5;
+
+  /// No description provided for @chapter5Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'보통 이야기'**
+  String get chapter5Desc;
+
+  /// No description provided for @chapter7.
+  ///
+  /// In ko, this message translates to:
+  /// **'7챕터'**
+  String get chapter7;
+
+  /// No description provided for @chapter7Desc.
+  ///
+  /// In ko, this message translates to:
+  /// **'긴 이야기'**
+  String get chapter7Desc;
+
+  /// No description provided for @formatText.
+  ///
+  /// In ko, this message translates to:
+  /// **'텍스트형'**
+  String get formatText;
+
+  /// No description provided for @formatTextDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'글로 읽는 동화'**
+  String get formatTextDesc;
+
+  /// No description provided for @formatImage.
+  ///
+  /// In ko, this message translates to:
+  /// **'그림형'**
+  String get formatImage;
+
+  /// No description provided for @formatImageDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'그림으로 보는 동화'**
+  String get formatImageDesc;
 
   /// No description provided for @favoritesTitle.
   ///
@@ -523,6 +823,24 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'아빠'**
   String get voiceDad;
+
+  /// No description provided for @voiceMom.
+  ///
+  /// In ko, this message translates to:
+  /// **'엄마'**
+  String get voiceMom;
+
+  /// No description provided for @voiceGrandma.
+  ///
+  /// In ko, this message translates to:
+  /// **'할머니'**
+  String get voiceGrandma;
+
+  /// No description provided for @voiceGrandpa.
+  ///
+  /// In ko, this message translates to:
+  /// **'할아버지'**
+  String get voiceGrandpa;
 
   /// No description provided for @settingsTitle.
   ///

@@ -155,10 +155,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get createTitle => '동화 만들기';
 
   @override
-  String get createQuestion => '어떤 동화를 만들까요? 📖';
+  String get createQuestion => '나만의 동화를 만들어봐요! 📖';
 
   @override
-  String get createDesc => '카테고리를 선택하면 AI가 특별한 동화를 만들어줘요!';
+  String get createDesc => '배경, 장르, 성격을 골라주면 AI가 동화를 만들어요!';
 
   @override
   String createBtnWithCategory(String category) {
@@ -167,6 +167,48 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get createBtnNoCategory => '카테고리를 먼저 선택해주세요';
+
+  @override
+  String get createBtnReady => '동화 만들기!';
+
+  @override
+  String get createBtnNotReady => '항목을 모두 선택해주세요';
+
+  @override
+  String get createSectionSetting => '구성 배경';
+
+  @override
+  String get createSectionSettingMax => '최대 3개';
+
+  @override
+  String get createSectionGenre => '장르';
+
+  @override
+  String get createSectionTheme => '이야기 성격';
+
+  @override
+  String get createSectionChapter => '챕터 수';
+
+  @override
+  String get createSectionFormat => '형식';
+
+  @override
+  String get createSectionCharacter => '내 캐릭터';
+
+  @override
+  String get createCharacterUse => '사용';
+
+  @override
+  String get createCharacterUseDesc => '내 캐릭터가 주인공이 돼요';
+
+  @override
+  String get createCharacterSkip => '사용 안함';
+
+  @override
+  String get createCharacterSkipDesc => 'AI가 캐릭터를 만들어요';
+
+  @override
+  String get createSectionVoice => '읽어줄 목소리';
 
   @override
   String get categoryAdventure => '모험';
@@ -191,6 +233,114 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get categoryMagic => '마법';
+
+  @override
+  String get categoryForest => '숲·자연';
+
+  @override
+  String get categoryKingdom => '왕국·성';
+
+  @override
+  String get categorySchool => '학교';
+
+  @override
+  String get categoryCity => '도시·마을';
+
+  @override
+  String get genreClassic => '클래식';
+
+  @override
+  String get genreFolklore => '전래동화';
+
+  @override
+  String get genreComedy => '코미디';
+
+  @override
+  String get genreMystery => '미스터리';
+
+  @override
+  String get genreScifi => 'SF·미래';
+
+  @override
+  String get genreMusical => '뮤지컬';
+
+  @override
+  String get genreQuiz => '수수께끼';
+
+  @override
+  String get genreDaily => '일상';
+
+  @override
+  String get genreDream => '꿈·상상';
+
+  @override
+  String get genreHorror => '으스스';
+
+  @override
+  String get themeMoral => '교훈·도덕';
+
+  @override
+  String get themeFriendship => '우정';
+
+  @override
+  String get themeFamilyLove => '가족사랑';
+
+  @override
+  String get themeCourage => '용기·도전';
+
+  @override
+  String get themeGrowth => '성장';
+
+  @override
+  String get themeSharing => '나눔·배려';
+
+  @override
+  String get themeSelfExpression => '자기표현';
+
+  @override
+  String get themeEnvironment => '환경사랑';
+
+  @override
+  String get themeGratitude => '감사';
+
+  @override
+  String get themeProblemSolving => '문제해결';
+
+  @override
+  String get themeCuriosity => '호기심';
+
+  @override
+  String get themeForgiveness => '용서·화해';
+
+  @override
+  String get chapter3 => '3챕터';
+
+  @override
+  String get chapter3Desc => '짧은 이야기';
+
+  @override
+  String get chapter5 => '5챕터';
+
+  @override
+  String get chapter5Desc => '보통 이야기';
+
+  @override
+  String get chapter7 => '7챕터';
+
+  @override
+  String get chapter7Desc => '긴 이야기';
+
+  @override
+  String get formatText => '텍스트형';
+
+  @override
+  String get formatTextDesc => '글로 읽는 동화';
+
+  @override
+  String get formatImage => '그림형';
+
+  @override
+  String get formatImageDesc => '그림으로 보는 동화';
 
   @override
   String get favoritesTitle => '찜목록';
@@ -228,6 +378,15 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get voiceDad => '아빠';
+
+  @override
+  String get voiceMom => '엄마';
+
+  @override
+  String get voiceGrandma => '할머니';
+
+  @override
+  String get voiceGrandpa => '할아버지';
 
   @override
   String get settingsTitle => '설정';
