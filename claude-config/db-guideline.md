@@ -49,6 +49,7 @@
 | `character_box` | 내 캐릭터 파츠 선택값 (얼굴/머리/눈/코/입) | `CharacterModel` |
 | `favorites_box` | 즐겨찾기 동화 목록 | `FavoriteItem` |
 | `draft_box` | 동화 만들기 임시저장 | `FairytaleDraft` |
+| `slide_cache_box` | 슬라이드 형식 동화 페이지 데이터 캐시 | `SlideCacheEntry` |
 
 **사용 규칙**
 - 구조화된 객체는 Hive TypeAdapter를 정의하여 사용한다.
@@ -69,7 +70,9 @@
 |--------|------|
 | 사용자 계정 정보 | 이름, 이메일, 프로필 이미지 URL |
 | 캐릭터 정보 | 최종 저장된 캐릭터 구성 |
-| 생성된 동화 | 제목, 내용, 이미지, 카테고리 |
+| 생성된 동화 | 제목, 내용, 이미지, 카테고리, 출력 형식(slide/video) |
+| 슬라이드 페이지 데이터 | `List<{ pageIndex, imageUrl, text }>` — 슬라이드 형식 동화 전용 |
+| 영상 URL | CDN 영상 파일 경로 — 영상 재생 형식 동화 전용 |
 | 즐겨찾기 목록 | 서버 동기화 대상 |
 | 구독·결제 정보 | 서버 단독 관리 |
 

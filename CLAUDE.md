@@ -16,6 +16,8 @@
 | [project-overview.md](claude-config/project-overview.md) | 프로젝트 현황 및 설명 |
 | [non-touch.md](claude-config/non-touch.md) | 분석 및 수정 금지 목록 |
 | [db-guideline.md](claude-config/db-guideline.md) | 데이터 저장 규칙 (로컬/서버 DB) |
+| [mcp-interface.md](claude-config/mcp-interface.md) | AI 연동 인터페이스 정의 (텍스트/이미지/TTS/영상) |
+| [offline-strategy.md](claude-config/offline-strategy.md) | 오프라인 동화 저장 전략 (슬라이드/영상 형식) |
 | [api-guidelines.md](claude-config/api-guidelines.md) | 서버 통신 규칙 (API 클라이언트) |
 | [csa_category.md](claude-config/csa_category.md) | 동화 카테고리 분류 (배경/장르/이야기 성격) |
 
@@ -114,6 +116,36 @@ localeNotifier.value = const Locale('ja');
 ### 콘텐츠 데이터 vs UI 문자열
 - **ARB 대상**: 버튼 라벨, 섹션 헤더, 에러 메시지, 안내 문구 등 UI 고정 문자열
 - **ARB 불필요**: 백엔드 API에서 받아오는 동화 제목·설명, 사용자 생성 데이터 등 콘텐츠
+
+## 소스 수정 후 서버 재시작
+
+소스 파일을 수정하고 변경 사항을 반영할 때는 반드시 아래 순서를 따른다.
+
+```bash
+# 1. 의존성이 변경된 경우 (pubspec.yaml 수정 시)
+flutter pub get
+
+# 2. ARB(다국어) 파일이 변경된 경우
+flutter gen-l10n
+
+# 3. 실행 중인 앱 종료 후 재시작
+# Hot Reload (UI 변경만): r 키 입력 (앱 상태 유지)
+# Hot Restart (로직 변경): R 키 입력 (앱 상태 초기화)
+# 전체 재시작 (네이티브 변경, 패키지 추가 등): q → flutter run
+
+# 4. 네이티브 코드 변경, 패키지 추가, main.dart 변경 시 — 반드시 전체 재시작
+flutter run
+```
+
+> **Hot Reload만으로 반영되지 않는 경우** (전체 재시작 필요):
+> - `pubspec.yaml` 패키지 추가/변경
+> - `main.dart` 수정
+> - `initState()` 내 초기화 로직 변경
+> - Hive Box 등록 / TypeAdapter 추가
+> - 네이티브(android/, ios/) 파일 변경
+> - `flutter gen-l10n` 실행 후
+
+---
 
 ## 개발 명령어
 ```bash

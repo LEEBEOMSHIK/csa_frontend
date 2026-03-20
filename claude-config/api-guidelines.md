@@ -79,6 +79,8 @@ const String _baseUrl = 'https://api.example.com'; // TODO: 확정 후 수정
 | GET | `/fairytale/list` | 동화 목록 조회 |
 | GET | `/fairytale/{id}` | 동화 상세 조회 |
 | POST | `/fairytale/generate` | AI 동화 생성 |
+| GET | `/fairytale/{id}/slides` | 슬라이드 형식 — 페이지 목록 조회 |
+| GET | `/fairytale/{id}/video` | 영상 재생 형식 — 영상 URL 조회 |
 | POST | `/fairytale/share` | 동화 공유 |
 | POST | `/user/character` | 캐릭터 저장 |
 | GET | `/user/profile` | 사용자 프로필 조회 |
