@@ -48,6 +48,63 @@ class AppLocalizationsKo extends AppLocalizations {
   String get homeMoreBtn => '더보기';
 
   @override
+  String get detailReadBtn => '읽기';
+
+  @override
+  String get detailAuthorLabel => '작가';
+
+  @override
+  String get detailAgeLabel => '권장 연령';
+
+  @override
+  String get detailDurationLabel => '읽기 시간';
+
+  @override
+  String get detailMinUnit => '분';
+
+  @override
+  String get detailPageUnit => '페이지';
+
+  @override
+  String get detailOfflineSave => '오프라인 저장';
+
+  @override
+  String get detailDownloadModalTitle => '다운로드 형식 선택';
+
+  @override
+  String get detailDownloadSubtitle => '저장 형식을 선택해주세요';
+
+  @override
+  String get detailDownloadSlide => '슬라이드 형식';
+
+  @override
+  String get detailDownloadSlideDesc => '페이지를 넘기며 읽는 그림책 형태';
+
+  @override
+  String get detailDownloadVideo => '영상 형식';
+
+  @override
+  String get detailDownloadVideoDesc => '음성과 애니메이션이 포함된 영상';
+
+  @override
+  String get detailDownloadSaveBtn => '저장하기';
+
+  @override
+  String get detailDownloadCancel => '취소';
+
+  @override
+  String get detailDownloadProgress => '다운로드 중...';
+
+  @override
+  String get detailDownloadWaiting => '대기 중';
+
+  @override
+  String get detailFavoriteAdded => '찜 목록에 추가되었어요 💛';
+
+  @override
+  String get detailFavoriteRemoved => '찜 목록에서 제거되었어요';
+
+  @override
   String get characterTitle => '내 캐릭터';
 
   @override

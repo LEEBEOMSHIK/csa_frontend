@@ -48,6 +48,63 @@ class AppLocalizationsJa extends AppLocalizations {
   String get homeMoreBtn => 'もっと見る';
 
   @override
+  String get detailReadBtn => '読む';
+
+  @override
+  String get detailAuthorLabel => '作者';
+
+  @override
+  String get detailAgeLabel => '対象年齢';
+
+  @override
+  String get detailDurationLabel => '読む時間';
+
+  @override
+  String get detailMinUnit => '分';
+
+  @override
+  String get detailPageUnit => 'ページ';
+
+  @override
+  String get detailOfflineSave => 'オフライン保存';
+
+  @override
+  String get detailDownloadModalTitle => 'ダウンロード形式を選択';
+
+  @override
+  String get detailDownloadSubtitle => '保存形式を選択してください';
+
+  @override
+  String get detailDownloadSlide => 'スライド形式';
+
+  @override
+  String get detailDownloadSlideDesc => 'ページをめくって読む絵本形式';
+
+  @override
+  String get detailDownloadVideo => '動画形式';
+
+  @override
+  String get detailDownloadVideoDesc => '音声とアニメーションが含まれた動画';
+
+  @override
+  String get detailDownloadSaveBtn => '保存する';
+
+  @override
+  String get detailDownloadCancel => 'キャンセル';
+
+  @override
+  String get detailDownloadProgress => 'ダウンロード中...';
+
+  @override
+  String get detailDownloadWaiting => '待機中';
+
+  @override
+  String get detailFavoriteAdded => 'お気に入りに追加しました 💛';
+
+  @override
+  String get detailFavoriteRemoved => 'お気に入りから削除しました';
+
+  @override
   String get characterTitle => 'マイキャラ';
 
   @override

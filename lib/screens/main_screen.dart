@@ -5,6 +5,7 @@ import 'package:csa_frontend/features/fairytale_create/screens/fairytale_create_
 import 'package:csa_frontend/features/home/screens/home_screen.dart';
 import 'package:csa_frontend/features/favorites/screens/favorites_screen.dart';
 import 'package:csa_frontend/features/my/screens/my_screen.dart';
+import 'package:csa_frontend/utils/locale_provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key, this.debugLoginData});
@@ -16,7 +17,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 2;
   bool _debugPanelVisible = true;
 
   static const List<Widget> _screens = [
@@ -29,25 +29,30 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (widget.debugLoginData != null && _debugPanelVisible)
-            _DebugDataPanel(
-              data: widget.debugLoginData!,
-              onClose: () => setState(() => _debugPanelVisible = false),
-            ),
-          _BottomNav(
-            currentIndex: _currentIndex,
-            onTap: (i) => setState(() => _currentIndex = i),
+    return ValueListenableBuilder<int>(
+      valueListenable: mainTabNotifier,
+      builder: (context, currentIndex, _) {
+        return Scaffold(
+          body: IndexedStack(
+            index: currentIndex,
+            children: _screens,
           ),
-        ],
-      ),
+          bottomNavigationBar: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (widget.debugLoginData != null && _debugPanelVisible)
+                _DebugDataPanel(
+                  data: widget.debugLoginData!,
+                  onClose: () => setState(() => _debugPanelVisible = false),
+                ),
+              _BottomNav(
+                currentIndex: currentIndex,
+                onTap: (i) => mainTabNotifier.value = i,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

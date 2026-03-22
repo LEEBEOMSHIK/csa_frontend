@@ -176,6 +176,120 @@ abstract class AppLocalizations {
   /// **'더보기'**
   String get homeMoreBtn;
 
+  /// No description provided for @detailReadBtn.
+  ///
+  /// In ko, this message translates to:
+  /// **'읽기'**
+  String get detailReadBtn;
+
+  /// No description provided for @detailAuthorLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'작가'**
+  String get detailAuthorLabel;
+
+  /// No description provided for @detailAgeLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'권장 연령'**
+  String get detailAgeLabel;
+
+  /// No description provided for @detailDurationLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'읽기 시간'**
+  String get detailDurationLabel;
+
+  /// No description provided for @detailMinUnit.
+  ///
+  /// In ko, this message translates to:
+  /// **'분'**
+  String get detailMinUnit;
+
+  /// No description provided for @detailPageUnit.
+  ///
+  /// In ko, this message translates to:
+  /// **'페이지'**
+  String get detailPageUnit;
+
+  /// No description provided for @detailOfflineSave.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인 저장'**
+  String get detailOfflineSave;
+
+  /// No description provided for @detailDownloadModalTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'다운로드 형식 선택'**
+  String get detailDownloadModalTitle;
+
+  /// No description provided for @detailDownloadSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장 형식을 선택해주세요'**
+  String get detailDownloadSubtitle;
+
+  /// No description provided for @detailDownloadSlide.
+  ///
+  /// In ko, this message translates to:
+  /// **'슬라이드 형식'**
+  String get detailDownloadSlide;
+
+  /// No description provided for @detailDownloadSlideDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'페이지를 넘기며 읽는 그림책 형태'**
+  String get detailDownloadSlideDesc;
+
+  /// No description provided for @detailDownloadVideo.
+  ///
+  /// In ko, this message translates to:
+  /// **'영상 형식'**
+  String get detailDownloadVideo;
+
+  /// No description provided for @detailDownloadVideoDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'음성과 애니메이션이 포함된 영상'**
+  String get detailDownloadVideoDesc;
+
+  /// No description provided for @detailDownloadSaveBtn.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장하기'**
+  String get detailDownloadSaveBtn;
+
+  /// No description provided for @detailDownloadCancel.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get detailDownloadCancel;
+
+  /// No description provided for @detailDownloadProgress.
+  ///
+  /// In ko, this message translates to:
+  /// **'다운로드 중...'**
+  String get detailDownloadProgress;
+
+  /// No description provided for @detailDownloadWaiting.
+  ///
+  /// In ko, this message translates to:
+  /// **'대기 중'**
+  String get detailDownloadWaiting;
+
+  /// No description provided for @detailFavoriteAdded.
+  ///
+  /// In ko, this message translates to:
+  /// **'찜 목록에 추가되었어요 💛'**
+  String get detailFavoriteAdded;
+
+  /// No description provided for @detailFavoriteRemoved.
+  ///
+  /// In ko, this message translates to:
+  /// **'찜 목록에서 제거되었어요'**
+  String get detailFavoriteRemoved;
+
   /// No description provided for @characterTitle.
   ///
   /// In ko, this message translates to:

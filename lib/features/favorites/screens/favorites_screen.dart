@@ -1,62 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/features/home/models/fairytale.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 import 'package:csa_frontend/utils/app_colors.dart';
+import 'package:csa_frontend/utils/locale_provider.dart';
 
-class FavoritesScreen extends StatefulWidget {
+class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
-
-  @override
-  State<FavoritesScreen> createState() => _FavoritesScreenState();
-}
-
-class _FavoritesScreenState extends State<FavoritesScreen> {
-  final List<_FavoriteItem> _items = const [
-    _FavoriteItem(emoji: '👸', title: '신데렐라', category: '유명 동화', color: Color(0xFF9B5DE5)),
-    _FavoriteItem(emoji: '🚀', title: '우주를 여행한 토끼', category: 'AI 동화', color: Color(0xFF073B4C)),
-    _FavoriteItem(emoji: '🍎', title: '백설공주', category: '유명 동화', color: Color(0xFFEF476F)),
-  ];
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Column(
-        children: [
-          AppTopBar(
-            title: l10n.favoritesTitle,
-            actions: [
-              if (_items.isNotEmpty)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.4),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    l10n.favoritesCountBadge(_items.length),
-                    style: const TextStyle(
-                      color: Color(0xFF333333),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 13,
+    return ValueListenableBuilder<List<FairytaleItem>>(
+      valueListenable: favoritesNotifier,
+      builder: (context, items, _) {
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          body: Column(
+            children: [
+              AppTopBar(
+                title: l10n.favoritesTitle,
+                actions: [
+                  if (items.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.4),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        l10n.favoritesCountBadge(items.length),
+                        style: const TextStyle(
+                          color: Color(0xFF333333),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                ],
+              ),
+              Expanded(
+                child: items.isEmpty
+                    ? _buildEmpty(context, l10n)
+                    : _buildList(context, items),
+              ),
             ],
           ),
-          Expanded(
-            child: _items.isEmpty
-                ? _buildEmpty(l10n)
-                : _buildList(),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildEmpty(AppLocalizations l10n) {
+  Widget _buildEmpty(BuildContext context, AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -101,12 +97,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     );
   }
 
-  Widget _buildList() {
+  Widget _buildList(BuildContext context, List<FairytaleItem> items) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _items.length,
+      itemCount: items.length,
       itemBuilder: (context, index) {
-        final item = _items[index];
+        final item = items[index];
+        final itemColor = _parseColor(item.colorHex);
+        final categoryLabel =
+            item.categories.isNotEmpty ? item.categories.first : '';
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
@@ -127,59 +126,54 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: item.color.withValues(alpha: 0.15),
+                color: itemColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: Center(
-                  child: Text(item.emoji,
-                      style: const TextStyle(fontSize: 28))),
+              child: Icon(Icons.auto_stories_rounded,
+                  color: itemColor, size: 28),
             ),
             title: Text(
-              item.title,
+              item.titleFor(localeNotifier.value.languageCode),
               style: const TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 15,
                 color: AppColors.textPrimary,
               ),
             ),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: item.color.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(8),
+            subtitle: categoryLabel.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: itemColor.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            categoryLabel,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: itemColor,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Text(
-                      item.category,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: item.color,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.play_circle_filled_rounded),
-                  color: item.color,
-                  iconSize: 30,
-                ),
-                GestureDetector(
-                  onTap: () => setState(() => _items.removeAt(index)),
-                  child: const Icon(Icons.favorite_rounded,
-                      color: AppColors.favorites, size: 22),
-                ),
-              ],
+                  )
+                : null,
+            trailing: GestureDetector(
+              onTap: () {
+                final current =
+                    List<FairytaleItem>.from(favoritesNotifier.value);
+                current.removeWhere((f) => f.id == item.id);
+                favoritesNotifier.value = current;
+              },
+              child: const Icon(Icons.favorite_rounded,
+                  color: AppColors.favorites, size: 22),
             ),
           ),
         );
@@ -188,15 +182,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 }
 
-class _FavoriteItem {
-  final String emoji;
-  final String title;
-  final String category;
-  final Color color;
-  const _FavoriteItem({
-    required this.emoji,
-    required this.title,
-    required this.category,
-    required this.color,
-  });
+Color _parseColor(String? hex) {
+  if (hex == null || hex.length != 7 || !hex.startsWith('#')) {
+    return const Color(0xFFFFA7A7);
+  }
+  final value = int.tryParse('FF${hex.substring(1)}', radix: 16);
+  return value != null ? Color(value) : const Color(0xFFFFA7A7);
 }
