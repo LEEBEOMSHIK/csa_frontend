@@ -826,7 +826,7 @@
                   "ref": "aP8jB",
                   "name": "sc3",
                   "height": "fit_content",
-                  "x": 185.33333333333331,
+                  "x": 185.33333333333334,
                   "y": 0,
                   "descendants": {
                     "5rg82": {
@@ -1020,7 +1020,7 @@
                   "ref": "aP8jB",
                   "name": "rc3",
                   "height": "fit_content",
-                  "x": 185.33333333333331,
+                  "x": 185.33333333333334,
                   "y": 0,
                   "descendants": {
                     "5rg82": {
@@ -3348,7 +3348,7 @@
       "name": "동화 상세",
       "clip": true,
       "width": 390,
-      "height": 1600,
+      "height": 1760,
       "fill": "#FFFFFF",
       "layout": "vertical",
       "children": [
@@ -4046,7 +4046,7 @@
           "id": "IPa5c",
           "name": "LowerSection",
           "width": "fill_container",
-          "height": 900,
+          "height": 1060,
           "layout": "vertical",
           "children": [
             {
@@ -4054,9 +4054,68 @@
               "id": "hV957",
               "name": "StoryInfoRow",
               "width": "fill_container",
-              "height": 88,
-              "padding": 16,
+              "height": 96,
+              "padding": [
+                0,
+                16
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
               "children": [
+                {
+                  "type": "frame",
+                  "id": "kW3gV",
+                  "name": "authorChip",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "XCgt0",
+                      "name": "infoIcon1",
+                      "width": 22,
+                      "height": 22,
+                      "iconFontName": "person",
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#9C6FDE"
+                    },
+                    {
+                      "type": "text",
+                      "id": "w6WvL",
+                      "name": "infoVal1",
+                      "fill": "#333333",
+                      "content": "작가명",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "cUX5g",
+                      "name": "infoLbl1",
+                      "fill": "#999999",
+                      "content": "작가",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "rectangle",
+                  "id": "GhkBA",
+                  "layoutPosition": "absolute",
+                  "x": 0,
+                  "y": 0,
+                  "name": "authorDiv",
+                  "fill": "#E0E0E0",
+                  "width": 1,
+                  "height": 48
+                },
                 {
                   "type": "frame",
                   "id": "SjO1X",
@@ -4103,10 +4162,13 @@
                 {
                   "type": "rectangle",
                   "id": "Eykkc",
+                  "layoutPosition": "absolute",
+                  "x": 0,
+                  "y": 0,
                   "name": "divV1",
                   "fill": "#E0E0E0",
                   "width": 1,
-                  "height": 40
+                  "height": 48
                 },
                 {
                   "type": "frame",
@@ -4154,10 +4216,13 @@
                 {
                   "type": "rectangle",
                   "id": "PqjkF",
+                  "layoutPosition": "absolute",
+                  "x": 0,
+                  "y": 0,
                   "name": "divV2",
                   "fill": "#E0E0E0",
                   "width": 1,
-                  "height": 40
+                  "height": 48
                 },
                 {
                   "type": "frame",
@@ -5053,7 +5118,7 @@
                   "name": "ReadButton",
                   "width": "fill_container",
                   "height": 52,
-                  "fill": "#FFA7A7",
+                  "fill": "#6B8CFF",
                   "cornerRadius": 16,
                   "gap": 8,
                   "justifyContent": "center",
@@ -5078,6 +5143,100 @@
                       "fontFamily": "Inter",
                       "fontSize": 16,
                       "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "Yzozj",
+              "name": "Divider/Offline",
+              "fill": "#EEEEEE",
+              "width": 390,
+              "height": 1
+            },
+            {
+              "type": "frame",
+              "id": "B6VQN",
+              "name": "OfflineSaveSection",
+              "width": 390,
+              "height": 120,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                16,
+                16,
+                20,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "z82gp",
+                  "name": "offlineHeader",
+                  "width": "fill_container",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "sKyTS",
+                      "name": "offlineIcon",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "download",
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#888888"
+                    },
+                    {
+                      "type": "text",
+                      "id": "PLvDm",
+                      "name": "offlineLabel",
+                      "fill": "#555555",
+                      "content": "오프라인 저장",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "V5dt0",
+                  "name": "offlineBtn",
+                  "width": "fill_container",
+                  "height": 48,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#EEEEEE"
+                  },
+                  "gap": 8,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "DeFXE",
+                      "name": "offlineBtnIcon",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "cloud_download",
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#7EC8C8"
+                    },
+                    {
+                      "type": "text",
+                      "id": "NoW2l",
+                      "name": "offlineBtnText",
+                      "fill": "#555555",
+                      "content": "저장하기",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
                     }
                   ]
                 }

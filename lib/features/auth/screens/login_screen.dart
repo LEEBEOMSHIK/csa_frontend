@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:csa_frontend/features/auth/services/google_auth_service.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/screens/main_screen.dart';
 import 'package:csa_frontend/shared/services/api_client.dart';
@@ -9,6 +10,20 @@ const _testPassword = 'test1234';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
+
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    final locale = Localizations.localeOf(context).languageCode;
+    try {
+      await GoogleAuthService.signIn(locale);
+      if (!context.mounted) return;
+      _navigateToHome(context);
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Google login failed: $e')),
+      );
+    }
+  }
 
   void _navigateToHome(BuildContext context, {Map<String, dynamic>? debugData}) {
     Navigator.of(context).pushReplacement(
@@ -212,7 +227,7 @@ class LoginScreen extends StatelessWidget {
               children: [
                 // Google login button
                 _LoginButton(
-                  onTap: () {},
+                  onTap: () => _signInWithGoogle(context),
                   backgroundColor: Colors.white,
                   foregroundColor: const Color(0xFF333333),
                   borderColor: const Color(0xFFE0E0E0),

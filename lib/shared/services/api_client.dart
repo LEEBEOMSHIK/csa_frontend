@@ -37,7 +37,7 @@ class ApiClient {
         baseUrl: _baseUrl,
         connectTimeout: _connectTimeout,
         receiveTimeout: _receiveTimeout,
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
       ),
     );
     dio.interceptors.add(_AuthInterceptor(dio, _storage));
@@ -91,10 +91,14 @@ class ApiClient {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode ?? 0;
         if (statusCode >= 400 && statusCode < 500) {
+          final rawData = e.response?.data;
+          final msg = rawData is Map
+              ? (rawData['message'] as String? ?? rawData['error'] as String? ?? 'Client error')
+              : 'Client error';
           return ApiException(
             type: ApiExceptionType.client,
             statusCode: statusCode,
-            message: e.response?.data?['message'] as String? ?? 'Client error',
+            message: msg,
           );
         }
         return ApiException(
