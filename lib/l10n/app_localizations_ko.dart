@@ -116,10 +116,25 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get characterTabBasic => '기본형';
+  String get characterTabAll => '전체';
 
   @override
-  String get characterTabHair => '머리';
+  String get characterTabHat => '모자';
+
+  @override
+  String get characterTabTop => '상의';
+
+  @override
+  String get characterTabBottom => '하의';
+
+  @override
+  String get characterTabGlasses => '안경';
+
+  @override
+  String get characterTabAccessory => '악세서리';
+
+  @override
+  String get characterTabFace => '얼굴형';
 
   @override
   String get characterTabEyes => '눈';
@@ -129,84 +144,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get characterTabMouth => '입';
-
-  @override
-  String get faceRound => '둥근형';
-
-  @override
-  String get faceSquare => '각진형';
-
-  @override
-  String get faceInvTriangle => '역삼각형';
-
-  @override
-  String get faceHeart => '하트형';
-
-  @override
-  String get faceEgg => '계란형';
-
-  @override
-  String get faceHex => '육각형';
-
-  @override
-  String get hairBob => '단발';
-
-  @override
-  String get hairLong => '긴머리';
-
-  @override
-  String get hairCurly => '곱슬';
-
-  @override
-  String get hairBuzz => '빡빡이';
-
-  @override
-  String get hairPony => '포니테일';
-
-  @override
-  String get hairMohawk => '모히칸';
-
-  @override
-  String get eyeDefault => '기본눈';
-
-  @override
-  String get eyeBig => '큰눈';
-
-  @override
-  String get eyeSleepy => '졸린눈';
-
-  @override
-  String get eyeCrescent => '반달눈';
-
-  @override
-  String get eyeStar => '별눈';
-
-  @override
-  String get eyeRound => '동그란눈';
-
-  @override
-  String get noseSmall => '작은코';
-
-  @override
-  String get noseNormal => '보통코';
-
-  @override
-  String get noseHigh => '오뚝코';
-
-  @override
-  String get noseCute => '귀여운코';
-
-  @override
-  String get mouthSmile => '웃음';
-
-  @override
-  String get mouthGrin => '미소';
-
-  @override
-  String get mouthOpen => '벌린입';
-
-  @override
-  String get mouthPout => '삐침';
 
   @override
   String get createTitle => '동화 만들기';

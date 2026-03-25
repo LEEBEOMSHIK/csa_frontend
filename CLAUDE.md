@@ -21,6 +21,7 @@
 | [api-guidelines.md](claude-config/api-guidelines.md) | 서버 통신 규칙 (API 클라이언트) |
 | [csa_category.md](claude-config/csa_category.md) | 동화 카테고리 분류 (배경/장르/이야기 성격) |
 | [error-reference.md](claude-config/error-reference.md) | 발생 오류 레퍼런스 (원인·해결·재발 조건) |
+| [charactor-strategy.md](claude-config/charactor-strategy.md) | 캐릭터 화면 2D 게임형 전환 전략 |
 
 ## 핵심 원칙
 1. 요청된 것만 변경한다 — 과도한 리팩터링 금지

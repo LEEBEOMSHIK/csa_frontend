@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/features/favorites/services/favorite_service.dart';
 import 'package:csa_frontend/features/home/models/fairytale.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
@@ -166,11 +167,14 @@ class FavoritesScreen extends StatelessWidget {
                   )
                 : null,
             trailing: GestureDetector(
-              onTap: () {
+              onTap: () async {
                 final current =
                     List<FairytaleItem>.from(favoritesNotifier.value);
                 current.removeWhere((f) => f.id == item.id);
                 favoritesNotifier.value = current;
+                try {
+                  await FavoriteService.instance.removeFavorite(item.id);
+                } catch (_) {}
               },
               child: const Icon(Icons.favorite_rounded,
                   color: AppColors.favorites, size: 22),

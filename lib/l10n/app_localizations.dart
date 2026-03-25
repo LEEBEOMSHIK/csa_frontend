@@ -308,17 +308,47 @@ abstract class AppLocalizations {
   /// **'{part} 옵션'**
   String characterOptionTitle(String part);
 
-  /// No description provided for @characterTabBasic.
+  /// No description provided for @characterTabAll.
   ///
   /// In ko, this message translates to:
-  /// **'기본형'**
-  String get characterTabBasic;
+  /// **'전체'**
+  String get characterTabAll;
 
-  /// No description provided for @characterTabHair.
+  /// No description provided for @characterTabHat.
   ///
   /// In ko, this message translates to:
-  /// **'머리'**
-  String get characterTabHair;
+  /// **'모자'**
+  String get characterTabHat;
+
+  /// No description provided for @characterTabTop.
+  ///
+  /// In ko, this message translates to:
+  /// **'상의'**
+  String get characterTabTop;
+
+  /// No description provided for @characterTabBottom.
+  ///
+  /// In ko, this message translates to:
+  /// **'하의'**
+  String get characterTabBottom;
+
+  /// No description provided for @characterTabGlasses.
+  ///
+  /// In ko, this message translates to:
+  /// **'안경'**
+  String get characterTabGlasses;
+
+  /// No description provided for @characterTabAccessory.
+  ///
+  /// In ko, this message translates to:
+  /// **'악세서리'**
+  String get characterTabAccessory;
+
+  /// No description provided for @characterTabFace.
+  ///
+  /// In ko, this message translates to:
+  /// **'얼굴형'**
+  String get characterTabFace;
 
   /// No description provided for @characterTabEyes.
   ///
@@ -337,162 +367,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'입'**
   String get characterTabMouth;
-
-  /// No description provided for @faceRound.
-  ///
-  /// In ko, this message translates to:
-  /// **'둥근형'**
-  String get faceRound;
-
-  /// No description provided for @faceSquare.
-  ///
-  /// In ko, this message translates to:
-  /// **'각진형'**
-  String get faceSquare;
-
-  /// No description provided for @faceInvTriangle.
-  ///
-  /// In ko, this message translates to:
-  /// **'역삼각형'**
-  String get faceInvTriangle;
-
-  /// No description provided for @faceHeart.
-  ///
-  /// In ko, this message translates to:
-  /// **'하트형'**
-  String get faceHeart;
-
-  /// No description provided for @faceEgg.
-  ///
-  /// In ko, this message translates to:
-  /// **'계란형'**
-  String get faceEgg;
-
-  /// No description provided for @faceHex.
-  ///
-  /// In ko, this message translates to:
-  /// **'육각형'**
-  String get faceHex;
-
-  /// No description provided for @hairBob.
-  ///
-  /// In ko, this message translates to:
-  /// **'단발'**
-  String get hairBob;
-
-  /// No description provided for @hairLong.
-  ///
-  /// In ko, this message translates to:
-  /// **'긴머리'**
-  String get hairLong;
-
-  /// No description provided for @hairCurly.
-  ///
-  /// In ko, this message translates to:
-  /// **'곱슬'**
-  String get hairCurly;
-
-  /// No description provided for @hairBuzz.
-  ///
-  /// In ko, this message translates to:
-  /// **'빡빡이'**
-  String get hairBuzz;
-
-  /// No description provided for @hairPony.
-  ///
-  /// In ko, this message translates to:
-  /// **'포니테일'**
-  String get hairPony;
-
-  /// No description provided for @hairMohawk.
-  ///
-  /// In ko, this message translates to:
-  /// **'모히칸'**
-  String get hairMohawk;
-
-  /// No description provided for @eyeDefault.
-  ///
-  /// In ko, this message translates to:
-  /// **'기본눈'**
-  String get eyeDefault;
-
-  /// No description provided for @eyeBig.
-  ///
-  /// In ko, this message translates to:
-  /// **'큰눈'**
-  String get eyeBig;
-
-  /// No description provided for @eyeSleepy.
-  ///
-  /// In ko, this message translates to:
-  /// **'졸린눈'**
-  String get eyeSleepy;
-
-  /// No description provided for @eyeCrescent.
-  ///
-  /// In ko, this message translates to:
-  /// **'반달눈'**
-  String get eyeCrescent;
-
-  /// No description provided for @eyeStar.
-  ///
-  /// In ko, this message translates to:
-  /// **'별눈'**
-  String get eyeStar;
-
-  /// No description provided for @eyeRound.
-  ///
-  /// In ko, this message translates to:
-  /// **'동그란눈'**
-  String get eyeRound;
-
-  /// No description provided for @noseSmall.
-  ///
-  /// In ko, this message translates to:
-  /// **'작은코'**
-  String get noseSmall;
-
-  /// No description provided for @noseNormal.
-  ///
-  /// In ko, this message translates to:
-  /// **'보통코'**
-  String get noseNormal;
-
-  /// No description provided for @noseHigh.
-  ///
-  /// In ko, this message translates to:
-  /// **'오뚝코'**
-  String get noseHigh;
-
-  /// No description provided for @noseCute.
-  ///
-  /// In ko, this message translates to:
-  /// **'귀여운코'**
-  String get noseCute;
-
-  /// No description provided for @mouthSmile.
-  ///
-  /// In ko, this message translates to:
-  /// **'웃음'**
-  String get mouthSmile;
-
-  /// No description provided for @mouthGrin.
-  ///
-  /// In ko, this message translates to:
-  /// **'미소'**
-  String get mouthGrin;
-
-  /// No description provided for @mouthOpen.
-  ///
-  /// In ko, this message translates to:
-  /// **'벌린입'**
-  String get mouthOpen;
-
-  /// No description provided for @mouthPout.
-  ///
-  /// In ko, this message translates to:
-  /// **'삐침'**
-  String get mouthPout;
 
   /// No description provided for @createTitle.
   ///

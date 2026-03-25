@@ -116,97 +116,34 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get characterTabBasic => 'ベース';
+  String get characterTabAll => 'すべて';
 
   @override
-  String get characterTabHair => 'かみ';
+  String get characterTabHat => 'ぼうし';
 
   @override
-  String get characterTabEyes => 'め';
+  String get characterTabTop => 'トップス';
 
   @override
-  String get characterTabNose => 'はな';
+  String get characterTabBottom => 'ボトムス';
 
   @override
-  String get characterTabMouth => 'くち';
+  String get characterTabGlasses => 'めがね';
 
   @override
-  String get faceRound => 'まるがお';
+  String get characterTabAccessory => 'アクセサリー';
 
   @override
-  String get faceSquare => 'かくがお';
+  String get characterTabFace => '顔型';
 
   @override
-  String get faceInvTriangle => 'さかさんかく';
+  String get characterTabEyes => '目';
 
   @override
-  String get faceHeart => 'ハートがお';
+  String get characterTabNose => '鼻';
 
   @override
-  String get faceEgg => 'たまごがお';
-
-  @override
-  String get faceHex => 'ろっかくがお';
-
-  @override
-  String get hairBob => 'ショートボブ';
-
-  @override
-  String get hairLong => 'ロングヘア';
-
-  @override
-  String get hairCurly => 'カーリー';
-
-  @override
-  String get hairBuzz => 'バリカン';
-
-  @override
-  String get hairPony => 'ポニーテール';
-
-  @override
-  String get hairMohawk => 'モヒカン';
-
-  @override
-  String get eyeDefault => 'ふつうのめ';
-
-  @override
-  String get eyeBig => 'おおきいめ';
-
-  @override
-  String get eyeSleepy => 'ねむいめ';
-
-  @override
-  String get eyeCrescent => 'はんげつめ';
-
-  @override
-  String get eyeStar => 'ほしめ';
-
-  @override
-  String get eyeRound => 'まるいめ';
-
-  @override
-  String get noseSmall => 'ちいさいはな';
-
-  @override
-  String get noseNormal => 'ふつうはな';
-
-  @override
-  String get noseHigh => 'たかいはな';
-
-  @override
-  String get noseCute => 'かわいいはな';
-
-  @override
-  String get mouthSmile => 'わらい';
-
-  @override
-  String get mouthGrin => 'えがお';
-
-  @override
-  String get mouthOpen => 'あけたくち';
-
-  @override
-  String get mouthPout => 'ふくれっつら';
+  String get characterTabMouth => '口';
 
   @override
   String get createTitle => 'どうわをつくる';

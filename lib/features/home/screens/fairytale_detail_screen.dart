@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/features/favorites/services/favorite_service.dart';
 import 'package:csa_frontend/features/home/models/fairytale.dart';
 import 'package:csa_frontend/features/home/models/fairytale_detail.dart';
 import 'package:csa_frontend/features/home/services/fairytale_service.dart';
@@ -63,7 +64,7 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
     return colors[cat] ?? const Color(0xFFFFA7A7);
   }
 
-  void _toggleFavorite(BuildContext context) {
+  Future<void> _toggleFavorite(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
     final current = List<FairytaleItem>.from(favoritesNotifier.value);
     final isFav = current.any((f) => f.id == widget.item.id);
@@ -73,6 +74,14 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
       current.add(widget.item);
     }
     favoritesNotifier.value = current;
+    try {
+      if (isFav) {
+        await FavoriteService.instance.removeFavorite(widget.item.id);
+      } else {
+        await FavoriteService.instance.addFavorite(widget.item.id);
+      }
+    } catch (_) {}
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(isFav ? l10n.detailFavoriteRemoved : l10n.detailFavoriteAdded),

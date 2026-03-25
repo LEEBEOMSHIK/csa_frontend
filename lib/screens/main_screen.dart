@@ -4,6 +4,7 @@ import 'package:csa_frontend/features/character/screens/character_screen.dart';
 import 'package:csa_frontend/features/fairytale_create/screens/fairytale_create_screen.dart';
 import 'package:csa_frontend/features/home/screens/home_screen.dart';
 import 'package:csa_frontend/features/favorites/screens/favorites_screen.dart';
+import 'package:csa_frontend/features/favorites/services/favorite_service.dart';
 import 'package:csa_frontend/features/my/screens/my_screen.dart';
 import 'package:csa_frontend/utils/locale_provider.dart';
 
@@ -18,6 +19,19 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   bool _debugPanelVisible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavorites();
+  }
+
+  Future<void> _loadFavorites() async {
+    try {
+      final items = await FavoriteService.instance.fetchFavorites();
+      favoritesNotifier.value = items;
+    } catch (_) {}
+  }
 
   static const List<Widget> _screens = [
     CharacterScreen(),
