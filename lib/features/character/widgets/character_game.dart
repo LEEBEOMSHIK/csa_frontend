@@ -1,7 +1,9 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'character_preview.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -78,7 +80,7 @@ class CharacterGame extends FlameGame {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 배경 컴포넌트 — 따뜻한 그라디언트 + 구름 장식
+// 배경 컴포넌트
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _BackgroundComponent extends Component with HasGameReference<CharacterGame> {
@@ -87,7 +89,6 @@ class _BackgroundComponent extends Component with HasGameReference<CharacterGame
     final w = game.size.x;
     final h = game.size.y;
 
-    // 그라디언트 배경
     final gradient = const LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
@@ -99,7 +100,6 @@ class _BackgroundComponent extends Component with HasGameReference<CharacterGame
         ..shader = gradient.createShader(Rect.fromLTWH(0, 0, w, h)),
     );
 
-    // 지면 장식선
     canvas.drawLine(
       Offset(20, h - 18),
       Offset(w - 20, h - 18),
@@ -109,9 +109,7 @@ class _BackgroundComponent extends Component with HasGameReference<CharacterGame
         ..strokeCap = StrokeCap.round,
     );
 
-    // 구름 (왼쪽)
     _drawCloud(canvas, Offset(w * 0.14, h * 0.18), 14);
-    // 구름 (오른쪽)
     _drawCloud(canvas, Offset(w * 0.84, h * 0.13), 11);
   }
 
@@ -125,38 +123,80 @@ class _BackgroundComponent extends Component with HasGameReference<CharacterGame
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 캐릭터 컴포넌트 — CharacterPainter 래핑 + idle bounce 애니메이션
+// PNG 파트 레이어 — 단일 이미지를 고정 크기로 렌더링
+// Flame Component가 아닌 일반 Dart 클래스 — 부모 컴포넌트가 직접 render 호출
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _PartLayer {
+  ui.Image? _image;
+  final double _w;
+  final double _h;
+
+  _PartLayer({required double w, required double h})
+      : _w = w,
+        _h = h;
+
+  Future<void> loadPath(String? path) async {
+    if (path == null) {
+      _image = null;
+      return;
+    }
+    try {
+      print('load: $path');
+      final data = await rootBundle.load(path);
+      final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+      final frame = await codec.getNextFrame();
+      _image = frame.image;
+      print('load OK: $path (${_image!.width}×${_image!.height})');
+    } catch (e) {
+      print('load FAIL: $path -> $e');
+      _image = null;
+    }
+  }
+
+  void clear() => _image = null;
+
+  // 모든 파트는 동일한 캔버스 기준(512×512)이므로 같은 dst rect에 그리면 정렬됨
+  void render(Canvas canvas) {
+    if (_image == null) return;
+    canvas.drawImageRect(
+      _image!,
+      Rect.fromLTWH(0, 0, _image!.width.toDouble(), _image!.height.toDouble()),
+      Rect.fromLTWH(0, 0, _w, _h),
+      Paint(),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 캐릭터 컴포넌트
+// 구조: BodyComponent / HeadComponent / EyesComponent / NoseComponent /
+//       MouthComponent / 의상 코드 오버레이 (clothesOnly)
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _CharacterComponent extends Component
     with HasGameReference<CharacterGame> {
   double _time = 0;
-  late CharacterPainter _painter;
-  Vector2 _pos = Vector2.zero();
+  List<int> _variants;
+  Vector2 _basePos = Vector2.zero();
 
   static const _w = 120.0;
   static const _h = 148.0;
 
-  _CharacterComponent({required List<int> variants}) {
-    _painter = _buildPainter(variants);
-  }
+  // 레이어 구조 (각 파트 독립 Sprite 레이어)
+  late final _PartLayer bodyComponent;
+  late final _PartLayer headComponent;
+  late final _PartLayer eyesComponent;
+  late final _PartLayer noseComponent;
+  late final _PartLayer mouthComponent;
 
-  @override
-  void onLoad() {
-    _pos = Vector2(game.size.x / 2, game.size.y / 2 - 8);
-  }
+  // 의상·모자·악세서리 코드 오버레이 (얼굴 파트 제외)
+  late CharacterPainter _clothesPainter;
 
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-    _pos = Vector2(size.x / 2, size.y / 2 - 8);
-  }
+  _CharacterComponent({required List<int> variants})
+      : _variants = List.from(variants);
 
-  void updateVariants(List<int> variants) {
-    _painter = _buildPainter(variants);
-  }
-
-  CharacterPainter _buildPainter(List<int> v) => CharacterPainter(
+  CharacterPainter _buildClothesPainter(List<int> v) => CharacterPainter(
         hatVariant:       v[0],
         topVariant:       v[1],
         bottomVariant:    v[2],
@@ -166,7 +206,67 @@ class _CharacterComponent extends Component
         eyesVariant:      v.length > 6 ? v[6] : 1,
         noseVariant:      v.length > 7 ? v[7] : 1,
         mouthVariant:     v.length > 8 ? v[8] : 1,
+        clothesOnly:      true,
       );
+
+  @override
+  Future<void> onLoad() async {
+    _basePos = Vector2(game.size.x / 2, game.size.y / 2 - 8);
+    _clothesPainter = _buildClothesPainter(_variants);
+
+    bodyComponent  = _PartLayer(w: _w, h: _h);
+    headComponent  = _PartLayer(w: _w, h: _h);
+    eyesComponent  = _PartLayer(w: _w, h: _h);
+    noseComponent  = _PartLayer(w: _w, h: _h);
+    mouthComponent = _PartLayer(w: _w, h: _h);
+
+    // _PartLayer는 Flame Component가 아니므로 addAll 없이 직접 render 호출
+    await _loadAllParts(_variants);
+  }
+
+  Future<void> _loadAllParts(List<int> v) async {
+    final fv = v.length > 5 ? v[5] : 1;
+    final ev = v.length > 6 ? v[6] : 1;
+    final nv = v.length > 7 ? v[7] : 1;
+    final mv = v.length > 8 ? v[8] : 1;
+
+    await Future.wait([
+      bodyComponent.loadPath('assets/character_parts/base/body.png'),
+      headComponent.loadPath(
+        (fv >= 1 && fv <= 2) ? 'assets/character_parts/base/head_0$fv.png' : null,
+      ),
+      eyesComponent.loadPath(
+        (ev >= 1 && ev <= 3) ? 'assets/character_parts/eyes/eyes_0$ev.png' : null,
+      ),
+      noseComponent.loadPath(
+        (nv >= 1 && nv <= 2) ? 'assets/character_parts/nose/nose_0$nv.png' : null,
+      ),
+      mouthComponent.loadPath(
+        (mv >= 1 && mv <= 3) ? 'assets/character_parts/mouth/mouth_0$mv.png' : null,
+      ),
+    ]);
+  }
+
+  /// 선택 변경 시 호출 — 즉시 기존 파트 클리어 후 새 에셋 로드
+  void updateVariants(List<int> variants) {
+    _variants = List.from(variants);
+    _clothesPainter = _buildClothesPainter(variants);
+
+    // 스테일 이미지가 보이지 않도록 즉시 클리어
+    headComponent.clear();
+    eyesComponent.clear();
+    noseComponent.clear();
+    mouthComponent.clear();
+
+    // 비동기 로드 — 완료되면 다음 프레임부터 반영
+    _loadAllParts(variants);
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    _basePos = Vector2(size.x / 2, size.y / 2 - 8);
+  }
 
   @override
   void update(double dt) {
@@ -178,26 +278,35 @@ class _CharacterComponent extends Component
     final bounce = math.sin(_time * 2.5) * 3.0;
     final shadowScale = 1.0 - (bounce.abs() / 18.0);
 
-    // 그림자
+    // 그림자 (바운스 없음 — 지면에 고정)
     canvas.drawOval(
       Rect.fromCenter(
-        center: Offset(_pos.x, _pos.y + _h / 2 - 10),
+        center: Offset(_basePos.x, _basePos.y + _h / 2 - 10),
         width: 48 * shadowScale,
         height: 7 * shadowScale,
       ),
       Paint()..color = const Color(0x28000000),
     );
 
-    // 캐릭터 본체
+    // 캐릭터 위치로 이동 (바운스 포함)
     canvas.save();
-    canvas.translate(_pos.x - _w / 2, _pos.y - _h / 2 + bounce);
-    _painter.paint(canvas, const Size(_w, _h));
+    canvas.translate(_basePos.x - _w / 2, _basePos.y - _h / 2 + bounce);
+
+    // ── PNG 레이어 렌더링 (모든 파트 동일 dst rect → 정렬 보장) ──
+    // 레이어 순: body → head → eyes → nose → mouth → clothes
+    for (final layer in [bodyComponent, headComponent, eyesComponent, noseComponent, mouthComponent]) {
+      layer.render(canvas);
+    }
+
+    // ── 의상 코드 오버레이 (clothesOnly=true: 얼굴/머리/눈/코/입 미포함) ──
+    _clothesPainter.paint(canvas, const Size(_w, _h));
+
     canvas.restore();
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 떠다니는 반짝이 별 — 배경에 상시 떠있음
+// 떠다니는 반짝이 별
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _FloatingSparkle extends Component {
@@ -250,7 +359,7 @@ class _FloatingSparkle extends Component {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 버스트 파티클 — equipItem() 호출 시 생성, 자동 소멸
+// 버스트 파티클
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _BurstParticle extends Component {
@@ -273,7 +382,7 @@ class _BurstParticle extends Component {
     _time += dt;
     _pos.x += _vel.x * dt;
     _pos.y += _vel.y * dt;
-    _vel.y += 220 * dt; // 중력
+    _vel.y += 220 * dt;
     if (_time >= _lifetime) removeFromParent();
   }
 

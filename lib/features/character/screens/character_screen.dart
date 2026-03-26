@@ -44,68 +44,68 @@ class _CharacterScreenState extends State<CharacterScreen>
   // ── 아이템 데이터 ───────────────────────────────────────────────────────────
   static const _hatItems = <_ItemData>[
     _ItemData(categoryIndex: 0, variantIndex: 0, label: '없음', color: Color(0xFFDDDDDD), isNone: true),
-    _ItemData(categoryIndex: 0, variantIndex: 1, label: '악마 투구', color: Color(0xFFB22222), icon: Icons.whatshot),
-    _ItemData(categoryIndex: 0, variantIndex: 2, label: '파라오', color: Color(0xFFD4AC0D), icon: Icons.account_balance),
-    _ItemData(categoryIndex: 0, variantIndex: 3, label: '카우보이', color: Color(0xFF7B4F2E), icon: Icons.terrain),
-    _ItemData(categoryIndex: 0, variantIndex: 4, label: '마법사', color: Color(0xFF6B2FA0), icon: Icons.auto_fix_high),
+    _ItemData(categoryIndex: 0, variantIndex: 1, label: '악마 투구', color: Color(0xFFB22222)),
+    _ItemData(categoryIndex: 0, variantIndex: 2, label: '파라오', color: Color(0xFFD4AC0D)),
+    _ItemData(categoryIndex: 0, variantIndex: 3, label: '카우보이', color: Color(0xFF7B4F2E)),
+    _ItemData(categoryIndex: 0, variantIndex: 4, label: '마법사', color: Color(0xFF6B2FA0)),
   ];
 
   static const _topItems = <_ItemData>[
     _ItemData(categoryIndex: 1, variantIndex: 0, label: '없음', color: Color(0xFFDDDDDD), isNone: true),
-    _ItemData(categoryIndex: 1, variantIndex: 1, label: '흰 티셔츠', color: Color(0xFFE0E0E0), icon: Icons.checkroom),
-    _ItemData(categoryIndex: 1, variantIndex: 2, label: '꽃무늬', color: Color(0xFFFF8FAB), icon: Icons.local_florist),
-    _ItemData(categoryIndex: 1, variantIndex: 3, label: '줄무늬', color: Color(0xFF4488CC), icon: Icons.view_stream),
-    _ItemData(categoryIndex: 1, variantIndex: 4, label: '정장', color: Color(0xFF2C3E50), icon: Icons.business_center),
+    _ItemData(categoryIndex: 1, variantIndex: 1, label: '흰 티셔츠', color: Color(0xFFE0E0E0)),
+    _ItemData(categoryIndex: 1, variantIndex: 2, label: '꽃무늬', color: Color(0xFFFF8FAB)),
+    _ItemData(categoryIndex: 1, variantIndex: 3, label: '줄무늬', color: Color(0xFF4488CC)),
+    _ItemData(categoryIndex: 1, variantIndex: 4, label: '정장', color: Color(0xFF2C3E50)),
   ];
 
   static const _bottomItems = <_ItemData>[
     _ItemData(categoryIndex: 2, variantIndex: 0, label: '없음', color: Color(0xFFDDDDDD), isNone: true),
-    _ItemData(categoryIndex: 2, variantIndex: 1, label: '청바지', color: Color(0xFF3A5FA0), icon: Icons.straighten),
-    _ItemData(categoryIndex: 2, variantIndex: 2, label: '반바지', color: Color(0xFFB8965A), icon: Icons.crop_square),
-    _ItemData(categoryIndex: 2, variantIndex: 3, label: '스커트', color: Color(0xFFE05580), icon: Icons.architecture),
+    _ItemData(categoryIndex: 2, variantIndex: 1, label: '청바지', color: Color(0xFF3A5FA0)),
+    _ItemData(categoryIndex: 2, variantIndex: 2, label: '반바지', color: Color(0xFFB8965A)),
+    _ItemData(categoryIndex: 2, variantIndex: 3, label: '스커트', color: Color(0xFFE05580)),
   ];
 
   static const _glassesItems = <_ItemData>[
     _ItemData(categoryIndex: 3, variantIndex: 0, label: '없음', color: Color(0xFFDDDDDD), isNone: true),
-    _ItemData(categoryIndex: 3, variantIndex: 1, label: '선글라스', color: Color(0xFF1A6B1A), icon: Icons.wb_sunny),
-    _ItemData(categoryIndex: 3, variantIndex: 2, label: '둥근 안경', color: Color(0xFFD4A017), icon: Icons.remove_red_eye),
-    _ItemData(categoryIndex: 3, variantIndex: 3, label: '별 안경', color: Color(0xFFCC44AA), icon: Icons.star),
+    _ItemData(categoryIndex: 3, variantIndex: 1, label: '선글라스', color: Color(0xFF1A6B1A)),
+    _ItemData(categoryIndex: 3, variantIndex: 2, label: '둥근 안경', color: Color(0xFFD4A017)),
+    _ItemData(categoryIndex: 3, variantIndex: 3, label: '별 안경', color: Color(0xFFCC44AA)),
   ];
 
   static const _accessoryItems = <_ItemData>[
     _ItemData(categoryIndex: 4, variantIndex: 0, label: '없음', color: Color(0xFFDDDDDD), isNone: true),
-    _ItemData(categoryIndex: 4, variantIndex: 1, label: '하트 머그', color: Color(0xFFCC2244), icon: Icons.coffee),
-    _ItemData(categoryIndex: 4, variantIndex: 2, label: '책', color: Color(0xFF226688), icon: Icons.menu_book),
-    _ItemData(categoryIndex: 4, variantIndex: 3, label: '별 지팡이', color: Color(0xFFCCAA00), icon: Icons.auto_awesome),
+    _ItemData(categoryIndex: 4, variantIndex: 1, label: '하트 머그', color: Color(0xFFCC2244)),
+    _ItemData(categoryIndex: 4, variantIndex: 2, label: '책', color: Color(0xFF226688)),
+    _ItemData(categoryIndex: 4, variantIndex: 3, label: '별 지팡이', color: Color(0xFFCCAA00)),
   ];
 
   // 얼굴형 (없음 없음 — 항상 하나 선택)
   static const _faceItems = <_ItemData>[
-    _ItemData(categoryIndex: 5, variantIndex: 1, label: '둥근 얼굴', color: Color(0xFFFFCBAA), icon: Icons.face_rounded),
-    _ItemData(categoryIndex: 5, variantIndex: 2, label: '타원 얼굴', color: Color(0xFF1A1A1A), icon: Icons.face_2_rounded),
-    _ItemData(categoryIndex: 5, variantIndex: 3, label: '각진 얼굴', color: Color(0xFFD4A017), icon: Icons.face_3_rounded),
-    _ItemData(categoryIndex: 5, variantIndex: 4, label: '넓은 얼굴', color: Color(0xFF8B1A1A), icon: Icons.face_4_rounded),
+    _ItemData(categoryIndex: 5, variantIndex: 1, label: '둥근 얼굴', color: Color(0xFFFFCBAA), imagePath: 'assets/character_parts/base/head_01.png'),
+    _ItemData(categoryIndex: 5, variantIndex: 2, label: '타원 얼굴', color: Color(0xFFFFD9B7), imagePath: 'assets/character_parts/base/head_02.png'),
+    _ItemData(categoryIndex: 5, variantIndex: 3, label: '각진 얼굴', color: Color(0xFFD4A017)),
+    _ItemData(categoryIndex: 5, variantIndex: 4, label: '넓은 얼굴', color: Color(0xFF8B1A1A)),
   ];
 
   static const _eyesItems = <_ItemData>[
-    _ItemData(categoryIndex: 6, variantIndex: 1, label: '기본 눈', color: Color(0xFF4488CC), icon: Icons.remove_red_eye_rounded),
-    _ItemData(categoryIndex: 6, variantIndex: 2, label: '반짝 눈', color: Color(0xFF9C27B0), icon: Icons.auto_awesome),
-    _ItemData(categoryIndex: 6, variantIndex: 3, label: '졸린 눈', color: Color(0xFF607D8B), icon: Icons.nights_stay_rounded),
-    _ItemData(categoryIndex: 6, variantIndex: 4, label: '별 눈', color: Color(0xFFFF9800), icon: Icons.star_rounded),
+    _ItemData(categoryIndex: 6, variantIndex: 1, label: '기본 눈', color: Color(0xFFE8F4FF), imagePath: 'assets/character_parts/eyes/eyes_01.png'),
+    _ItemData(categoryIndex: 6, variantIndex: 2, label: '반짝 눈', color: Color(0xFFEDE8FF), imagePath: 'assets/character_parts/eyes/eyes_02.png'),
+    _ItemData(categoryIndex: 6, variantIndex: 3, label: '졸린 눈', color: Color(0xFFE8F0F4), imagePath: 'assets/character_parts/eyes/eyes_03.png'),
+    _ItemData(categoryIndex: 6, variantIndex: 4, label: '별 눈', color: Color(0xFFFF9800)),
   ];
 
   static const _noseItems = <_ItemData>[
-    _ItemData(categoryIndex: 7, variantIndex: 1, label: '점 코', color: Color(0xFFE8A87C), icon: Icons.circle),
-    _ItemData(categoryIndex: 7, variantIndex: 2, label: '버튼 코', color: Color(0xFFFFCBAA), icon: Icons.lens),
-    _ItemData(categoryIndex: 7, variantIndex: 3, label: '주근깨', color: Color(0xFFF4A460), icon: Icons.scatter_plot_rounded),
-    _ItemData(categoryIndex: 7, variantIndex: 4, label: '들창코', color: Color(0xFFDEB887), icon: Icons.north_east_rounded),
+    _ItemData(categoryIndex: 7, variantIndex: 1, label: '점 코', color: Color(0xFFFFECDF), imagePath: 'assets/character_parts/nose/nose_01.png'),
+    _ItemData(categoryIndex: 7, variantIndex: 2, label: '버튼 코', color: Color(0xFFFFE8D6), imagePath: 'assets/character_parts/nose/nose_02.png'),
+    _ItemData(categoryIndex: 7, variantIndex: 3, label: '주근깨', color: Color(0xFFF4A460)),
+    _ItemData(categoryIndex: 7, variantIndex: 4, label: '들창코', color: Color(0xFFDEB887)),
   ];
 
   static const _mouthItems = <_ItemData>[
-    _ItemData(categoryIndex: 8, variantIndex: 1, label: '미소', color: Color(0xFFFF8FAB), icon: Icons.sentiment_satisfied_rounded),
-    _ItemData(categoryIndex: 8, variantIndex: 2, label: '활짝', color: Color(0xFFFF5252), icon: Icons.sentiment_very_satisfied_rounded),
-    _ItemData(categoryIndex: 8, variantIndex: 3, label: '무표정', color: Color(0xFF90A4AE), icon: Icons.sentiment_neutral_rounded),
-    _ItemData(categoryIndex: 8, variantIndex: 4, label: '애교', color: Color(0xFFFF80AB), icon: Icons.favorite_rounded),
+    _ItemData(categoryIndex: 8, variantIndex: 1, label: '미소', color: Color(0xFFFFEEF2), imagePath: 'assets/character_parts/mouth/mouth_01.png'),
+    _ItemData(categoryIndex: 8, variantIndex: 2, label: '활짝', color: Color(0xFFFFE0E4), imagePath: 'assets/character_parts/mouth/mouth_02.png'),
+    _ItemData(categoryIndex: 8, variantIndex: 3, label: '무표정', color: Color(0xFFEEF2F4), imagePath: 'assets/character_parts/mouth/mouth_03.png'),
+    _ItemData(categoryIndex: 8, variantIndex: 4, label: '애교', color: Color(0xFFFF80AB)),
   ];
 
   List<_ItemData> _getCurrentItems() {
@@ -399,7 +399,7 @@ class _ItemData {
   final String label;
   final Color color;
   final bool isNone;
-  final IconData? icon;
+  final String? imagePath;
 
   const _ItemData({
     required this.categoryIndex,
@@ -407,7 +407,7 @@ class _ItemData {
     required this.label,
     required this.color,
     this.isNone = false,
-    this.icon,
+    this.imagePath,
   });
 }
 
@@ -487,39 +487,53 @@ class _ItemCard extends StatelessWidget {
                   ),
                 ),
               )
-            else
-              Center(
+            else if (item.imagePath != null)
+              // 이미지 에셋 표시
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // 아이콘 배경 원
-                    Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.35),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        item.icon ?? Icons.style,
-                        size: 18,
-                        color: _iconColor(item.color),
+                    Expanded(
+                      child: Image.asset(
+                        item.imagePath!,
+                        fit: BoxFit.contain,
                       ),
                     ),
-                    const SizedBox(height: 3),
-                    Text(
-                      item.label,
-                      style: TextStyle(
-                        fontSize: 8,
-                        color: _textColorFor(item.color),
-                        fontWeight: FontWeight.w700,
-                        height: 1.1,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 3),
+                      child: Text(
+                        item.label,
+                        style: TextStyle(
+                          fontSize: 8,
+                          color: _textColorFor(item.color),
+                          fontWeight: FontWeight.w700,
+                          height: 1.1,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
+                ),
+              )
+            else
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Text(
+                    item.label,
+                    style: TextStyle(
+                      fontSize: 9,
+                      color: _textColorFor(item.color),
+                      fontWeight: FontWeight.w700,
+                      height: 1.2,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
 
@@ -548,11 +562,6 @@ class _ItemCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color _iconColor(Color bg) {
-    final luminance = bg.computeLuminance();
-    return luminance > 0.45 ? const Color(0xFF444422) : Colors.white;
   }
 
   Color _textColorFor(Color bg) {

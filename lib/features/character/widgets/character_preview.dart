@@ -140,6 +140,7 @@ class CharacterPainter extends CustomPainter {
   final int eyesVariant;   // 1-4: 눈 스타일
   final int noseVariant;   // 1-4: 코 스타일
   final int mouthVariant;  // 1-4: 입 스타일
+  final bool clothesOnly;  // true: 의상/모자/악세서리만 그림 (몸통/머리/눈/코/입 생략)
 
   const CharacterPainter({
     required this.hatVariant,
@@ -151,6 +152,7 @@ class CharacterPainter extends CustomPainter {
     this.eyesVariant   = 1,
     this.noseVariant   = 1,
     this.mouthVariant  = 1,
+    this.clothesOnly   = false,
   });
 
   // ── 스킨 색상 ──
@@ -176,15 +178,15 @@ class CharacterPainter extends CustomPainter {
 
     _drawAccessory(canvas, cx, size, front: false);
     _drawBottom(canvas, cx, size);
-    _drawBodySkin(canvas, cx);
+    if (!clothesOnly) _drawBodySkin(canvas, cx);
     _drawTop(canvas, cx, size);
     _drawLowerArms(canvas, cx);
     _drawFeet(canvas, cx);
-    _drawHead(canvas, cx);
-    _drawHair(canvas, cx);
-    _drawEyes(canvas, cx);
-    _drawNose(canvas, cx);
-    _drawMouth(canvas, cx);
+    if (!clothesOnly) _drawHead(canvas, cx);
+    if (!clothesOnly) _drawHair(canvas, cx);
+    if (!clothesOnly) _drawEyes(canvas, cx);
+    if (!clothesOnly) _drawNose(canvas, cx);
+    if (!clothesOnly) _drawMouth(canvas, cx);
     _drawGlasses(canvas, cx);
     _drawHat(canvas, cx);
     _drawAccessory(canvas, cx, size, front: true);
@@ -1091,5 +1093,6 @@ class CharacterPainter extends CustomPainter {
       faceVariant      != old.faceVariant      ||
       eyesVariant      != old.eyesVariant      ||
       noseVariant      != old.noseVariant      ||
-      mouthVariant     != old.mouthVariant;
+      mouthVariant     != old.mouthVariant     ||
+      clothesOnly      != old.clothesOnly;
 }
