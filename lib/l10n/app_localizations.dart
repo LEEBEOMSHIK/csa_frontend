@@ -410,6 +410,42 @@ abstract class AppLocalizations {
   /// **'항목을 모두 선택해주세요'**
   String get createBtnNotReady;
 
+  /// No description provided for @createGenerating.
+  ///
+  /// In ko, this message translates to:
+  /// **'AI가 동화를 만들고 있어요...'**
+  String get createGenerating;
+
+  /// No description provided for @createGeneratingSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'잠시만 기다려주세요 ✨'**
+  String get createGeneratingSubtitle;
+
+  /// No description provided for @createSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'동화가 완성됐어요! 🎉'**
+  String get createSuccess;
+
+  /// No description provided for @createError.
+  ///
+  /// In ko, this message translates to:
+  /// **'동화 생성에 실패했어요'**
+  String get createError;
+
+  /// No description provided for @createRetry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get createRetry;
+
+  /// No description provided for @createClose.
+  ///
+  /// In ko, this message translates to:
+  /// **'닫기'**
+  String get createClose;
+
   /// No description provided for @createSectionSetting.
   ///
   /// In ko, this message translates to:
@@ -481,6 +517,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'읽어줄 목소리'**
   String get createSectionVoice;
+
+  /// No description provided for @createFormatTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'어떤 형식으로 만들까요?'**
+  String get createFormatTitle;
 
   /// No description provided for @categoryAdventure.
   ///

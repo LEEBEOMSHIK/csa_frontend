@@ -169,6 +169,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get createBtnNotReady => 'ぜんぶえらんでね';
 
   @override
+  String get createGenerating => 'AIがどうわをつくっています...';
+
+  @override
+  String get createGeneratingSubtitle => 'しばらくお待ちください ✨';
+
+  @override
+  String get createSuccess => 'どうわができました！🎉';
+
+  @override
+  String get createError => 'どうわをつくれませんでした';
+
+  @override
+  String get createRetry => 'もう一度';
+
+  @override
+  String get createClose => 'とじる';
+
+  @override
   String get createSectionSetting => '舞台・背景';
 
   @override
@@ -203,6 +221,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get createSectionVoice => 'よんでくれるこえ';
+
+  @override
+  String get createFormatTitle => 'どんな形式でつくる？';
 
   @override
   String get categoryAdventure => 'ぼうけん';

@@ -169,6 +169,24 @@ class AppLocalizationsKo extends AppLocalizations {
   String get createBtnNotReady => '항목을 모두 선택해주세요';
 
   @override
+  String get createGenerating => 'AI가 동화를 만들고 있어요...';
+
+  @override
+  String get createGeneratingSubtitle => '잠시만 기다려주세요 ✨';
+
+  @override
+  String get createSuccess => '동화가 완성됐어요! 🎉';
+
+  @override
+  String get createError => '동화 생성에 실패했어요';
+
+  @override
+  String get createRetry => '다시 시도';
+
+  @override
+  String get createClose => '닫기';
+
+  @override
   String get createSectionSetting => '구성 배경';
 
   @override
@@ -203,6 +221,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get createSectionVoice => '읽어줄 목소리';
+
+  @override
+  String get createFormatTitle => '어떤 형식으로 만들까요?';
 
   @override
   String get categoryAdventure => '모험';

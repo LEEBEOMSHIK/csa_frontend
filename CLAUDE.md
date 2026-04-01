@@ -23,6 +23,15 @@
 | [error-reference.md](claude-config/error-reference.md) | 발생 오류 레퍼런스 (원인·해결·재발 조건) |
 | [charactor-strategy.md](claude-config/charactor-strategy.md) | 캐릭터 화면 2D 게임형 전환 전략 |
 
+## 연관 프로젝트 경로
+
+| 프로젝트 | 경로 |
+|----------|------|
+| 백엔드 | `C:/project/csa/csa_backend` |
+| 프론트엔드 | `C:/project/csa/csa_frontend` |
+
+> 백엔드 변경이 필요한 경우, 위 경로에 직접 접근하여 수정한다. 별도 언급 없이도 해당 폴더 내 파일만 변경하며, 그 외 파일은 건드리지 않는다.
+
 ## 핵심 원칙
 1. 요청된 것만 변경한다 — 과도한 리팩터링 금지
 2. 불필요한 주석·docstring 추가 금지

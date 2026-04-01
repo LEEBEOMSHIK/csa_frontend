@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_request.dart';
+import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_response.dart';
+import 'package:csa_frontend/features/fairytale_create/services/fairytale_create_service.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
+import 'package:csa_frontend/shared/services/api_client.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 import 'package:csa_frontend/utils/app_colors.dart';
+import 'package:csa_frontend/utils/locale_provider.dart';
 
 class FairytaleCreateScreen extends StatefulWidget {
   const FairytaleCreateScreen({super.key});
@@ -17,8 +22,117 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
   int? _chapter;    // 0=3ch, 1=5ch, 2=7ch
   int? _character;  // 0=use, 1=skip
   int? _voice;      // 0=dad, 1=mom, 2=grandma, 3=grandpa
+  bool _isGenerating = false;
 
   static const int _maxSettings = 3;
+
+  void _onGenerateTap() {
+    if (!_isReady || _isGenerating) return;
+    _showFormatSheet();
+  }
+
+  void _showFormatSheet() {
+    final l10n = AppLocalizations.of(context)!;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (_) => _FormatSelectionSheet(
+        l10n: l10n,
+        onSelect: (format) {
+          Navigator.of(context).pop();
+          _startGenerate(format);
+        },
+      ),
+    );
+  }
+
+  Future<void> _startGenerate(String format) async {
+    if (!_isReady || _isGenerating) return;
+
+    final l10n = AppLocalizations.of(context)!;
+    final lang = localeNotifier.value.languageCode;
+
+    final request = FairytaleGenerateRequest(
+      settings: _settings
+          .map((i) => FairytaleGenerateRequest.settingKeys[i])
+          .toList(),
+      genre: FairytaleGenerateRequest.genreKeys[_genre!],
+      theme: FairytaleGenerateRequest.themeKeys[_theme!],
+      chapterCount: FairytaleGenerateRequest.chapterCounts[_chapter!],
+      useCharacter: _character == 0,
+      voiceType: FairytaleGenerateRequest.voiceTypeKeys[_voice!],
+      language: lang,
+      format: format,
+    );
+
+    setState(() => _isGenerating = true);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => _GeneratingDialog(l10n: l10n),
+    );
+
+    try {
+      final response = await FairytaleCreateService.instance.generate(request);
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      _showSuccessDialog(response, l10n);
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      _showErrorDialog(e.message, l10n);
+    } catch (_) {
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      _showErrorDialog(l10n.createError, l10n);
+    } finally {
+      if (mounted) setState(() => _isGenerating = false);
+    }
+  }
+
+  void _showSuccessDialog(FairytaleGenerateResponse response, AppLocalizations l10n) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(l10n.createSuccess,
+            style: const TextStyle(fontWeight: FontWeight.w800)),
+        content: Text(
+          '"${response.title}"\n${response.pages.length}페이지',
+          style: const TextStyle(fontSize: 15),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(l10n.createClose),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showErrorDialog(String message, AppLocalizations l10n) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(l10n.createError,
+            style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.red)),
+        content: Text(message, style: const TextStyle(fontSize: 14)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(l10n.createClose),
+          ),
+        ],
+      ),
+    );
+  }
 
   bool get _isReady =>
       _settings.isNotEmpty &&
@@ -268,7 +382,7 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
-                onPressed: _isReady ? () {} : null,
+                onPressed: (_isReady && !_isGenerating) ? _onGenerateTap : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.create,
                   foregroundColor: Colors.white,
@@ -671,6 +785,169 @@ class _CharacterToggleCard extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GeneratingDialog extends StatelessWidget {
+  final AppLocalizations l10n;
+  const _GeneratingDialog({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircularProgressIndicator(color: AppColors.create),
+            const SizedBox(height: 20),
+            Text(
+              l10n.createGenerating,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: AppColors.textPrimary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              l10n.createGeneratingSubtitle,
+              style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FormatSelectionSheet extends StatelessWidget {
+  final AppLocalizations l10n;
+  final void Function(String format) onSelect;
+
+  const _FormatSelectionSheet({required this.l10n, required this.onSelect});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 4,
+            margin: const EdgeInsets.only(bottom: 24),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          Text(
+            l10n.createFormatTitle,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              color: AppColors.textPrimary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          _FormatCard(
+            emoji: '📖',
+            label: l10n.detailDownloadSlide,
+            desc: l10n.detailDownloadSlideDesc,
+            color: const Color(0xFF5BBFAB),
+            onTap: () => onSelect('slide'),
+          ),
+          const SizedBox(height: 12),
+          _FormatCard(
+            emoji: '🎬',
+            label: l10n.detailDownloadVideo,
+            desc: l10n.detailDownloadVideoDesc,
+            color: const Color(0xFF9B5DE5),
+            onTap: () => onSelect('video'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FormatCard extends StatelessWidget {
+  final String emoji;
+  final String label;
+  final String desc;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _FormatCard({
+    required this.emoji,
+    required this.label,
+    required this.desc,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: color.withValues(alpha: 0.4), width: 1.5),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(emoji, style: const TextStyle(fontSize: 26)),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: color,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    desc,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios_rounded, size: 15,
+                color: color.withValues(alpha: 0.7)),
+          ],
         ),
       ),
     );

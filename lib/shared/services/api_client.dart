@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-// 로컬 개발용 백엔드 URL (Android 에뮬레이터: http://10.0.2.2:8080)
+// Android 에뮬레이터에서 호스트 머신은 10.0.2.2 (localhost X)
 // TODO: 백엔드 확정 후 실제 URL로 교체
-const String _baseUrl = 'http://localhost:8080';
+const String _baseUrl = 'http://10.0.2.2:8080';
 const Duration _connectTimeout = Duration(seconds: 10);
 const Duration _receiveTimeout = Duration(seconds: 30);
 
@@ -156,12 +156,16 @@ class _AuthInterceptor extends Interceptor {
 
     final response = await _dio.post(
       '/auth/refresh',
-      data: {'refresh_token': refreshToken},
+      data: {'refreshToken': refreshToken},
     );
-    final newAccessToken = response.data['access_token'] as String?;
+    final newAccessToken = response.data['accessToken'] as String?;
+    final newRefreshToken = response.data['refreshToken'] as String?;
     if (newAccessToken == null) return false;
 
     await _storage.write(key: 'access_token', value: newAccessToken);
+    if (newRefreshToken != null) {
+      await _storage.write(key: 'refresh_token', value: newRefreshToken);
+    }
     return true;
   }
 
