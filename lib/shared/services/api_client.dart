@@ -1,9 +1,19 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-// Android 에뮬레이터에서 호스트 머신은 10.0.2.2 (localhost X)
-// TODO: 백엔드 확정 후 실제 URL로 교체
-const String _baseUrl = 'http://10.0.2.2:8080';
+// 플랫폼별 백엔드 호스트
+// - 웹 / iOS 시뮬레이터 / 데스크톱: localhost
+// - Android 에뮬레이터: 10.0.2.2 (호스트 머신 별칭, localhost는 에뮬레이터 자신)
+// TODO: 실서버 확정 후 환경별 URL로 교체
+String _resolveBaseUrl() {
+  if (kIsWeb) return 'http://localhost:8080';
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    return 'http://10.0.2.2:8080';
+  }
+  return 'http://localhost:8080';
+}
+
 const Duration _connectTimeout = Duration(seconds: 10);
 const Duration _receiveTimeout = Duration(seconds: 30);
 
@@ -34,7 +44,7 @@ class ApiClient {
   Dio _buildDio() {
     final dio = Dio(
       BaseOptions(
-        baseUrl: _baseUrl,
+        baseUrl: _resolveBaseUrl(),
         connectTimeout: _connectTimeout,
         receiveTimeout: _receiveTimeout,
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},

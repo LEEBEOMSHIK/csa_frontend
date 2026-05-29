@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:csa_frontend/features/auth/services/google_auth_service.dart';
@@ -194,7 +196,9 @@ class LoginScreen extends StatelessWidget {
                         LayoutBuilder(
                           builder: (context, constraints) {
                             final size = MediaQuery.of(context).size;
-                            final imageSize = size.width * 0.55;
+                            // 너비뿐 아니라 높이로도 제한해 넓고 낮은 창에서 오버플로 방지
+                            final imageSize =
+                                math.min(size.width * 0.55, size.height * 0.3);
                             return Image.asset(
                               'assets/images/login/이야기 숲.png',
                               width: imageSize,
