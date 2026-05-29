@@ -1129,6 +1129,42 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'{count}페이지'**
   String myFairytalePageCount(int count);
+
+  /// No description provided for @characterSaveTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'캐릭터 저장'**
+  String get characterSaveTitle;
+
+  /// No description provided for @characterNameHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'캐릭터 이름'**
+  String get characterNameHint;
+
+  /// No description provided for @characterSaveAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get characterSaveAction;
+
+  /// No description provided for @characterCancel.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get characterCancel;
+
+  /// No description provided for @characterSaved.
+  ///
+  /// In ko, this message translates to:
+  /// **'캐릭터를 저장했어요'**
+  String get characterSaved;
+
+  /// No description provided for @characterSaveError.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장에 실패했어요'**
+  String get characterSaveError;
 }
 
 class _AppLocalizationsDelegate

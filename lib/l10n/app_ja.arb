@@ -210,5 +210,11 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "characterSaveTitle": "キャラクター保存",
+  "characterNameHint": "キャラクター名",
+  "characterSaveAction": "保存",
+  "characterCancel": "キャンセル",
+  "characterSaved": "キャラクターを保存しました",
+  "characterSaveError": "保存に失敗しました"
 }

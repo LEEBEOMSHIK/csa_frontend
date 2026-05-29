@@ -210,5 +210,11 @@
     "placeholders": {
       "count": { "type": "int" }
     }
-  }
+  },
+  "characterSaveTitle": "캐릭터 저장",
+  "characterNameHint": "캐릭터 이름",
+  "characterSaveAction": "저장",
+  "characterCancel": "취소",
+  "characterSaved": "캐릭터를 저장했어요",
+  "characterSaveError": "저장에 실패했어요"
 }

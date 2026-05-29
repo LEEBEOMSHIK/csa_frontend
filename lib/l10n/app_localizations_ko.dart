@@ -533,4 +533,22 @@ class AppLocalizationsKo extends AppLocalizations {
   String myFairytalePageCount(int count) {
     return '$count페이지';
   }
+
+  @override
+  String get characterSaveTitle => '캐릭터 저장';
+
+  @override
+  String get characterNameHint => '캐릭터 이름';
+
+  @override
+  String get characterSaveAction => '저장';
+
+  @override
+  String get characterCancel => '취소';
+
+  @override
+  String get characterSaved => '캐릭터를 저장했어요';
+
+  @override
+  String get characterSaveError => '저장에 실패했어요';
 }

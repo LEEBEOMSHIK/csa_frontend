@@ -1,7 +1,9 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
+import 'package:csa_frontend/shared/services/api_client.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
+import 'package:csa_frontend/features/character/services/character_service.dart';
 import 'package:csa_frontend/features/character/widgets/character_game.dart';
 
 class CharacterScreen extends StatefulWidget {
@@ -22,6 +24,10 @@ class _CharacterScreenState extends State<CharacterScreen>
 
   late final TabController _contentTabController;
   late final CharacterGame _characterGame;
+
+  // 현재 편집 중인 캐릭터의 서버 ID (저장된 적 없으면 null → 신규 생성)
+  int? _currentCharacterId;
+  bool _isSaving = false;
 
   static const _activeColor = Color(0xFFFF7043);
   static const _inactiveColor = Color(0xFF999999);
@@ -46,12 +52,90 @@ class _CharacterScreenState extends State<CharacterScreen>
     _contentTabController = TabController(length: 2, vsync: this);
     _contentTabController.addListener(() => setState(() {}));
     _characterGame = CharacterGame(variants: List.from(_selectedVariants));
+    _loadLatestCharacter();
   }
 
   @override
   void dispose() {
     _contentTabController.dispose();
     super.dispose();
+  }
+
+  /// 서버에 저장된 가장 최근 캐릭터를 불러와 편집기에 반영
+  Future<void> _loadLatestCharacter() async {
+    try {
+      final characters = await CharacterService.instance.fetchMyCharacters();
+      if (characters.isEmpty || !mounted) return;
+      final latest = characters.first;
+      if (latest.variants.length != _selectedVariants.length) return;
+      setState(() {
+        _currentCharacterId = latest.id;
+        for (var i = 0; i < _selectedVariants.length; i++) {
+          _selectedVariants[i] = latest.variants[i];
+        }
+      });
+      _characterGame.equipItem(_selectedVariants);
+    } catch (_) {
+      // 미로그인/네트워크 실패 시 기본 캐릭터 유지
+    }
+  }
+
+  Future<void> _onSaveTap() async {
+    if (_isSaving) return;
+    final l10n = AppLocalizations.of(context)!;
+    final name = await _promptName(l10n);
+    if (name == null || name.trim().isEmpty) return;
+
+    setState(() => _isSaving = true);
+    try {
+      final variants = List<int>.from(_selectedVariants);
+      final saved = _currentCharacterId == null
+          ? await CharacterService.instance.create(name.trim(), variants)
+          : await CharacterService.instance
+              .update(_currentCharacterId!, name.trim(), variants);
+      if (!mounted) return;
+      setState(() => _currentCharacterId = saved.id);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.characterSaved)));
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.characterSaveError)));
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
+  }
+
+  Future<String?> _promptName(AppLocalizations l10n) {
+    final controller = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(l10n.characterSaveTitle,
+            style: const TextStyle(fontWeight: FontWeight.w800)),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          maxLength: 20,
+          decoration: InputDecoration(hintText: l10n.characterNameHint),
+          onSubmitted: (v) => Navigator.of(ctx).pop(v),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(l10n.characterCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(controller.text),
+            child: Text(l10n.characterSaveAction),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -68,10 +152,18 @@ class _CharacterScreenState extends State<CharacterScreen>
             title: l10n.characterTitle,
             actions: [
               GestureDetector(
-                onTap: () {},
-                child: const Padding(
-                  padding: EdgeInsets.only(right: 4),
-                  child: Icon(Icons.check_rounded, color: Colors.white, size: 24),
+                onTap: _isSaving ? null : _onSaveTap,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: _isSaving
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white),
+                        )
+                      : const Icon(Icons.check_rounded,
+                          color: Colors.white, size: 24),
                 ),
               ),
             ],
