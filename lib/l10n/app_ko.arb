@@ -189,5 +189,26 @@
   "loginWithApple": "Apple로 시작",
   "loginWithYahoo": "Yahoo! JAPANで始める",
   "loginTestSkip": "테스트 (홈으로 이동)",
-  "loginFooter": "시작과 동시에 이야기 숲의 서비스 약관, 개인정보 취급 방침에 동의하게 됩니다."
+  "loginFooter": "시작과 동시에 이야기 숲의 서비스 약관, 개인정보 취급 방침에 동의하게 됩니다.",
+  "settingsMyFairytales": "내가 만든 동화",
+  "myFairytaleTitle": "내가 만든 동화",
+  "myFairytaleEmpty": "아직 만든 동화가 없어요",
+  "myFairytaleError": "목록을 불러오지 못했어요",
+  "myFairytaleRetry": "다시 시도",
+  "myFairytaleShared": "공유됨",
+  "myFairytalePrivate": "비공개",
+  "myFairytaleShare": "공유하기",
+  "myFairytaleUnshare": "공유 해제",
+  "myFairytaleDelete": "삭제",
+  "myFairytaleDeleteTitle": "동화 삭제",
+  "myFairytaleDeleteMessage": "이 동화를 삭제할까요? 되돌릴 수 없어요.",
+  "myFairytaleCancel": "취소",
+  "myFairytaleStatusGenerating": "생성 중",
+  "myFairytaleStatusFailed": "생성 실패",
+  "myFairytalePageCount": "{count}페이지",
+  "@myFairytalePageCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

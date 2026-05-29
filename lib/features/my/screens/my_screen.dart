@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
+import 'package:csa_frontend/features/my/screens/my_fairytale_list_screen.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 import 'package:csa_frontend/utils/locale_provider.dart';
 
@@ -137,6 +138,14 @@ class _MyScreenState extends State<MyScreen> {
                   const _ThickDivider(),
                   // 활동 내역 섹션
                   _SectionHeader(title: l10n.settingsSectionActivity),
+                  _SubRow(
+                    label: l10n.settingsMyFairytales,
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const MyFairytaleListScreen(),
+                      ),
+                    ),
+                  ),
                   _SubRow(label: l10n.settingsPurchaseHistory, onTap: () {}),
                   _SubRow(label: l10n.settingsFavoriteHistory, onTap: () {}),
                   const _ThickDivider(),

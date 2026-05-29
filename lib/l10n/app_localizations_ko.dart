@@ -483,4 +483,54 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get loginFooter => '시작과 동시에 이야기 숲의 서비스 약관, 개인정보 취급 방침에 동의하게 됩니다.';
+
+  @override
+  String get settingsMyFairytales => '내가 만든 동화';
+
+  @override
+  String get myFairytaleTitle => '내가 만든 동화';
+
+  @override
+  String get myFairytaleEmpty => '아직 만든 동화가 없어요';
+
+  @override
+  String get myFairytaleError => '목록을 불러오지 못했어요';
+
+  @override
+  String get myFairytaleRetry => '다시 시도';
+
+  @override
+  String get myFairytaleShared => '공유됨';
+
+  @override
+  String get myFairytalePrivate => '비공개';
+
+  @override
+  String get myFairytaleShare => '공유하기';
+
+  @override
+  String get myFairytaleUnshare => '공유 해제';
+
+  @override
+  String get myFairytaleDelete => '삭제';
+
+  @override
+  String get myFairytaleDeleteTitle => '동화 삭제';
+
+  @override
+  String get myFairytaleDeleteMessage => '이 동화를 삭제할까요? 되돌릴 수 없어요.';
+
+  @override
+  String get myFairytaleCancel => '취소';
+
+  @override
+  String get myFairytaleStatusGenerating => '생성 중';
+
+  @override
+  String get myFairytaleStatusFailed => '생성 실패';
+
+  @override
+  String myFairytalePageCount(int count) {
+    return '$count페이지';
+  }
 }

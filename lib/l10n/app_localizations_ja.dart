@@ -483,4 +483,54 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get loginFooter => '利用を開始することで、物語の森のサービス利用規約・プライバシーポリシーに同意したものとみなします。';
+
+  @override
+  String get settingsMyFairytales => '作った童話';
+
+  @override
+  String get myFairytaleTitle => '作った童話';
+
+  @override
+  String get myFairytaleEmpty => 'まだ作った童話がありません';
+
+  @override
+  String get myFairytaleError => 'リストを読み込めませんでした';
+
+  @override
+  String get myFairytaleRetry => '再試行';
+
+  @override
+  String get myFairytaleShared => '公開中';
+
+  @override
+  String get myFairytalePrivate => '非公開';
+
+  @override
+  String get myFairytaleShare => '公開する';
+
+  @override
+  String get myFairytaleUnshare => '公開をやめる';
+
+  @override
+  String get myFairytaleDelete => '削除';
+
+  @override
+  String get myFairytaleDeleteTitle => '童話を削除';
+
+  @override
+  String get myFairytaleDeleteMessage => 'この童話を削除しますか？元に戻せません。';
+
+  @override
+  String get myFairytaleCancel => 'キャンセル';
+
+  @override
+  String get myFairytaleStatusGenerating => '生成中';
+
+  @override
+  String get myFairytaleStatusFailed => '生成失敗';
+
+  @override
+  String myFairytalePageCount(int count) {
+    return '$countページ';
+  }
 }

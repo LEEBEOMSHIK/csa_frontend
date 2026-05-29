@@ -1033,6 +1033,102 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'시작과 동시에 이야기 숲의 서비스 약관, 개인정보 취급 방침에 동의하게 됩니다.'**
   String get loginFooter;
+
+  /// No description provided for @settingsMyFairytales.
+  ///
+  /// In ko, this message translates to:
+  /// **'내가 만든 동화'**
+  String get settingsMyFairytales;
+
+  /// No description provided for @myFairytaleTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'내가 만든 동화'**
+  String get myFairytaleTitle;
+
+  /// No description provided for @myFairytaleEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 만든 동화가 없어요'**
+  String get myFairytaleEmpty;
+
+  /// No description provided for @myFairytaleError.
+  ///
+  /// In ko, this message translates to:
+  /// **'목록을 불러오지 못했어요'**
+  String get myFairytaleError;
+
+  /// No description provided for @myFairytaleRetry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get myFairytaleRetry;
+
+  /// No description provided for @myFairytaleShared.
+  ///
+  /// In ko, this message translates to:
+  /// **'공유됨'**
+  String get myFairytaleShared;
+
+  /// No description provided for @myFairytalePrivate.
+  ///
+  /// In ko, this message translates to:
+  /// **'비공개'**
+  String get myFairytalePrivate;
+
+  /// No description provided for @myFairytaleShare.
+  ///
+  /// In ko, this message translates to:
+  /// **'공유하기'**
+  String get myFairytaleShare;
+
+  /// No description provided for @myFairytaleUnshare.
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 해제'**
+  String get myFairytaleUnshare;
+
+  /// No description provided for @myFairytaleDelete.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제'**
+  String get myFairytaleDelete;
+
+  /// No description provided for @myFairytaleDeleteTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'동화 삭제'**
+  String get myFairytaleDeleteTitle;
+
+  /// No description provided for @myFairytaleDeleteMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 동화를 삭제할까요? 되돌릴 수 없어요.'**
+  String get myFairytaleDeleteMessage;
+
+  /// No description provided for @myFairytaleCancel.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get myFairytaleCancel;
+
+  /// No description provided for @myFairytaleStatusGenerating.
+  ///
+  /// In ko, this message translates to:
+  /// **'생성 중'**
+  String get myFairytaleStatusGenerating;
+
+  /// No description provided for @myFairytaleStatusFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'생성 실패'**
+  String get myFairytaleStatusFailed;
+
+  /// No description provided for @myFairytalePageCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}페이지'**
+  String myFairytalePageCount(int count);
 }
 
 class _AppLocalizationsDelegate
