@@ -557,4 +557,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get characterSelectHint => '왼쪽에서 꾸밀 부위를 선택해 보세요';
+
+  @override
+  String get ttsSelectVoice => '읽어줄 목소리를 선택하세요';
+
+  @override
+  String get ttsNoContent => '읽어줄 내용이 없어요';
 }

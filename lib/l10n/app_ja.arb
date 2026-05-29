@@ -218,5 +218,7 @@
   "characterSaved": "キャラクターを保存しました",
   "characterSaveError": "保存に失敗しました",
   "characterNone": "なし",
-  "characterSelectHint": "左から飾る部位を選んでみよう"
+  "characterSelectHint": "左から飾る部位を選んでみよう",
+  "ttsSelectVoice": "読み上げる声を選んでください",
+  "ttsNoContent": "読み上げる内容がありません"
 }

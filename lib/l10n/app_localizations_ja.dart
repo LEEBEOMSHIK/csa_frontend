@@ -557,4 +557,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get characterSelectHint => '左から飾る部位を選んでみよう';
+
+  @override
+  String get ttsSelectVoice => '読み上げる声を選んでください';
+
+  @override
+  String get ttsNoContent => '読み上げる内容がありません';
 }

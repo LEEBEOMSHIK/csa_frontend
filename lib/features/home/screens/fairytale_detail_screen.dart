@@ -4,6 +4,7 @@ import 'package:csa_frontend/features/home/models/fairytale.dart';
 import 'package:csa_frontend/features/home/models/fairytale_detail.dart';
 import 'package:csa_frontend/features/home/services/fairytale_service.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
+import 'package:csa_frontend/shared/services/tts_service.dart';
 import 'package:csa_frontend/utils/locale_provider.dart';
 
 class FairytaleDetailScreen extends StatefulWidget {
@@ -28,6 +29,69 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
   void initState() {
     super.initState();
     _fetchDetail();
+  }
+
+  @override
+  void dispose() {
+    TtsService.instance.stop();
+    super.dispose();
+  }
+
+  /// 재생 버튼: 읽는 중이면 정지, 아니면 목소리 선택 후 본문 낭독
+  Future<void> _onPlayTts(String lang) async {
+    final l10n = AppLocalizations.of(context)!;
+    if (TtsService.instance.isSpeaking.value) {
+      await TtsService.instance.stop();
+      return;
+    }
+    final text = _detail?.fullContentFor(lang) ?? widget.item.descriptionFor(lang);
+    if (text == null || text.trim().isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.ttsNoContent)));
+      return;
+    }
+    final voice = await _pickVoice(l10n);
+    if (voice == null) return;
+    await TtsService.instance.speak(text, lang: lang, voice: voice);
+  }
+
+  Future<String?> _pickVoice(AppLocalizations l10n) {
+    final voices = <String, String>{
+      'dad': l10n.voiceDad,
+      'mom': l10n.voiceMom,
+      'grandma': l10n.voiceGrandma,
+      'grandpa': l10n.voiceGrandpa,
+    };
+    return showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.ttsSelectVoice,
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF333333)),
+              ),
+              const SizedBox(height: 12),
+              ...voices.entries.map((e) => ListTile(
+                    leading: const Icon(Icons.record_voice_over_rounded,
+                        color: Color(0xFFFE9EC7)),
+                    title: Text(e.value),
+                    onTap: () => Navigator.of(ctx).pop(e.key),
+                  )),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _fetchDetail() async {
@@ -159,9 +223,15 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
                             onTap: null,
                           ),
                           const SizedBox(height: 8),
-                          _RoundIconBtn(
-                            icon: Icons.play_circle,
-                            onTap: null,
+                          // 읽어주기(TTS) — 읽는 중이면 정지 아이콘
+                          ValueListenableBuilder<bool>(
+                            valueListenable: TtsService.instance.isSpeaking,
+                            builder: (context, speaking, _) => _RoundIconBtn(
+                              icon: speaking
+                                  ? Icons.stop_circle
+                                  : Icons.play_circle,
+                              onTap: () => _onPlayTts(lang),
+                            ),
                           ),
                           const SizedBox(height: 8),
                           // Favorite button — toggles this fairy tale in the favorites list

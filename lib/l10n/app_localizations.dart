@@ -1177,6 +1177,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'왼쪽에서 꾸밀 부위를 선택해 보세요'**
   String get characterSelectHint;
+
+  /// No description provided for @ttsSelectVoice.
+  ///
+  /// In ko, this message translates to:
+  /// **'읽어줄 목소리를 선택하세요'**
+  String get ttsSelectVoice;
+
+  /// No description provided for @ttsNoContent.
+  ///
+  /// In ko, this message translates to:
+  /// **'읽어줄 내용이 없어요'**
+  String get ttsNoContent;
 }
 
 class _AppLocalizationsDelegate
