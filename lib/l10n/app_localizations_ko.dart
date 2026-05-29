@@ -551,4 +551,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get characterSaveError => '저장에 실패했어요';
+
+  @override
+  String get characterNone => '없음';
+
+  @override
+  String get characterSelectHint => '왼쪽에서 꾸밀 부위를 선택해 보세요';
 }

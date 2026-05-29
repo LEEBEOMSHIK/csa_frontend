@@ -216,5 +216,7 @@
   "characterSaveAction": "저장",
   "characterCancel": "취소",
   "characterSaved": "캐릭터를 저장했어요",
-  "characterSaveError": "저장에 실패했어요"
+  "characterSaveError": "저장에 실패했어요",
+  "characterNone": "없음",
+  "characterSelectHint": "왼쪽에서 꾸밀 부위를 선택해 보세요"
 }

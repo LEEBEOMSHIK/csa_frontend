@@ -216,5 +216,7 @@
   "characterSaveAction": "保存",
   "characterCancel": "キャンセル",
   "characterSaved": "キャラクターを保存しました",
-  "characterSaveError": "保存に失敗しました"
+  "characterSaveError": "保存に失敗しました",
+  "characterNone": "なし",
+  "characterSelectHint": "左から飾る部位を選んでみよう"
 }

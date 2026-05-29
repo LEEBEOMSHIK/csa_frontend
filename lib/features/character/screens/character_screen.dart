@@ -32,6 +32,26 @@ class _CharacterScreenState extends State<CharacterScreen>
   static const _activeColor = Color(0xFFFF7043);
   static const _inactiveColor = Color(0xFF999999);
 
+  // 좌측 탭(1~9) → _selectedVariants 슬롯(0~8)별 선택 가능한 변형 값 목록
+  // 슬롯 순서: [hat, top, bottom, glasses, accessory, face, eyes, nose, mouth]
+  static const List<List<int>> _variantOptions = [
+    [0, 1, 2, 3, 4], // hat (0=없음)
+    [0, 1, 2, 3, 4], // top
+    [0, 1, 2, 3],    // bottom
+    [0, 1, 2, 3],    // glasses (0=없음)
+    [0, 1, 2, 3],    // accessory (0=없음)
+    [1, 2],          // face
+    [1, 2, 3],       // eyes
+    [1, 2],          // nose
+    [1, 2, 3],       // mouth
+  ];
+
+  void _selectVariant(int slot, int value) {
+    if (_selectedVariants[slot] == value) return;
+    setState(() => _selectedVariants[slot] = value);
+    _characterGame.equipItem(_selectedVariants);
+  }
+
   // ── 탭 정의 ────────────────────────────────────────────────────────────────
   List<_TabItem> _buildTabs(AppLocalizations l10n) => [
         _TabItem(label: l10n.characterTabAll,       icon: Icons.grid_view_rounded),
@@ -135,6 +155,41 @@ class _CharacterScreenState extends State<CharacterScreen>
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildItemPanel(AppLocalizations l10n) {
+    // 전체(0) 탭은 안내만 표시
+    if (_selectedTabIndex == 0) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text(
+            l10n.characterSelectHint,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 13, color: Color(0xFF999999)),
+          ),
+        ),
+      );
+    }
+
+    final slot = _selectedTabIndex - 1;
+    final options = _variantOptions[slot];
+    final current = _selectedVariants[slot];
+
+    return GridView.count(
+      padding: const EdgeInsets.all(16),
+      crossAxisCount: 3,
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
+      children: options
+          .map((v) => _OptionCell(
+                label: v == 0 ? l10n.characterNone : '$v',
+                selected: v == current,
+                activeColor: _activeColor,
+                onTap: () => _selectVariant(slot, v),
+              ))
+          .toList(),
     );
   }
 
@@ -307,8 +362,11 @@ class _CharacterScreenState extends State<CharacterScreen>
                           ),
 
                           // ── 오른쪽 아이템 그리드 ──
-                          const Expanded(
-                            child: ColoredBox(color: Color(0xFFF8F6EE)),
+                          Expanded(
+                            child: ColoredBox(
+                              color: const Color(0xFFF8F6EE),
+                              child: _buildItemPanel(l10n),
+                            ),
                           ),
                         ],
                       ),
@@ -340,6 +398,47 @@ class _TabItem {
   final String label;
   final IconData icon;
   const _TabItem({required this.label, required this.icon});
+}
+
+class _OptionCell extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final Color activeColor;
+  final VoidCallback onTap;
+
+  const _OptionCell({
+    required this.label,
+    required this.selected,
+    required this.activeColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        decoration: BoxDecoration(
+          color: selected ? activeColor.withValues(alpha: 0.12) : Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: selected ? activeColor : const Color(0xFFE5E0D5),
+            width: selected ? 2 : 1,
+          ),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+            color: selected ? activeColor : const Color(0xFF888888),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _ContentTabItem extends StatelessWidget {

@@ -1165,6 +1165,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'저장에 실패했어요'**
   String get characterSaveError;
+
+  /// No description provided for @characterNone.
+  ///
+  /// In ko, this message translates to:
+  /// **'없음'**
+  String get characterNone;
+
+  /// No description provided for @characterSelectHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'왼쪽에서 꾸밀 부위를 선택해 보세요'**
+  String get characterSelectHint;
 }
 
 class _AppLocalizationsDelegate

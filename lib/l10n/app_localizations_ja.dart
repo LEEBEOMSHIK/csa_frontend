@@ -551,4 +551,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get characterSaveError => '保存に失敗しました';
+
+  @override
+  String get characterNone => 'なし';
+
+  @override
+  String get characterSelectHint => '左から飾る部位を選んでみよう';
 }
