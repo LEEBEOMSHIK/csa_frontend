@@ -1,11 +1,15 @@
 class FairytaleGenerateResponse {
   final int id;
   final String title;
+  final String language;
+  final String voiceType;
   final List<FairytalePageResponse> pages;
 
   const FairytaleGenerateResponse({
     required this.id,
     required this.title,
+    this.language = 'ko',
+    this.voiceType = 'dad',
     required this.pages,
   });
 
@@ -13,6 +17,8 @@ class FairytaleGenerateResponse {
     return FairytaleGenerateResponse(
       id: json['id'] as int,
       title: json['title'] as String,
+      language: json['language'] as String? ?? 'ko',
+      voiceType: json['voiceType'] as String? ?? 'dad',
       pages: (json['pages'] as List<dynamic>)
           .map((p) => FairytalePageResponse.fromJson(p as Map<String, dynamic>))
           .toList(),

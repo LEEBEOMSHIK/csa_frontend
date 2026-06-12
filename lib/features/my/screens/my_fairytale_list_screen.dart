@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/features/fairytale_create/screens/fairytale_slide_screen.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/my/models/my_fairytale.dart';
 import 'package:csa_frontend/features/my/services/my_fairytale_service.dart';
@@ -6,7 +7,9 @@ import 'package:csa_frontend/shared/services/api_client.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 
 class MyFairytaleListScreen extends StatefulWidget {
-  const MyFairytaleListScreen({super.key});
+  final MyFairytaleService? service;
+
+  const MyFairytaleListScreen({super.key, this.service});
 
   @override
   State<MyFairytaleListScreen> createState() => _MyFairytaleListScreenState();
@@ -18,6 +21,9 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
   late Future<List<MyFairytale>> _future;
   List<MyFairytale> _items = [];
 
+  MyFairytaleService get _service =>
+      widget.service ?? MyFairytaleService.instance;
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +31,7 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
   }
 
   Future<List<MyFairytale>> _load() async {
-    final items = await MyFairytaleService.instance.fetchMyFairytales();
+    final items = await _service.fetchMyFairytales();
     _items = items;
     return items;
   }
@@ -37,19 +43,21 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
   Future<void> _onToggleShare(MyFairytale item) async {
     final l10n = AppLocalizations.of(context)!;
     try {
-      final shared = await MyFairytaleService.instance.toggleShare(item.id);
+      final shared = await _service.toggleShare(item.id);
       setState(() {
         final idx = _items.indexWhere((e) => e.id == item.id);
         if (idx != -1) _items[idx] = _items[idx].copyWith(shared: shared);
       });
     } on ApiException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.message)));
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(l10n.myFairytaleError)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.myFairytaleError)));
     }
   }
 
@@ -59,8 +67,10 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(l10n.myFairytaleDeleteTitle,
-            style: const TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(
+          l10n.myFairytaleDeleteTitle,
+          style: const TextStyle(fontWeight: FontWeight.w800),
+        ),
         content: Text(l10n.myFairytaleDeleteMessage),
         actions: [
           TextButton(
@@ -69,8 +79,10 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(l10n.myFairytaleDelete,
-                style: const TextStyle(color: Colors.red)),
+            child: Text(
+              l10n.myFairytaleDelete,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -78,16 +90,54 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
     if (confirmed != true) return;
 
     try {
-      await MyFairytaleService.instance.delete(item.id);
+      await _service.delete(item.id);
       setState(() => _items.removeWhere((e) => e.id == item.id));
     } on ApiException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.message)));
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(l10n.myFairytaleError)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.myFairytaleError)));
+    }
+  }
+
+  Future<void> _onOpen(MyFairytale item) async {
+    if (!item.isCompleted || item.format != 'slide') return;
+    final l10n = AppLocalizations.of(context)!;
+    try {
+      final response = await _service.fetchSlides(item.id);
+      if (!mounted) return;
+      if (response.pages.isEmpty) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.ttsNoContent)));
+        return;
+      }
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => FairytaleSlideScreen(
+            fairytale: response,
+            lang: response.language.isNotEmpty
+                ? response.language
+                : item.language,
+            voiceType: response.voiceType,
+          ),
+        ),
+      );
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.message)));
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.myFairytaleError)));
     }
   }
 
@@ -126,6 +176,7 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
                     item: _items[i],
                     accent: _accent,
                     l10n: l10n,
+                    onOpen: () => _onOpen(_items[i]),
                     onToggleShare: () => _onToggleShare(_items[i]),
                     onDelete: () => _onDelete(_items[i]),
                   ),
@@ -143,6 +194,7 @@ class _FairytaleCard extends StatelessWidget {
   final MyFairytale item;
   final Color accent;
   final AppLocalizations l10n;
+  final VoidCallback onOpen;
   final VoidCallback onToggleShare;
   final VoidCallback onDelete;
 
@@ -150,86 +202,95 @@ class _FairytaleCard extends StatelessWidget {
     required this.item,
     required this.accent,
     required this.l10n,
+    required this.onOpen,
     required this.onToggleShare,
     required this.onDelete,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          _Thumbnail(item: item),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.title,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF333333),
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Icon(
-                      item.format == 'video'
-                          ? Icons.movie_rounded
-                          : Icons.menu_book_rounded,
-                      size: 14,
-                      color: const Color(0xFF999999),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      l10n.myFairytalePageCount(item.pageCount),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF999999),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    _StatusBadge(item: item, l10n: l10n),
-                  ],
-                ),
-              ],
+    final canOpen = item.isCompleted && item.format == 'slide';
+    return GestureDetector(
+      onTap: canOpen ? onOpen : null,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
-          ),
-          if (item.isCompleted)
+          ],
+        ),
+        child: Row(
+          children: [
+            _Thumbnail(item: item),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.title,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF333333),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Icon(
+                        item.format == 'video'
+                            ? Icons.movie_rounded
+                            : Icons.menu_book_rounded,
+                        size: 14,
+                        color: const Color(0xFF999999),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        l10n.myFairytalePageCount(item.pageCount),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF999999),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      _StatusBadge(item: item, l10n: l10n),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            if (item.isCompleted)
+              IconButton(
+                tooltip: item.shared
+                    ? l10n.myFairytaleUnshare
+                    : l10n.myFairytaleShare,
+                onPressed: onToggleShare,
+                icon: Icon(
+                  item.shared ? Icons.public_rounded : Icons.public_off_rounded,
+                  color: item.shared ? accent : const Color(0xFFBBBBBB),
+                  size: 22,
+                ),
+              ),
             IconButton(
-              tooltip:
-                  item.shared ? l10n.myFairytaleUnshare : l10n.myFairytaleShare,
-              onPressed: onToggleShare,
-              icon: Icon(
-                item.shared ? Icons.public_rounded : Icons.public_off_rounded,
-                color: item.shared ? accent : const Color(0xFFBBBBBB),
+              tooltip: l10n.myFairytaleDelete,
+              onPressed: onDelete,
+              icon: const Icon(
+                Icons.delete_outline_rounded,
+                color: Color(0xFFBBBBBB),
                 size: 22,
               ),
             ),
-          IconButton(
-            tooltip: l10n.myFairytaleDelete,
-            onPressed: onDelete,
-            icon: const Icon(Icons.delete_outline_rounded,
-                color: Color(0xFFBBBBBB), size: 22),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -243,15 +304,18 @@ class _Thumbnail extends StatelessWidget {
   Widget build(BuildContext context) {
     const size = 56.0;
     Widget placeholder() => Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF3F3F3),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Icon(Icons.auto_stories_rounded,
-              color: Color(0xFFCCCCCC), size: 24),
-        );
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: const Color(0xFFF3F3F3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Icon(
+        Icons.auto_stories_rounded,
+        color: Color(0xFFCCCCCC),
+        size: 24,
+      ),
+    );
 
     if (item.thumbnailUrl == null || item.thumbnailUrl!.isEmpty) {
       return placeholder();
@@ -319,8 +383,11 @@ class _EmptyView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.auto_stories_outlined,
-              size: 56, color: Color(0xFFDDDDDD)),
+          const Icon(
+            Icons.auto_stories_outlined,
+            size: 56,
+            color: Color(0xFFDDDDDD),
+          ),
           const SizedBox(height: 12),
           Text(
             message,
@@ -348,11 +415,16 @@ class _ErrorView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.cloud_off_rounded,
-              size: 48, color: Color(0xFFDDDDDD)),
+          const Icon(
+            Icons.cloud_off_rounded,
+            size: 48,
+            color: Color(0xFFDDDDDD),
+          ),
           const SizedBox(height: 12),
-          Text(message,
-              style: const TextStyle(fontSize: 14, color: Color(0xFF999999))),
+          Text(
+            message,
+            style: const TextStyle(fontSize: 14, color: Color(0xFF999999)),
+          ),
           const SizedBox(height: 12),
           TextButton(onPressed: onRetry, child: Text(retryLabel)),
         ],
