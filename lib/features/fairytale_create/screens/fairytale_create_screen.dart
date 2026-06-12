@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_request.dart';
-import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_response.dart';
+import 'package:csa_frontend/features/fairytale_create/screens/fairytale_slide_screen.dart';
 import 'package:csa_frontend/features/fairytale_create/services/fairytale_create_service.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/shared/services/api_client.dart';
@@ -19,9 +19,9 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
   final Set<int> _settings = {};
   int? _genre;
   int? _theme;
-  int? _chapter;    // 0=3ch, 1=5ch, 2=7ch
-  int? _character;  // 0=use, 1=skip
-  int? _voice;      // 0=dad, 1=mom, 2=grandma, 3=grandpa
+  int? _chapter; // 0=3ch, 1=5ch, 2=7ch
+  int? _character; // 0=use, 1=skip
+  int? _voice; // 0=dad, 1=mom, 2=grandma, 3=grandpa
   bool _isGenerating = false;
 
   static const int _maxSettings = 3;
@@ -81,7 +81,19 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
       final response = await FairytaleCreateService.instance.generate(request);
       if (!mounted) return;
       Navigator.of(context).pop();
-      _showSuccessDialog(response, l10n);
+      if (response.pages.isEmpty) {
+        _showErrorDialog(l10n.ttsNoContent, l10n);
+        return;
+      }
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => FairytaleSlideScreen(
+            fairytale: response,
+            lang: request.language,
+            voiceType: request.voiceType,
+          ),
+        ),
+      );
     } on ApiException catch (e) {
       if (!mounted) return;
       Navigator.of(context).pop();
@@ -95,34 +107,18 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
     }
   }
 
-  void _showSuccessDialog(FairytaleGenerateResponse response, AppLocalizations l10n) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(l10n.createSuccess,
-            style: const TextStyle(fontWeight: FontWeight.w800)),
-        content: Text(
-          '"${response.title}"\n${response.pages.length}페이지',
-          style: const TextStyle(fontSize: 15),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(l10n.createClose),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _showErrorDialog(String message, AppLocalizations l10n) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(l10n.createError,
-            style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.red)),
+        title: Text(
+          l10n.createError,
+          style: const TextStyle(
+            fontWeight: FontWeight.w800,
+            color: Colors.red,
+          ),
+        ),
         content: Text(message, style: const TextStyle(fontSize: 14)),
         actions: [
           TextButton(
@@ -365,10 +361,34 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
                     mainAxisSpacing: 10,
                     childAspectRatio: 2.4,
                     children: [
-                      _VoiceCard(emoji: '👨', label: l10n.voiceDad,    color: const Color(0xFF118AB2), selected: _voice == 0, onTap: () => setState(() => _voice = 0)),
-                      _VoiceCard(emoji: '👩', label: l10n.voiceMom,    color: const Color(0xFFFF6B9D), selected: _voice == 1, onTap: () => setState(() => _voice = 1)),
-                      _VoiceCard(emoji: '👵', label: l10n.voiceGrandma, color: const Color(0xFF9B5DE5), selected: _voice == 2, onTap: () => setState(() => _voice = 2)),
-                      _VoiceCard(emoji: '👴', label: l10n.voiceGrandpa, color: const Color(0xFFF4A261), selected: _voice == 3, onTap: () => setState(() => _voice = 3)),
+                      _VoiceCard(
+                        emoji: '👨',
+                        label: l10n.voiceDad,
+                        color: const Color(0xFF118AB2),
+                        selected: _voice == 0,
+                        onTap: () => setState(() => _voice = 0),
+                      ),
+                      _VoiceCard(
+                        emoji: '👩',
+                        label: l10n.voiceMom,
+                        color: const Color(0xFFFF6B9D),
+                        selected: _voice == 1,
+                        onTap: () => setState(() => _voice = 1),
+                      ),
+                      _VoiceCard(
+                        emoji: '👵',
+                        label: l10n.voiceGrandma,
+                        color: const Color(0xFF9B5DE5),
+                        selected: _voice == 2,
+                        onTap: () => setState(() => _voice = 2),
+                      ),
+                      _VoiceCard(
+                        emoji: '👴',
+                        label: l10n.voiceGrandpa,
+                        color: const Color(0xFFF4A261),
+                        selected: _voice == 3,
+                        onTap: () => setState(() => _voice = 3),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -399,9 +419,7 @@ class _FairytaleCreateScreenState extends State<FairytaleCreateScreen> {
                     const SizedBox(width: 10),
                     Flexible(
                       child: Text(
-                        _isReady
-                            ? l10n.createBtnReady
-                            : l10n.createBtnNotReady,
+                        _isReady ? l10n.createBtnReady : l10n.createBtnNotReady,
                         style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 16,
@@ -672,10 +690,14 @@ class _ChapterCard extends StatelessWidget {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
-            color: selected ? _selectedColor : _selectedColor.withValues(alpha: 0.1),
+            color: selected
+                ? _selectedColor
+                : _selectedColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: selected ? _selectedColor : _selectedColor.withValues(alpha: 0.4),
+              color: selected
+                  ? _selectedColor
+                  : _selectedColor.withValues(alpha: 0.4),
               width: 1,
             ),
             boxShadow: [
@@ -818,7 +840,10 @@ class _GeneratingDialog extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               l10n.createGeneratingSubtitle,
-              style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -873,7 +898,8 @@ class _FormatSelectionSheet extends StatelessWidget {
             label: l10n.detailDownloadVideo,
             desc: l10n.detailDownloadVideoDesc,
             color: const Color(0xFF9B5DE5),
-            onTap: () => onSelect('video'),
+            enabled: false,
+            onTap: () {},
           ),
         ],
       ),
@@ -887,6 +913,7 @@ class _FormatCard extends StatelessWidget {
   final String desc;
   final Color color;
   final VoidCallback onTap;
+  final bool enabled;
 
   const _FormatCard({
     required this.emoji,
@@ -894,19 +921,23 @@ class _FormatCard extends StatelessWidget {
     required this.desc,
     required this.color,
     required this.onTap,
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
+          color: color.withValues(alpha: enabled ? 0.08 : 0.04),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.4), width: 1.5),
+          border: Border.all(
+            color: color.withValues(alpha: enabled ? 0.4 : 0.16),
+            width: 1.5,
+          ),
         ),
         child: Row(
           children: [
@@ -931,7 +962,7 @@ class _FormatCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
-                      color: color,
+                      color: enabled ? color : AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -945,8 +976,11 @@ class _FormatCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios_rounded, size: 15,
-                color: color.withValues(alpha: 0.7)),
+            Icon(
+              enabled ? Icons.arrow_forward_ios_rounded : Icons.lock_clock,
+              size: 15,
+              color: color.withValues(alpha: enabled ? 0.7 : 0.28),
+            ),
           ],
         ),
       ),
@@ -1009,4 +1043,3 @@ class _VoiceCard extends StatelessWidget {
     );
   }
 }
-

@@ -21,13 +21,16 @@ class LoginScreen extends StatelessWidget {
       _navigateToHome(context);
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Google login failed: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Google login failed: $e')));
     }
   }
 
-  void _navigateToHome(BuildContext context, {Map<String, dynamic>? debugData}) {
+  void _navigateToHome(
+    BuildContext context, {
+    Map<String, dynamic>? debugData,
+  }) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => MainScreen(debugLoginData: debugData)),
     );
@@ -38,24 +41,26 @@ class LoginScreen extends StatelessWidget {
 
     // 1) 회원가입 (이미 존재하면 무시)
     try {
-      await ApiClient.instance.post('/auth/signup', data: {
-        'email': _testEmail,
-        'password': _testPassword,
-      });
+      await ApiClient.instance.post(
+        '/auth/signup',
+        data: {'email': _testEmail, 'password': _testPassword},
+      );
     } catch (_) {}
 
     // 2) 로그인 → 토큰 수령
     Map<String, dynamic> tokens;
     try {
-      tokens = await ApiClient.instance.post('/auth/login', data: {
-        'email': _testEmail,
-        'password': _testPassword,
-      }) as Map<String, dynamic>;
+      tokens =
+          await ApiClient.instance.post(
+                '/auth/login',
+                data: {'email': _testEmail, 'password': _testPassword},
+              )
+              as Map<String, dynamic>;
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login failed: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Login failed: $e')));
       return;
     }
 
@@ -73,21 +78,25 @@ class LoginScreen extends StatelessWidget {
 
     // 3) /users/me — 토큰 인증 확인
     try {
-      final me = await ApiClient.instance.get('/users/me') as Map<String, dynamic>;
+      final me =
+          await ApiClient.instance.get('/users/me') as Map<String, dynamic>;
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('JWT OK — ${me['email']}')),
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('JWT OK — ${me['email']}')));
+      _navigateToHome(
+        context,
+        debugData: {
+          ...tokens,
+          'me_email': me['email'],
+          'me_id': me['id'] ?? me['userId'],
+        },
       );
-      _navigateToHome(context, debugData: {
-        ...tokens,
-        'me_email': me['email'],
-        'me_id': me['id'] ?? me['userId'],
-      });
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Token verify failed: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Token verify failed: $e')));
     }
   }
 
@@ -122,8 +131,11 @@ class LoginScreen extends StatelessWidget {
                   const Positioned(
                     right: 30,
                     top: 50,
-                    child: Icon(Icons.auto_awesome,
-                        color: Color(0xFFFFA7A7), size: 22),
+                    child: Icon(
+                      Icons.auto_awesome,
+                      color: Color(0xFFFFA7A7),
+                      size: 22,
+                    ),
                   ),
                   const Positioned(
                     right: 50,
@@ -168,46 +180,51 @@ class LoginScreen extends StatelessWidget {
                   ),
                   // Brand content
                   Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          l10n.loginAppTitle,
-                          style: const TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 36,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFFFFA7A7),
-                            letterSpacing: -1,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            l10n.loginAppTitle,
+                            style: const TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFFFFA7A7),
+                              letterSpacing: -1,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          l10n.loginAppSubtitle,
-                          style: const TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF666666),
+                          const SizedBox(height: 8),
+                          Text(
+                            l10n.loginAppSubtitle,
+                            style: const TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF666666),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 24),
-                        // Illustration
-                        LayoutBuilder(
-                          builder: (context, constraints) {
-                            final size = MediaQuery.of(context).size;
-                            // 너비뿐 아니라 높이로도 제한해 넓고 낮은 창에서 오버플로 방지
-                            final imageSize =
-                                math.min(size.width * 0.55, size.height * 0.3);
-                            return Image.asset(
-                              'assets/images/login/이야기 숲.png',
-                              width: imageSize,
-                              height: imageSize,
-                              fit: BoxFit.contain,
-                            );
-                          },
-                        ),
-                      ],
+                          const SizedBox(height: 24),
+                          // Illustration
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              final size = MediaQuery.of(context).size;
+                              // 너비뿐 아니라 높이로도 제한해 넓고 낮은 창에서 오버플로 방지
+                              final imageSize = math.min(
+                                size.width * 0.55,
+                                size.height * 0.3,
+                              );
+                              return Image.asset(
+                                'assets/images/login/이야기 숲.png',
+                                width: imageSize,
+                                height: imageSize,
+                                fit: BoxFit.contain,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -254,7 +271,11 @@ class LoginScreen extends StatelessWidget {
                     onTap: () {},
                     backgroundColor: const Color(0xFFFF0033),
                     foregroundColor: Colors.white,
-                    icon: const Icon(Icons.search, color: Colors.white, size: 20),
+                    icon: const Icon(
+                      Icons.search,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                     label: l10n.loginWithYahoo,
                   ),
                 const SizedBox(height: 12),
@@ -274,8 +295,11 @@ class LoginScreen extends StatelessWidget {
                   onTap: () => _testJwt(context),
                   backgroundColor: Colors.white.withValues(alpha: 0.25),
                   foregroundColor: Colors.white,
-                  icon: const Icon(Icons.skip_next_rounded,
-                      color: Colors.white, size: 20),
+                  icon: const Icon(
+                    Icons.skip_next_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                   label: l10n.loginTestSkip,
                 ),
                 const SizedBox(height: 16),
@@ -361,9 +385,7 @@ class _GoogleIcon extends StatelessWidget {
     return Container(
       width: 20,
       height: 20,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
       child: const Text(
         'G',
         textAlign: TextAlign.center,

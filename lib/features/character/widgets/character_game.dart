@@ -15,7 +15,7 @@ class CharacterGame extends FlameGame {
   _CharacterComponent? _char;
 
   CharacterGame({required List<int> variants})
-      : _variants = List.from(variants);
+    : _variants = List.from(variants);
 
   @override
   Color backgroundColor() => const Color(0xFFFFF4CC);
@@ -32,15 +32,17 @@ class CharacterGame extends FlameGame {
   void _addSparkles() {
     final rng = math.Random();
     for (int i = 0; i < 8; i++) {
-      add(_FloatingSparkle(
-        position: Vector2(
-          rng.nextDouble() * size.x,
-          20 + rng.nextDouble() * (size.y - 40),
+      add(
+        _FloatingSparkle(
+          position: Vector2(
+            rng.nextDouble() * size.x,
+            20 + rng.nextDouble() * (size.y - 40),
+          ),
+          phase: rng.nextDouble() * math.pi * 2,
+          speed: 0.7 + rng.nextDouble() * 0.9,
+          sparkSize: 2.5 + rng.nextDouble() * 3.0,
         ),
-        phase: rng.nextDouble() * math.pi * 2,
-        speed: 0.7 + rng.nextDouble() * 0.9,
-        sparkSize: 2.5 + rng.nextDouble() * 3.0,
-      ));
+      );
     }
   }
 
@@ -66,15 +68,17 @@ class CharacterGame extends FlameGame {
     for (int i = 0; i < 14; i++) {
       final angle = i * math.pi * 2 / 14;
       final speed = 70.0 + rng.nextDouble() * 90;
-      add(_BurstParticle(
-        position: center +
-            Vector2(math.cos(angle) * 25, math.sin(angle) * 20),
-        velocity: Vector2(
-          math.cos(angle) * speed,
-          math.sin(angle) * speed - 40,
+      add(
+        _BurstParticle(
+          position:
+              center + Vector2(math.cos(angle) * 25, math.sin(angle) * 20),
+          velocity: Vector2(
+            math.cos(angle) * speed,
+            math.sin(angle) * speed - 40,
+          ),
+          color: burstColors[i % burstColors.length],
         ),
-        color: burstColors[i % burstColors.length],
-      ));
+      );
     }
   }
 }
@@ -83,7 +87,8 @@ class CharacterGame extends FlameGame {
 // 배경 컴포넌트
 // ─────────────────────────────────────────────────────────────────────────────
 
-class _BackgroundComponent extends Component with HasGameReference<CharacterGame> {
+class _BackgroundComponent extends Component
+    with HasGameReference<CharacterGame> {
   @override
   void render(Canvas canvas) {
     final w = game.size.x;
@@ -96,8 +101,7 @@ class _BackgroundComponent extends Component with HasGameReference<CharacterGame
     );
     canvas.drawRect(
       Rect.fromLTWH(0, 0, w, h),
-      Paint()
-        ..shader = gradient.createShader(Rect.fromLTWH(0, 0, w, h)),
+      Paint()..shader = gradient.createShader(Rect.fromLTWH(0, 0, w, h)),
     );
 
     canvas.drawLine(
@@ -132,9 +136,7 @@ class _PartLayer {
   final double _w;
   final double _h;
 
-  _PartLayer({required double w, required double h})
-      : _w = w,
-        _h = h;
+  _PartLayer({required double w, required double h}) : _w = w, _h = h;
 
   Future<void> loadPath(String? path) async {
     if (path == null) {
@@ -142,14 +144,11 @@ class _PartLayer {
       return;
     }
     try {
-      print('load: $path');
       final data = await rootBundle.load(path);
       final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
       final frame = await codec.getNextFrame();
       _image = frame.image;
-      print('load OK: $path (${_image!.width}×${_image!.height})');
-    } catch (e) {
-      print('load FAIL: $path -> $e');
+    } catch (_) {
       _image = null;
     }
   }
@@ -194,30 +193,30 @@ class _CharacterComponent extends Component
   late CharacterPainter _clothesPainter;
 
   _CharacterComponent({required List<int> variants})
-      : _variants = List.from(variants);
+    : _variants = List.from(variants);
 
   CharacterPainter _buildClothesPainter(List<int> v) => CharacterPainter(
-        hatVariant:       v[0],
-        topVariant:       v[1],
-        bottomVariant:    v[2],
-        glassesVariant:   v[3],
-        accessoryVariant: v[4],
-        faceVariant:      v.length > 5 ? v[5] : 1,
-        eyesVariant:      v.length > 6 ? v[6] : 1,
-        noseVariant:      v.length > 7 ? v[7] : 1,
-        mouthVariant:     v.length > 8 ? v[8] : 1,
-        clothesOnly:      true,
-      );
+    hatVariant: v[0],
+    topVariant: v[1],
+    bottomVariant: v[2],
+    glassesVariant: v[3],
+    accessoryVariant: v[4],
+    faceVariant: v.length > 5 ? v[5] : 1,
+    eyesVariant: v.length > 6 ? v[6] : 1,
+    noseVariant: v.length > 7 ? v[7] : 1,
+    mouthVariant: v.length > 8 ? v[8] : 1,
+    clothesOnly: true,
+  );
 
   @override
   Future<void> onLoad() async {
     _basePos = Vector2(game.size.x / 2, game.size.y / 2 - 8);
     _clothesPainter = _buildClothesPainter(_variants);
 
-    bodyComponent  = _PartLayer(w: _w, h: _h);
-    headComponent  = _PartLayer(w: _w, h: _h);
-    eyesComponent  = _PartLayer(w: _w, h: _h);
-    noseComponent  = _PartLayer(w: _w, h: _h);
+    bodyComponent = _PartLayer(w: _w, h: _h);
+    headComponent = _PartLayer(w: _w, h: _h);
+    eyesComponent = _PartLayer(w: _w, h: _h);
+    noseComponent = _PartLayer(w: _w, h: _h);
     mouthComponent = _PartLayer(w: _w, h: _h);
 
     // _PartLayer는 Flame Component가 아니므로 addAll 없이 직접 render 호출
@@ -233,16 +232,24 @@ class _CharacterComponent extends Component
     await Future.wait([
       bodyComponent.loadPath('assets/character_parts/base/body.png'),
       headComponent.loadPath(
-        (fv >= 1 && fv <= 2) ? 'assets/character_parts/base/head_0$fv.png' : null,
+        (fv >= 1 && fv <= 2)
+            ? 'assets/character_parts/base/head_0$fv.png'
+            : null,
       ),
       eyesComponent.loadPath(
-        (ev >= 1 && ev <= 3) ? 'assets/character_parts/eyes/eyes_0$ev.png' : null,
+        (ev >= 1 && ev <= 3)
+            ? 'assets/character_parts/eyes/eyes_0$ev.png'
+            : null,
       ),
       noseComponent.loadPath(
-        (nv >= 1 && nv <= 2) ? 'assets/character_parts/nose/nose_0$nv.png' : null,
+        (nv >= 1 && nv <= 2)
+            ? 'assets/character_parts/nose/nose_0$nv.png'
+            : null,
       ),
       mouthComponent.loadPath(
-        (mv >= 1 && mv <= 3) ? 'assets/character_parts/mouth/mouth_0$mv.png' : null,
+        (mv >= 1 && mv <= 3)
+            ? 'assets/character_parts/mouth/mouth_0$mv.png'
+            : null,
       ),
     ]);
   }
@@ -294,7 +301,13 @@ class _CharacterComponent extends Component
 
     // ── PNG 레이어 렌더링 (모든 파트 동일 dst rect → 정렬 보장) ──
     // 레이어 순: body → head → eyes → nose → mouth → clothes
-    for (final layer in [bodyComponent, headComponent, eyesComponent, noseComponent, mouthComponent]) {
+    for (final layer in [
+      bodyComponent,
+      headComponent,
+      eyesComponent,
+      noseComponent,
+      mouthComponent,
+    ]) {
       layer.render(canvas);
     }
 
@@ -321,10 +334,10 @@ class _FloatingSparkle extends Component {
     required double phase,
     required double speed,
     required double sparkSize,
-  })  : _pos = position.clone(),
-        _phase = phase,
-        _speed = speed,
-        _sparkSize = sparkSize;
+  }) : _pos = position.clone(),
+       _phase = phase,
+       _speed = speed,
+       _sparkSize = sparkSize;
 
   @override
   void update(double dt) {
@@ -333,8 +346,7 @@ class _FloatingSparkle extends Component {
 
   @override
   void render(Canvas canvas) {
-    final alpha =
-        (math.sin(_time * _speed + _phase) * 0.5 + 0.5) * 0.65;
+    final alpha = (math.sin(_time * _speed + _phase) * 0.5 + 0.5) * 0.65;
     if (alpha < 0.04) return;
 
     final yDrift = math.sin(_time * _speed * 0.5 + _phase) * 6.0;
@@ -373,9 +385,9 @@ class _BurstParticle extends Component {
     required Vector2 position,
     required Vector2 velocity,
     required Color color,
-  })  : _pos = position.clone(),
-        _vel = velocity.clone(),
-        _color = color;
+  }) : _pos = position.clone(),
+       _vel = velocity.clone(),
+       _color = color;
 
   @override
   void update(double dt) {
