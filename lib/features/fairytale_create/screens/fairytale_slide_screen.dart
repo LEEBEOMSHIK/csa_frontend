@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_response.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
+import 'package:csa_frontend/shared/services/audio_narration_service.dart';
 import 'package:csa_frontend/shared/services/tts_service.dart';
 import 'package:csa_frontend/utils/app_colors.dart';
 
@@ -23,23 +24,35 @@ class FairytaleSlideScreen extends StatefulWidget {
 
 class _FairytaleSlideScreenState extends State<FairytaleSlideScreen> {
   late final PageController _pageController;
+  late final Listenable _narrationListenable;
   int _currentIndex = 0;
 
   List<FairytalePageResponse> get _pages => widget.fairytale.pages;
+
+  bool get _isNarrating =>
+      TtsService.instance.isSpeaking.value ||
+      AudioNarrationService.instance.isPlaying.value;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    _narrationListenable = Listenable.merge([
+      TtsService.instance.isSpeaking,
+      AudioNarrationService.instance.isPlaying,
+    ]);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    if (TtsService.instance.isSpeaking.value) {
-      TtsService.instance.stop();
-    }
+    _stopNarration();
     super.dispose();
+  }
+
+  Future<void> _stopNarration() async {
+    await AudioNarrationService.instance.stop();
+    await TtsService.instance.stop();
   }
 
   Future<void> _moveTo(int index) async {
@@ -52,15 +65,29 @@ class _FairytaleSlideScreenState extends State<FairytaleSlideScreen> {
   }
 
   Future<void> _onPageChanged(int index) async {
+    final wasNarrating = _isNarrating;
     setState(() => _currentIndex = index);
-    if (!TtsService.instance.isSpeaking.value) return;
-    await _speakCurrentPage();
+    await _stopNarration();
+    if (!wasNarrating) return;
+    await _playCurrentPage();
   }
 
   Future<void> _toggleNarration() async {
-    if (TtsService.instance.isSpeaking.value) {
-      await TtsService.instance.stop();
+    if (_isNarrating) {
+      await _stopNarration();
       return;
+    }
+    await _playCurrentPage();
+  }
+
+  Future<void> _playCurrentPage() async {
+    if (_pages.isEmpty) return;
+    final page = _pages[_currentIndex];
+    final audioUrl = page.audioUrl?.trim();
+    if (audioUrl != null && audioUrl.isNotEmpty) {
+      await TtsService.instance.stop();
+      final started = await AudioNarrationService.instance.play(audioUrl);
+      if (started) return;
     }
     await _speakCurrentPage();
   }
@@ -69,6 +96,7 @@ class _FairytaleSlideScreenState extends State<FairytaleSlideScreen> {
     if (_pages.isEmpty) return;
     final text = _pages[_currentIndex].text.trim();
     if (text.isEmpty) return;
+    await AudioNarrationService.instance.stop();
     await TtsService.instance.speak(
       text,
       lang: widget.lang,
@@ -112,6 +140,8 @@ class _FairytaleSlideScreenState extends State<FairytaleSlideScreen> {
               nextLabel: materialL10n.nextPageTooltip,
               playLabel: l10n.detailReadBtn,
               stopLabel: l10n.detailDownloadCancel,
+              narrationListenable: _narrationListenable,
+              isNarrating: () => _isNarrating,
               onPrev: () => _moveTo(_currentIndex - 1),
               onNext: () => _moveTo(_currentIndex + 1),
               onPlayToggle: _toggleNarration,
@@ -275,6 +305,8 @@ class _SlideControls extends StatelessWidget {
   final String nextLabel;
   final String playLabel;
   final String stopLabel;
+  final Listenable narrationListenable;
+  final bool Function() isNarrating;
   final VoidCallback onPrev;
   final VoidCallback onNext;
   final VoidCallback onPlayToggle;
@@ -286,6 +318,8 @@ class _SlideControls extends StatelessWidget {
     required this.nextLabel,
     required this.playLabel,
     required this.stopLabel,
+    required this.narrationListenable,
+    required this.isNarrating,
     required this.onPrev,
     required this.onNext,
     required this.onPlayToggle,
@@ -306,9 +340,10 @@ class _SlideControls extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: ValueListenableBuilder<bool>(
-              valueListenable: TtsService.instance.isSpeaking,
-              builder: (context, speaking, _) {
+            child: AnimatedBuilder(
+              animation: narrationListenable,
+              builder: (context, _) {
+                final speaking = isNarrating();
                 return ElevatedButton.icon(
                   key: const Key('slide-play-button'),
                   onPressed: onPlayToggle,
