@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
+import 'package:csa_frontend/features/my/models/user_settings.dart';
 import 'package:csa_frontend/features/my/screens/my_fairytale_list_screen.dart';
+import 'package:csa_frontend/features/my/services/user_settings_service.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 import 'package:csa_frontend/utils/locale_provider.dart';
+
+const String _currentTermVersion = 'v1.0';
 
 class MyScreen extends StatefulWidget {
   const MyScreen({super.key});
@@ -12,11 +16,121 @@ class MyScreen extends StatefulWidget {
 }
 
 class _MyScreenState extends State<MyScreen> {
-  bool _textNotiEnabled = true;
-  bool _pushNotiEnabled = true;
+  bool _textNotiEnabled = textNotiNotifier.value;
+  bool _pushNotiEnabled = pushNotiNotifier.value;
+
+  final _settingsService = UserSettingsService.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    textNotiNotifier.addListener(_syncNotiFromNotifiers);
+    pushNotiNotifier.addListener(_syncNotiFromNotifiers);
+  }
+
+  @override
+  void dispose() {
+    textNotiNotifier.removeListener(_syncNotiFromNotifiers);
+    pushNotiNotifier.removeListener(_syncNotiFromNotifiers);
+    super.dispose();
+  }
+
+  void _syncNotiFromNotifiers() {
+    if (!mounted) return;
+    setState(() {
+      _textNotiEnabled = textNotiNotifier.value;
+      _pushNotiEnabled = pushNotiNotifier.value;
+    });
+  }
+
+  UserSettings _currentSettings() => UserSettings(
+        locale: localeNotifier.value.languageCode,
+        textNotiEnabled: _textNotiEnabled,
+        pushNotiEnabled: _pushNotiEnabled,
+      );
 
   String get _selectedLanguageName =>
       localeNotifier.value.languageCode == 'ja' ? '日本語' : '한국어';
+
+  Future<void> _changeLanguage(String languageCode) async {
+    final previous = localeNotifier.value;
+    if (previous.languageCode == languageCode) return;
+    try {
+      final updated = await _settingsService.updateSettings(
+        _currentSettings().copyWith(locale: languageCode),
+      );
+      localeNotifier.value = Locale(updated.locale);
+    } catch (_) {
+      localeNotifier.value = previous;
+      _showSaveError();
+    }
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _changeNoti({bool? text, bool? push}) async {
+    final prevText = _textNotiEnabled;
+    final prevPush = _pushNotiEnabled;
+    setState(() {
+      if (text != null) _textNotiEnabled = text;
+      if (push != null) _pushNotiEnabled = push;
+    });
+    try {
+      final updated =
+          await _settingsService.updateSettings(_currentSettings());
+      textNotiNotifier.value = updated.textNotiEnabled;
+      pushNotiNotifier.value = updated.pushNotiEnabled;
+    } catch (_) {
+      setState(() {
+        _textNotiEnabled = prevText;
+        _pushNotiEnabled = prevPush;
+      });
+      _showSaveError();
+    }
+  }
+
+  void _showSaveError() {
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.settingsSaveError)),
+    );
+  }
+
+  Future<void> _agreeTerm(TermType type, String title) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(l10n.settingsTermAgreeTitle),
+          content: Text(l10n.settingsTermAgreeMessage(title)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text(l10n.settingsTermAgreeCancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: Text(l10n.settingsTermAgreeConfirm),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed != true) return;
+    try {
+      await _settingsService.agreeTerm(type, _currentTermVersion);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.settingsTermAgreed)),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.settingsTermAgreeError)),
+      );
+    }
+  }
 
   void _showLanguagePicker(AppLocalizations l10n) {
     showModalBottomSheet(
@@ -54,18 +168,16 @@ class _MyScreenState extends State<MyScreen> {
                   label: '한국어',
                   isSelected: localeNotifier.value.languageCode == 'ko',
                   onTap: () {
-                    localeNotifier.value = const Locale('ko');
-                    setState(() {});
                     Navigator.pop(context);
+                    _changeLanguage('ko');
                   },
                 ),
                 _LanguageOption(
                   label: '日本語',
                   isSelected: localeNotifier.value.languageCode == 'ja',
                   onTap: () {
-                    localeNotifier.value = const Locale('ja');
-                    setState(() {});
                     Navigator.pop(context);
+                    _changeLanguage('ja');
                   },
                 ),
               ],
@@ -177,12 +289,12 @@ class _MyScreenState extends State<MyScreen> {
                   _ToggleRow(
                     label: l10n.settingsTextNoti,
                     value: _textNotiEnabled,
-                    onChanged: (v) => setState(() => _textNotiEnabled = v),
+                    onChanged: (v) => _changeNoti(text: v),
                   ),
                   _ToggleRow(
                     label: l10n.settingsPushNoti,
                     value: _pushNotiEnabled,
-                    onChanged: (v) => setState(() => _pushNotiEnabled = v),
+                    onChanged: (v) => _changeNoti(push: v),
                   ),
                   const _ThickDivider(),
                   // 앱 설정 섹션
@@ -199,9 +311,21 @@ class _MyScreenState extends State<MyScreen> {
                   const _ThickDivider(),
                   // 약관 및 정책 섹션
                   _SectionHeader(title: l10n.settingsSectionPolicy),
-                  _SubRow(label: l10n.settingsTerms, onTap: () {}),
-                  _SubRow(label: l10n.settingsFinanceTerms, onTap: () {}),
-                  _SubRow(label: l10n.settingsPrivacy, onTap: () {}),
+                  _SubRow(
+                    label: l10n.settingsTerms,
+                    onTap: () =>
+                        _agreeTerm(TermType.service, l10n.settingsTerms),
+                  ),
+                  _SubRow(
+                    label: l10n.settingsFinanceTerms,
+                    onTap: () => _agreeTerm(
+                        TermType.finance, l10n.settingsFinanceTerms),
+                  ),
+                  _SubRow(
+                    label: l10n.settingsPrivacy,
+                    onTap: () =>
+                        _agreeTerm(TermType.privacy, l10n.settingsPrivacy),
+                  ),
                 ],
               ),
             ),

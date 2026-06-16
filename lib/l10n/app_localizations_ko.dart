@@ -461,6 +461,29 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settingsPrivacy => '개인정보처리방침';
 
   @override
+  String get settingsSaveError => '설정을 저장하지 못했어요';
+
+  @override
+  String get settingsTermAgreeTitle => '약관 동의';
+
+  @override
+  String settingsTermAgreeMessage(String title) {
+    return '$title에 동의하시겠어요?';
+  }
+
+  @override
+  String get settingsTermAgreeConfirm => '동의';
+
+  @override
+  String get settingsTermAgreeCancel => '취소';
+
+  @override
+  String get settingsTermAgreed => '동의 완료';
+
+  @override
+  String get settingsTermAgreeError => '동의 처리에 실패했어요';
+
+  @override
   String get loginAppTitle => '이야기 숲';
 
   @override

@@ -181,6 +181,18 @@
   "settingsTerms": "サービス利用規約",
   "settingsFinanceTerms": "電子金融取引利用規約",
   "settingsPrivacy": "プライバシーポリシー",
+  "settingsSaveError": "設定を保存できませんでした",
+  "settingsTermAgreeTitle": "規約同意",
+  "settingsTermAgreeMessage": "{title}に同意しますか？",
+  "@settingsTermAgreeMessage": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+  "settingsTermAgreeConfirm": "同意する",
+  "settingsTermAgreeCancel": "キャンセル",
+  "settingsTermAgreed": "同意が完了しました",
+  "settingsTermAgreeError": "同意処理に失敗しました",
 
   "loginAppTitle": "物語の森",
   "loginAppSubtitle": "Children Story Adventure",

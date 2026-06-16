@@ -181,6 +181,18 @@
   "settingsTerms": "서비스 이용약관",
   "settingsFinanceTerms": "전자금융거래 이용약관",
   "settingsPrivacy": "개인정보처리방침",
+  "settingsSaveError": "설정을 저장하지 못했어요",
+  "settingsTermAgreeTitle": "약관 동의",
+  "settingsTermAgreeMessage": "{title}에 동의하시겠어요?",
+  "@settingsTermAgreeMessage": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+  "settingsTermAgreeConfirm": "동의",
+  "settingsTermAgreeCancel": "취소",
+  "settingsTermAgreed": "동의 완료",
+  "settingsTermAgreeError": "동의 처리에 실패했어요",
 
   "loginAppTitle": "이야기 숲",
   "loginAppSubtitle": "Children Story Adventure",

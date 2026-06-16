@@ -986,6 +986,48 @@ abstract class AppLocalizations {
   /// **'개인정보처리방침'**
   String get settingsPrivacy;
 
+  /// No description provided for @settingsSaveError.
+  ///
+  /// In ko, this message translates to:
+  /// **'설정을 저장하지 못했어요'**
+  String get settingsSaveError;
+
+  /// No description provided for @settingsTermAgreeTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'약관 동의'**
+  String get settingsTermAgreeTitle;
+
+  /// No description provided for @settingsTermAgreeMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'{title}에 동의하시겠어요?'**
+  String settingsTermAgreeMessage(String title);
+
+  /// No description provided for @settingsTermAgreeConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'동의'**
+  String get settingsTermAgreeConfirm;
+
+  /// No description provided for @settingsTermAgreeCancel.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get settingsTermAgreeCancel;
+
+  /// No description provided for @settingsTermAgreed.
+  ///
+  /// In ko, this message translates to:
+  /// **'동의 완료'**
+  String get settingsTermAgreed;
+
+  /// No description provided for @settingsTermAgreeError.
+  ///
+  /// In ko, this message translates to:
+  /// **'동의 처리에 실패했어요'**
+  String get settingsTermAgreeError;
+
   /// No description provided for @loginAppTitle.
   ///
   /// In ko, this message translates to:

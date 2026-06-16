@@ -461,6 +461,29 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settingsPrivacy => 'プライバシーポリシー';
 
   @override
+  String get settingsSaveError => '設定を保存できませんでした';
+
+  @override
+  String get settingsTermAgreeTitle => '規約同意';
+
+  @override
+  String settingsTermAgreeMessage(String title) {
+    return '$titleに同意しますか？';
+  }
+
+  @override
+  String get settingsTermAgreeConfirm => '同意する';
+
+  @override
+  String get settingsTermAgreeCancel => 'キャンセル';
+
+  @override
+  String get settingsTermAgreed => '同意が完了しました';
+
+  @override
+  String get settingsTermAgreeError => '同意処理に失敗しました';
+
+  @override
   String get loginAppTitle => '物語の森';
 
   @override

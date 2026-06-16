@@ -6,6 +6,7 @@ import 'package:csa_frontend/features/home/screens/home_screen.dart';
 import 'package:csa_frontend/features/favorites/screens/favorites_screen.dart';
 import 'package:csa_frontend/features/favorites/services/favorite_service.dart';
 import 'package:csa_frontend/features/my/screens/my_screen.dart';
+import 'package:csa_frontend/features/my/services/user_settings_service.dart';
 import 'package:csa_frontend/utils/locale_provider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -24,12 +25,22 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _loadFavorites();
+    _loadSettings();
   }
 
   Future<void> _loadFavorites() async {
     try {
       final items = await FavoriteService.instance.fetchFavorites();
       favoritesNotifier.value = items;
+    } catch (_) {}
+  }
+
+  Future<void> _loadSettings() async {
+    try {
+      final settings = await UserSettingsService.instance.fetchSettings();
+      localeNotifier.value = Locale(settings.locale);
+      textNotiNotifier.value = settings.textNotiEnabled;
+      pushNotiNotifier.value = settings.pushNotiEnabled;
     } catch (_) {}
   }
 
