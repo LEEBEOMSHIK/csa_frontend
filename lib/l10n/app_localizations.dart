@@ -1220,6 +1220,24 @@ abstract class AppLocalizations {
   /// **'오프라인 저장을 삭제했어요'**
   String get offlineDeleteSuccess;
 
+  /// No description provided for @offlineBanner.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인 상태예요. 저장한 동화만 볼 수 있어요'**
+  String get offlineBanner;
+
+  /// No description provided for @offlineUnavailable.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인에서는 저장한 동화만 볼 수 있어요'**
+  String get offlineUnavailable;
+
+  /// No description provided for @offlineListEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인에 저장한 동화가 없어요'**
+  String get offlineListEmpty;
+
   /// No description provided for @characterSaveTitle.
   ///
   /// In ko, this message translates to:

@@ -582,6 +582,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get offlineDeleteSuccess => 'オフライン保存を削除しました';
 
   @override
+  String get offlineBanner => 'オフラインです。保存した童話のみ閲覧できます';
+
+  @override
+  String get offlineUnavailable => 'オフラインでは保存した童話のみ閲覧できます';
+
+  @override
+  String get offlineListEmpty => 'オフラインに保存した童話がありません';
+
+  @override
   String get characterSaveTitle => 'キャラクター保存';
 
   @override

@@ -582,6 +582,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get offlineDeleteSuccess => '오프라인 저장을 삭제했어요';
 
   @override
+  String get offlineBanner => '오프라인 상태예요. 저장한 동화만 볼 수 있어요';
+
+  @override
+  String get offlineUnavailable => '오프라인에서는 저장한 동화만 볼 수 있어요';
+
+  @override
+  String get offlineListEmpty => '오프라인에 저장한 동화가 없어요';
+
+  @override
   String get characterSaveTitle => '캐릭터 저장';
 
   @override

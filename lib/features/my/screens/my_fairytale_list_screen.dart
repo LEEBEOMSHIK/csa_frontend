@@ -4,15 +4,23 @@ import 'package:csa_frontend/features/fairytale_create/screens/fairytale_slide_s
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/my/models/my_fairytale.dart';
 import 'package:csa_frontend/features/my/services/my_fairytale_service.dart';
+import 'package:csa_frontend/features/offline/models/offline_slide_entry.dart';
 import 'package:csa_frontend/shared/services/api_client.dart';
+import 'package:csa_frontend/shared/services/connectivity_service.dart';
 import 'package:csa_frontend/shared/services/download_manager.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 
 class MyFairytaleListScreen extends StatefulWidget {
   final MyFairytaleService? service;
   final DownloadManager? downloadManager;
+  final ConnectivityService? connectivity;
 
-  const MyFairytaleListScreen({super.key, this.service, this.downloadManager});
+  const MyFairytaleListScreen({
+    super.key,
+    this.service,
+    this.downloadManager,
+    this.connectivity,
+  });
 
   @override
   State<MyFairytaleListScreen> createState() => _MyFairytaleListScreenState();
@@ -24,6 +32,9 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
   late Future<List<MyFairytale>> _future;
   List<MyFairytale> _items = [];
 
+  /// 직전 로드가 오프라인 저장본 기반이었는지 여부
+  bool _loadedOffline = false;
+
   /// 다운로드 진행 중인 동화 id 집합
   final Set<int> _downloading = {};
 
@@ -33,16 +44,72 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
   DownloadManager get _downloadManager =>
       widget.downloadManager ?? DownloadManager.instance;
 
+  ConnectivityService get _connectivity =>
+      widget.connectivity ?? ConnectivityService.instance;
+
   @override
   void initState() {
     super.initState();
     _future = _load();
+    _connectivity.isOnline.addListener(_onConnectivityChanged);
+  }
+
+  @override
+  void dispose() {
+    _connectivity.isOnline.removeListener(_onConnectivityChanged);
+    super.dispose();
+  }
+
+  void _onConnectivityChanged() {
+    if (!mounted) return;
+    // 온라인 복귀 시 서버 목록으로, 오프라인 진입 시 저장본 목록으로 자동 전환한다.
+    _reload();
+  }
+
+  /// 오프라인 저장본만 [MyFairytale] 카드 모델로 변환해 표시한다.
+  List<MyFairytale> _offlineItems() {
+    return _downloadManager
+        .availableSlides()
+        .map(_offlineToMyFairytale)
+        .toList();
+  }
+
+  static MyFairytale _offlineToMyFairytale(OfflineSlideEntry entry) {
+    return MyFairytale(
+      id: int.tryParse(entry.fairytaleId) ?? 0,
+      title: entry.title,
+      format: 'slide',
+      status: 'COMPLETED',
+      language: 'ko',
+      shared: false,
+      thumbnailUrl: null,
+      pageCount: entry.pages.length,
+      createdAt: entry.downloadedAt,
+    );
   }
 
   Future<List<MyFairytale>> _load() async {
-    final items = await _service.fetchMyFairytales();
-    _items = items;
-    return items;
+    // 오프라인이면 서버 호출 없이 저장본만 표시한다.
+    if (!_connectivity.isOnline.value) {
+      _loadedOffline = true;
+      _items = _offlineItems();
+      return _items;
+    }
+    try {
+      final items = await _service.fetchMyFairytales();
+      _loadedOffline = false;
+      _items = items;
+      return items;
+    } on ApiException catch (e) {
+      // 네트워크 오류는 저장본으로 폴백하고, 그 외 서버 오류는 그대로 노출한다.
+      if (e.type == ApiExceptionType.network ||
+          e.type == ApiExceptionType.timeout) {
+        _loadedOffline = true;
+        _items = _offlineItems();
+        return _items;
+      }
+      rethrow;
+    }
   }
 
   void _reload() {
@@ -176,6 +243,14 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
       return;
     }
 
+    // 저장본이 없는데 오프라인이면 서버 재생 대신 안내한다(접근 가드).
+    if (!_connectivity.isOnline.value) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.offlineUnavailable)));
+      return;
+    }
+
     try {
       final response = await _service.fetchSlides(item.id);
       if (!mounted) return;
@@ -217,6 +292,11 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
       body: Column(
         children: [
           AppTopBar(title: l10n.myFairytaleTitle),
+          ValueListenableBuilder<bool>(
+            valueListenable: _connectivity.isOnline,
+            builder: (_, online, _) =>
+                online ? const SizedBox.shrink() : _OfflineBanner(l10n: l10n),
+          ),
           Expanded(
             child: FutureBuilder<List<MyFairytale>>(
               future: _future,
@@ -234,7 +314,11 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
                   );
                 }
                 if (_items.isEmpty) {
-                  return _EmptyView(message: l10n.myFairytaleEmpty);
+                  return _EmptyView(
+                    message: _loadedOffline
+                        ? l10n.offlineListEmpty
+                        : l10n.myFairytaleEmpty,
+                  );
                 }
                 return ListView.separated(
                   padding: const EdgeInsets.all(16),
@@ -429,6 +513,42 @@ class _OfflineButton extends StatelessWidget {
         Icons.download_outlined,
         color: Color(0xFFBBBBBB),
         size: 22,
+      ),
+    );
+  }
+}
+
+class _OfflineBanner extends StatelessWidget {
+  final AppLocalizations l10n;
+  const _OfflineBanner({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: const Color(0xFFFFF1D6),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.cloud_off_rounded,
+            size: 18,
+            color: Color(0xFFB8860B),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              l10n.offlineBanner,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF8A6D1B),
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

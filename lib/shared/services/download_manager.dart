@@ -78,6 +78,22 @@ class DownloadManager {
     return _store.slideBox.get(fairytaleId);
   }
 
+  /// 완료·미만료 상태로 저장된(오프라인 이용 가능) 슬라이드 동화 목록.
+  /// 오프라인 상태에서 서버 목록 대신 표시할 후보로 사용한다.
+  List<OfflineSlideEntry> availableSlides() {
+    if (!_store.isInitialized) return const [];
+    final now = DateTime.now();
+    final entries = <OfflineSlideEntry>[];
+    for (final id in _store.metaBox.keys.cast<String>()) {
+      final meta = _store.metaBox.get(id);
+      if (meta == null || !meta.isCompleted || meta.isExpired(now)) continue;
+      final slide = _store.slideBox.get(id);
+      if (slide != null) entries.add(slide);
+    }
+    entries.sort((a, b) => b.downloadedAt.compareTo(a.downloadedAt));
+    return entries;
+  }
+
   /// 슬라이드 형식 동화를 오프라인 저장한다.
   /// 동시에 1개만 진행되도록 내부 큐에 직렬화한다.
   Future<void> downloadSlide({
