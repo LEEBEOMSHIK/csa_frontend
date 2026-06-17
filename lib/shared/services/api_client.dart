@@ -90,6 +90,27 @@ class ApiClient {
     }
   }
 
+  /// 원격 파일(이미지/오디오)을 로컬 경로로 다운로드한다.
+  /// 오프라인 저장 등 바이너리 다운로드 전용. [url] 은 절대 URL 이어야 한다.
+  Future<void> downloadFile(
+    String url,
+    String savePath, {
+    void Function(int received, int total)? onReceiveProgress,
+    CancelToken? cancelToken,
+  }) async {
+    try {
+      await _dio.download(
+        url,
+        savePath,
+        cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress,
+      );
+    } on DioException catch (e) {
+      if (CancelToken.isCancel(e)) rethrow;
+      throw _mapError(e);
+    }
+  }
+
   ApiException _mapError(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:

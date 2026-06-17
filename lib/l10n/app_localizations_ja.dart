@@ -558,6 +558,27 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get offlineSaveAction => 'オフライン保存';
+
+  @override
+  String get offlineSavedLabel => '保存済み';
+
+  @override
+  String get offlineDownloading => '保存中...';
+
+  @override
+  String get offlineDeleteAction => 'オフライン削除';
+
+  @override
+  String get offlineSaveSuccess => 'オフラインに保存しました';
+
+  @override
+  String get offlineSaveFailed => 'オフライン保存に失敗しました';
+
+  @override
+  String get offlineDeleteSuccess => 'オフライン保存を削除しました';
+
+  @override
   String get characterSaveTitle => 'キャラクター保存';
 
   @override

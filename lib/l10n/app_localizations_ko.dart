@@ -558,6 +558,27 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get offlineSaveAction => '오프라인 저장';
+
+  @override
+  String get offlineSavedLabel => '저장됨';
+
+  @override
+  String get offlineDownloading => '저장 중...';
+
+  @override
+  String get offlineDeleteAction => '오프라인 삭제';
+
+  @override
+  String get offlineSaveSuccess => '오프라인에 저장했어요';
+
+  @override
+  String get offlineSaveFailed => '오프라인 저장에 실패했어요';
+
+  @override
+  String get offlineDeleteSuccess => '오프라인 저장을 삭제했어요';
+
+  @override
   String get characterSaveTitle => '캐릭터 저장';
 
   @override

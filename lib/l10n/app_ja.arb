@@ -223,6 +223,13 @@
       "count": { "type": "int" }
     }
   },
+  "offlineSaveAction": "オフライン保存",
+  "offlineSavedLabel": "保存済み",
+  "offlineDownloading": "保存中...",
+  "offlineDeleteAction": "オフライン削除",
+  "offlineSaveSuccess": "オフラインに保存しました",
+  "offlineSaveFailed": "オフライン保存に失敗しました",
+  "offlineDeleteSuccess": "オフライン保存を削除しました",
   "characterSaveTitle": "キャラクター保存",
   "characterNameHint": "キャラクター名",
   "characterSaveAction": "保存",

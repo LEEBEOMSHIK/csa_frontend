@@ -1172,6 +1172,48 @@ abstract class AppLocalizations {
   /// **'{count}페이지'**
   String myFairytalePageCount(int count);
 
+  /// No description provided for @offlineSaveAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인 저장'**
+  String get offlineSaveAction;
+
+  /// No description provided for @offlineSavedLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장됨'**
+  String get offlineSavedLabel;
+
+  /// No description provided for @offlineDownloading.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장 중...'**
+  String get offlineDownloading;
+
+  /// No description provided for @offlineDeleteAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인 삭제'**
+  String get offlineDeleteAction;
+
+  /// No description provided for @offlineSaveSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인에 저장했어요'**
+  String get offlineSaveSuccess;
+
+  /// No description provided for @offlineSaveFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인 저장에 실패했어요'**
+  String get offlineSaveFailed;
+
+  /// No description provided for @offlineDeleteSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인 저장을 삭제했어요'**
+  String get offlineDeleteSuccess;
+
   /// No description provided for @characterSaveTitle.
   ///
   /// In ko, this message translates to:

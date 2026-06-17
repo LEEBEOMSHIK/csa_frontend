@@ -223,6 +223,13 @@
       "count": { "type": "int" }
     }
   },
+  "offlineSaveAction": "오프라인 저장",
+  "offlineSavedLabel": "저장됨",
+  "offlineDownloading": "저장 중...",
+  "offlineDeleteAction": "오프라인 삭제",
+  "offlineSaveSuccess": "오프라인에 저장했어요",
+  "offlineSaveFailed": "오프라인 저장에 실패했어요",
+  "offlineDeleteSuccess": "오프라인 저장을 삭제했어요",
   "characterSaveTitle": "캐릭터 저장",
   "characterNameHint": "캐릭터 이름",
   "characterSaveAction": "저장",

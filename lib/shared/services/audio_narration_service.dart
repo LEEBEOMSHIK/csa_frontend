@@ -20,6 +20,9 @@ class AudioNarrationService {
   Future<bool> Function(String url)? playOverride;
 
   @visibleForTesting
+  Future<bool> Function(String filePath)? playFileOverride;
+
+  @visibleForTesting
   Future<void> Function()? stopOverride;
 
   void _ensureInit() {
@@ -47,6 +50,28 @@ class AudioNarrationService {
     try {
       await _player.stop();
       await _player.setUrl(url);
+      isPlaying.value = true;
+      unawaited(_player.play());
+      return true;
+    } catch (_) {
+      isPlaying.value = false;
+      return false;
+    }
+  }
+
+  /// 로컬 파일 경로의 오디오를 재생한다. 성공 시 true, 실패 시 false.
+  Future<bool> playFile(String filePath) async {
+    if (filePath.trim().isEmpty) return false;
+    final override = playFileOverride;
+    if (override != null) {
+      final ok = await override(filePath);
+      isPlaying.value = ok;
+      return ok;
+    }
+    _ensureInit();
+    try {
+      await _player.stop();
+      await _player.setFilePath(filePath);
       isPlaying.value = true;
       unawaited(_player.play());
       return true;

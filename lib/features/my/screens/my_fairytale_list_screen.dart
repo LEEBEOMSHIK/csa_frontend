@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_response.dart';
 import 'package:csa_frontend/features/fairytale_create/screens/fairytale_slide_screen.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/my/models/my_fairytale.dart';
 import 'package:csa_frontend/features/my/services/my_fairytale_service.dart';
 import 'package:csa_frontend/shared/services/api_client.dart';
+import 'package:csa_frontend/shared/services/download_manager.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 
 class MyFairytaleListScreen extends StatefulWidget {
   final MyFairytaleService? service;
+  final DownloadManager? downloadManager;
 
-  const MyFairytaleListScreen({super.key, this.service});
+  const MyFairytaleListScreen({super.key, this.service, this.downloadManager});
 
   @override
   State<MyFairytaleListScreen> createState() => _MyFairytaleListScreenState();
@@ -21,8 +24,14 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
   late Future<List<MyFairytale>> _future;
   List<MyFairytale> _items = [];
 
+  /// 다운로드 진행 중인 동화 id 집합
+  final Set<int> _downloading = {};
+
   MyFairytaleService get _service =>
       widget.service ?? MyFairytaleService.instance;
+
+  DownloadManager get _downloadManager =>
+      widget.downloadManager ?? DownloadManager.instance;
 
   @override
   void initState() {
@@ -105,9 +114,68 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
     }
   }
 
+  bool _isOffline(MyFairytale item) =>
+      _downloadManager.isOfflineAvailable(item.id.toString());
+
+  Future<void> _onSaveOffline(MyFairytale item) async {
+    if (!item.isCompleted || item.format != 'slide') return;
+    final l10n = AppLocalizations.of(context)!;
+    setState(() => _downloading.add(item.id));
+    try {
+      await _downloadManager.downloadSlide(
+        fairytaleId: item.id,
+        voiceType: 'dad',
+        language: item.language,
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.offlineSaveSuccess)));
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.offlineSaveFailed)));
+    } finally {
+      if (mounted) setState(() => _downloading.remove(item.id));
+    }
+  }
+
+  Future<void> _onDeleteOffline(MyFairytale item) async {
+    final l10n = AppLocalizations.of(context)!;
+    await _downloadManager.delete(item.id.toString());
+    if (!mounted) return;
+    setState(() {});
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.offlineDeleteSuccess)));
+  }
+
   Future<void> _onOpen(MyFairytale item) async {
     if (!item.isCompleted || item.format != 'slide') return;
     final l10n = AppLocalizations.of(context)!;
+
+    // 오프라인 저장본이 있으면 로컬 파일로 재생한다.
+    final offline = _downloadManager.getSlide(item.id.toString());
+    if (offline != null) {
+      final response = FairytaleGenerateResponse.fromOfflineSlide(
+        offline,
+        language: item.language,
+        voiceType: 'dad',
+      );
+      if (!mounted) return;
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => FairytaleSlideScreen(
+            fairytale: response,
+            lang: item.language,
+            voiceType: 'dad',
+          ),
+        ),
+      );
+      return;
+    }
+
     try {
       final response = await _service.fetchSlides(item.id);
       if (!mounted) return;
@@ -176,9 +244,13 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
                     item: _items[i],
                     accent: _accent,
                     l10n: l10n,
+                    isOffline: _isOffline(_items[i]),
+                    isDownloading: _downloading.contains(_items[i].id),
                     onOpen: () => _onOpen(_items[i]),
                     onToggleShare: () => _onToggleShare(_items[i]),
                     onDelete: () => _onDelete(_items[i]),
+                    onSaveOffline: () => _onSaveOffline(_items[i]),
+                    onDeleteOffline: () => _onDeleteOffline(_items[i]),
                   ),
                 );
               },
@@ -194,17 +266,25 @@ class _FairytaleCard extends StatelessWidget {
   final MyFairytale item;
   final Color accent;
   final AppLocalizations l10n;
+  final bool isOffline;
+  final bool isDownloading;
   final VoidCallback onOpen;
   final VoidCallback onToggleShare;
   final VoidCallback onDelete;
+  final VoidCallback onSaveOffline;
+  final VoidCallback onDeleteOffline;
 
   const _FairytaleCard({
     required this.item,
     required this.accent,
     required this.l10n,
+    required this.isOffline,
+    required this.isDownloading,
     required this.onOpen,
     required this.onToggleShare,
     required this.onDelete,
+    required this.onSaveOffline,
+    required this.onDeleteOffline,
   });
 
   @override
@@ -268,6 +348,15 @@ class _FairytaleCard extends StatelessWidget {
                 ],
               ),
             ),
+            if (item.isCompleted && item.format == 'slide')
+              _OfflineButton(
+                l10n: l10n,
+                accent: accent,
+                isOffline: isOffline,
+                isDownloading: isDownloading,
+                onSave: onSaveOffline,
+                onDelete: onDeleteOffline,
+              ),
             if (item.isCompleted)
               IconButton(
                 tooltip: item.shared
@@ -291,6 +380,55 @@ class _FairytaleCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _OfflineButton extends StatelessWidget {
+  final AppLocalizations l10n;
+  final Color accent;
+  final bool isOffline;
+  final bool isDownloading;
+  final VoidCallback onSave;
+  final VoidCallback onDelete;
+
+  const _OfflineButton({
+    required this.l10n,
+    required this.accent,
+    required this.isOffline,
+    required this.isDownloading,
+    required this.onSave,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isDownloading) {
+      return IconButton(
+        tooltip: l10n.offlineDownloading,
+        onPressed: null,
+        icon: const SizedBox(
+          width: 18,
+          height: 18,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      );
+    }
+    if (isOffline) {
+      return IconButton(
+        tooltip: l10n.offlineDeleteAction,
+        onPressed: onDelete,
+        icon: Icon(Icons.offline_pin_rounded, color: accent, size: 22),
+      );
+    }
+    return IconButton(
+      tooltip: l10n.offlineSaveAction,
+      onPressed: onSave,
+      icon: const Icon(
+        Icons.download_outlined,
+        color: Color(0xFFBBBBBB),
+        size: 22,
       ),
     );
   }

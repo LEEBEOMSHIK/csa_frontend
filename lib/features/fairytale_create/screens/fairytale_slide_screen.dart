@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_response.dart';
@@ -83,6 +85,14 @@ class _FairytaleSlideScreenState extends State<FairytaleSlideScreen> {
   Future<void> _playCurrentPage() async {
     if (_pages.isEmpty) return;
     final page = _pages[_currentIndex];
+    final localAudioPath = page.localAudioPath?.trim();
+    if (localAudioPath != null && localAudioPath.isNotEmpty) {
+      await TtsService.instance.stop();
+      final started = await AudioNarrationService.instance.playFile(
+        localAudioPath,
+      );
+      if (started) return;
+    }
     final audioUrl = page.audioUrl?.trim();
     if (audioUrl != null && audioUrl.isNotEmpty) {
       await TtsService.instance.stop();
@@ -218,7 +228,12 @@ class _SlidePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(22),
               child: DecoratedBox(
                 decoration: const BoxDecoration(color: Color(0xFFFFF4E5)),
-                child: SizedBox.expand(child: _SlideImage(url: page.imageUrl)),
+                child: SizedBox.expand(
+                  child: _SlideImage(
+                    url: page.imageUrl,
+                    localPath: page.localImagePath,
+                  ),
+                ),
               ),
             ),
           ),
@@ -260,11 +275,20 @@ class _SlidePage extends StatelessWidget {
 
 class _SlideImage extends StatelessWidget {
   final String? url;
+  final String? localPath;
 
-  const _SlideImage({required this.url});
+  const _SlideImage({required this.url, this.localPath});
 
   @override
   Widget build(BuildContext context) {
+    final path = localPath;
+    if (path != null && path.isNotEmpty) {
+      return Image.file(
+        File(path),
+        fit: BoxFit.cover,
+        errorBuilder: (_, _, _) => const _ImagePlaceholder(),
+      );
+    }
     final imageUrl = url;
     if (imageUrl == null || imageUrl.isEmpty) {
       return const _ImagePlaceholder();
