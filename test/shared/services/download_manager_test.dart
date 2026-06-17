@@ -170,6 +170,50 @@ void main() {
     expect(metaBox.containsKey('100'), isFalse);
   });
 
+  test('availableMeta/totalUsedBytes/savedCount aggregate saved entries',
+      () async {
+    await manager.downloadSlide(
+      fairytaleId: 42,
+      voiceType: 'dad',
+      language: 'ko',
+    );
+
+    // 만료 항목은 집계에서 제외되어야 한다.
+    metaBox.put(
+      '99',
+      OfflineMetaEntry(
+        fairytaleId: '99',
+        format: 'slide',
+        totalSizeBytes: 5000,
+        downloadedAt: DateTime.now(),
+        expiresAt: DateTime.now().subtract(const Duration(days: 1)),
+        status: DownloadStatus.completed,
+      ),
+    );
+
+    expect(manager.savedCount(), 1);
+    expect(manager.availableMeta().length, 1);
+    expect(manager.availableMeta().first.fairytaleId, '42');
+    expect(manager.totalUsedBytes(), manager.availableMeta().first.totalSizeBytes);
+    expect(manager.totalUsedBytes(), greaterThan(0));
+  });
+
+  test('deleteAll removes every saved entry and files', () async {
+    await manager.downloadSlide(
+      fairytaleId: 42,
+      voiceType: 'dad',
+      language: 'ko',
+    );
+    expect(manager.savedCount(), 1);
+
+    await manager.deleteAll();
+
+    expect(manager.savedCount(), 0);
+    expect(slideBox.isEmpty, isTrue);
+    expect(metaBox.isEmpty, isTrue);
+    expect(Directory('${tempDir.path}/offline/42').existsSync(), isFalse);
+  });
+
   test('offline meta entry serializes through hive round-trip', () async {
     final entry = OfflineMetaEntry(
       fairytaleId: 'rt',

@@ -591,6 +591,49 @@ class AppLocalizationsJa extends AppLocalizations {
   String get offlineListEmpty => 'オフラインに保存した童話がありません';
 
   @override
+  String get offlineStorageTitle => 'オフライン保存童話';
+
+  @override
+  String offlineStorageSummary(int count, String size) {
+    return '$count件 · $size';
+  }
+
+  @override
+  String get offlineStorageManageTitle => '保存した童話';
+
+  @override
+  String get offlineStorageEmpty => '保存した童話がありません';
+
+  @override
+  String offlineStorageSavedAt(String date) {
+    return '$date 保存';
+  }
+
+  @override
+  String get offlineStorageDeleteAll => '全て削除';
+
+  @override
+  String get offlineStorageDeleteOne => '削除';
+
+  @override
+  String get offlineStorageDeleteOneTitle => '童話を削除';
+
+  @override
+  String get offlineStorageDeleteOneMessage => '保存した童話を削除しますか？';
+
+  @override
+  String get offlineStorageDeleteAllTitle => '全て削除';
+
+  @override
+  String get offlineStorageDeleteAllMessage => '保存した童話をすべて削除しますか？';
+
+  @override
+  String get offlineStorageDeleteAllDone => 'すべて削除しました';
+
+  @override
+  String get offlineStorageCancel => 'キャンセル';
+
+  @override
   String get characterSaveTitle => 'キャラクター保存';
 
   @override

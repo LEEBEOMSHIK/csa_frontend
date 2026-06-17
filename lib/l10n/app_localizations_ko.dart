@@ -591,6 +591,49 @@ class AppLocalizationsKo extends AppLocalizations {
   String get offlineListEmpty => '오프라인에 저장한 동화가 없어요';
 
   @override
+  String get offlineStorageTitle => '오프라인 저장 동화';
+
+  @override
+  String offlineStorageSummary(int count, String size) {
+    return '$count개 · $size';
+  }
+
+  @override
+  String get offlineStorageManageTitle => '저장된 동화';
+
+  @override
+  String get offlineStorageEmpty => '저장한 동화가 없어요';
+
+  @override
+  String offlineStorageSavedAt(String date) {
+    return '$date 저장';
+  }
+
+  @override
+  String get offlineStorageDeleteAll => '전체 삭제';
+
+  @override
+  String get offlineStorageDeleteOne => '삭제';
+
+  @override
+  String get offlineStorageDeleteOneTitle => '동화 삭제';
+
+  @override
+  String get offlineStorageDeleteOneMessage => '저장한 동화를 삭제할까요?';
+
+  @override
+  String get offlineStorageDeleteAllTitle => '전체 삭제';
+
+  @override
+  String get offlineStorageDeleteAllMessage => '저장한 동화를 모두 삭제할까요?';
+
+  @override
+  String get offlineStorageDeleteAllDone => '모두 삭제했어요';
+
+  @override
+  String get offlineStorageCancel => '취소';
+
+  @override
   String get characterSaveTitle => '캐릭터 저장';
 
   @override

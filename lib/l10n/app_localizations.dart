@@ -1238,6 +1238,84 @@ abstract class AppLocalizations {
   /// **'오프라인에 저장한 동화가 없어요'**
   String get offlineListEmpty;
 
+  /// No description provided for @offlineStorageTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인 저장 동화'**
+  String get offlineStorageTitle;
+
+  /// No description provided for @offlineStorageSummary.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개 · {size}'**
+  String offlineStorageSummary(int count, String size);
+
+  /// No description provided for @offlineStorageManageTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장된 동화'**
+  String get offlineStorageManageTitle;
+
+  /// No description provided for @offlineStorageEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장한 동화가 없어요'**
+  String get offlineStorageEmpty;
+
+  /// No description provided for @offlineStorageSavedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'{date} 저장'**
+  String offlineStorageSavedAt(String date);
+
+  /// No description provided for @offlineStorageDeleteAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 삭제'**
+  String get offlineStorageDeleteAll;
+
+  /// No description provided for @offlineStorageDeleteOne.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제'**
+  String get offlineStorageDeleteOne;
+
+  /// No description provided for @offlineStorageDeleteOneTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'동화 삭제'**
+  String get offlineStorageDeleteOneTitle;
+
+  /// No description provided for @offlineStorageDeleteOneMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장한 동화를 삭제할까요?'**
+  String get offlineStorageDeleteOneMessage;
+
+  /// No description provided for @offlineStorageDeleteAllTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 삭제'**
+  String get offlineStorageDeleteAllTitle;
+
+  /// No description provided for @offlineStorageDeleteAllMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장한 동화를 모두 삭제할까요?'**
+  String get offlineStorageDeleteAllMessage;
+
+  /// No description provided for @offlineStorageDeleteAllDone.
+  ///
+  /// In ko, this message translates to:
+  /// **'모두 삭제했어요'**
+  String get offlineStorageDeleteAllDone;
+
+  /// No description provided for @offlineStorageCancel.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get offlineStorageCancel;
+
   /// No description provided for @characterSaveTitle.
   ///
   /// In ko, this message translates to:

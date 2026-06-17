@@ -234,6 +234,30 @@
   "offlineBanner": "オフラインです。保存した童話のみ閲覧できます",
   "offlineUnavailable": "オフラインでは保存した童話のみ閲覧できます",
   "offlineListEmpty": "オフラインに保存した童話がありません",
+  "offlineStorageTitle": "オフライン保存童話",
+  "offlineStorageSummary": "{count}件 · {size}",
+  "@offlineStorageSummary": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "size": { "type": "String" }
+    }
+  },
+  "offlineStorageManageTitle": "保存した童話",
+  "offlineStorageEmpty": "保存した童話がありません",
+  "offlineStorageSavedAt": "{date} 保存",
+  "@offlineStorageSavedAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "offlineStorageDeleteAll": "全て削除",
+  "offlineStorageDeleteOne": "削除",
+  "offlineStorageDeleteOneTitle": "童話を削除",
+  "offlineStorageDeleteOneMessage": "保存した童話を削除しますか？",
+  "offlineStorageDeleteAllTitle": "全て削除",
+  "offlineStorageDeleteAllMessage": "保存した童話をすべて削除しますか？",
+  "offlineStorageDeleteAllDone": "すべて削除しました",
+  "offlineStorageCancel": "キャンセル",
   "characterSaveTitle": "キャラクター保存",
   "characterNameHint": "キャラクター名",
   "characterSaveAction": "保存",

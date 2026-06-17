@@ -234,6 +234,30 @@
   "offlineBanner": "오프라인 상태예요. 저장한 동화만 볼 수 있어요",
   "offlineUnavailable": "오프라인에서는 저장한 동화만 볼 수 있어요",
   "offlineListEmpty": "오프라인에 저장한 동화가 없어요",
+  "offlineStorageTitle": "오프라인 저장 동화",
+  "offlineStorageSummary": "{count}개 · {size}",
+  "@offlineStorageSummary": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "size": { "type": "String" }
+    }
+  },
+  "offlineStorageManageTitle": "저장된 동화",
+  "offlineStorageEmpty": "저장한 동화가 없어요",
+  "offlineStorageSavedAt": "{date} 저장",
+  "@offlineStorageSavedAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "offlineStorageDeleteAll": "전체 삭제",
+  "offlineStorageDeleteOne": "삭제",
+  "offlineStorageDeleteOneTitle": "동화 삭제",
+  "offlineStorageDeleteOneMessage": "저장한 동화를 삭제할까요?",
+  "offlineStorageDeleteAllTitle": "전체 삭제",
+  "offlineStorageDeleteAllMessage": "저장한 동화를 모두 삭제할까요?",
+  "offlineStorageDeleteAllDone": "모두 삭제했어요",
+  "offlineStorageCancel": "취소",
   "characterSaveTitle": "캐릭터 저장",
   "characterNameHint": "캐릭터 이름",
   "characterSaveAction": "저장",

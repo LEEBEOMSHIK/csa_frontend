@@ -94,6 +94,43 @@ class DownloadManager {
     return entries;
   }
 
+  /// 완료·미만료 상태로 저장된 동화의 메타데이터 목록(최근 저장 순).
+  /// 저장 관리 화면에서 용량/저장일 표시에 사용한다.
+  List<OfflineMetaEntry> availableMeta() {
+    if (!_store.isInitialized) return const [];
+    final now = DateTime.now();
+    final entries = <OfflineMetaEntry>[];
+    for (final id in _store.metaBox.keys.cast<String>()) {
+      final meta = _store.metaBox.get(id);
+      if (meta == null || !meta.isCompleted || meta.isExpired(now)) continue;
+      if (!_store.slideBox.containsKey(id)) continue;
+      entries.add(meta);
+    }
+    entries.sort((a, b) => b.downloadedAt.compareTo(a.downloadedAt));
+    return entries;
+  }
+
+  /// 완료·미만료 저장본의 총 사용 용량(바이트) 합산.
+  int totalUsedBytes() {
+    var total = 0;
+    for (final meta in availableMeta()) {
+      total += meta.totalSizeBytes;
+    }
+    return total;
+  }
+
+  /// 저장된(완료·미만료) 동화 개수.
+  int savedCount() => availableMeta().length;
+
+  /// 저장된 모든 슬라이드 동화를 삭제한다(파일 + Hive 메타/본문).
+  Future<void> deleteAll() async {
+    if (!_store.isInitialized) return;
+    final ids = _store.metaBox.keys.cast<String>().toList();
+    for (final id in ids) {
+      await delete(id);
+    }
+  }
+
   /// 슬라이드 형식 동화를 오프라인 저장한다.
   /// 동시에 1개만 진행되도록 내부 큐에 직렬화한다.
   Future<void> downloadSlide({

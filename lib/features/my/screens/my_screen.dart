@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/my/models/user_settings.dart';
 import 'package:csa_frontend/features/my/screens/my_fairytale_list_screen.dart';
+import 'package:csa_frontend/features/my/screens/offline_storage_screen.dart';
 import 'package:csa_frontend/features/my/services/user_settings_service.dart';
+import 'package:csa_frontend/shared/services/download_manager.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
+import 'package:csa_frontend/utils/byte_format.dart';
 import 'package:csa_frontend/utils/locale_provider.dart';
 
 const String _currentTermVersion = 'v1.0';
@@ -20,12 +23,35 @@ class _MyScreenState extends State<MyScreen> {
   bool _pushNotiEnabled = pushNotiNotifier.value;
 
   final _settingsService = UserSettingsService.instance;
+  final _downloadManager = DownloadManager.instance;
+
+  int _offlineCount = 0;
+  int _offlineBytes = 0;
 
   @override
   void initState() {
     super.initState();
     textNotiNotifier.addListener(_syncNotiFromNotifiers);
     pushNotiNotifier.addListener(_syncNotiFromNotifiers);
+    _refreshOfflineSummary();
+  }
+
+  void _refreshOfflineSummary() {
+    if (!mounted) return;
+    setState(() {
+      _offlineCount = _downloadManager.savedCount();
+      _offlineBytes = _downloadManager.totalUsedBytes();
+    });
+  }
+
+  Future<void> _openOfflineStorage() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const OfflineStorageScreen(),
+      ),
+    );
+    // 목록 화면에서 삭제가 일어났을 수 있으므로 복귀 시 요약을 갱신한다.
+    _refreshOfflineSummary();
   }
 
   @override
@@ -303,6 +329,14 @@ class _MyScreenState extends State<MyScreen> {
                     label: l10n.settingsLanguage,
                     value: _selectedLanguageName,
                     onTap: () => _showLanguagePicker(l10n),
+                  ),
+                  _ValueRow(
+                    label: l10n.offlineStorageTitle,
+                    value: l10n.offlineStorageSummary(
+                      _offlineCount,
+                      formatBytes(_offlineBytes),
+                    ),
+                    onTap: _openOfflineStorage,
                   ),
                   const _ThickDivider(),
                   // 기기 설정 섹션
