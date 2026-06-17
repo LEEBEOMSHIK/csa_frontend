@@ -87,6 +87,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get detailDownloadVideoDesc => '음성과 애니메이션이 포함된 영상';
 
   @override
+  String get formatComingSoon => '준비 중';
+
+  @override
   String get detailDownloadSaveBtn => '저장하기';
 
   @override

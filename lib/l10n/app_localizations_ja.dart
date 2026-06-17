@@ -87,6 +87,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get detailDownloadVideoDesc => '音声とアニメーションが含まれた動画';
 
   @override
+  String get formatComingSoon => '準備中';
+
+  @override
   String get detailDownloadSaveBtn => '保存する';
 
   @override

@@ -254,6 +254,12 @@ abstract class AppLocalizations {
   /// **'음성과 애니메이션이 포함된 영상'**
   String get detailDownloadVideoDesc;
 
+  /// No description provided for @formatComingSoon.
+  ///
+  /// In ko, this message translates to:
+  /// **'준비 중'**
+  String get formatComingSoon;
+
   /// No description provided for @detailDownloadSaveBtn.
   ///
   /// In ko, this message translates to:

@@ -575,7 +575,7 @@ class _OfflineSaveSection extends StatelessWidget {
 // Download Modal (Screen/DownloadModal)
 // ─────────────────────────────────────────────
 
-enum _DownloadFormat { slide, video }
+enum _DownloadFormat { slide }
 
 class _DownloadModal extends StatefulWidget {
   const _DownloadModal();
@@ -647,18 +647,6 @@ class _DownloadModalState extends State<_DownloadModal> {
             size: '약 8.2 MB',
             selected: _selected == _DownloadFormat.slide,
             onTap: () => setState(() => _selected = _DownloadFormat.slide),
-          ),
-          const SizedBox(height: 10),
-          // Video format
-          _FormatOption(
-            icon: Icons.play_circle_outline,
-            iconBg: const Color(0xFFE8F4FD),
-            iconColor: const Color(0xFF4DB6E8),
-            title: l10n.detailDownloadVideo,
-            desc: l10n.detailDownloadVideoDesc,
-            size: '약 45.7 MB',
-            selected: _selected == _DownloadFormat.video,
-            onTap: () => setState(() => _selected = _DownloadFormat.video),
           ),
           const SizedBox(height: 20),
           // Cancel button
