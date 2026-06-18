@@ -108,6 +108,8 @@ void main() {
         downloadedAt: DateTime.now(),
         expiresAt: DateTime.now().add(const Duration(days: 30)),
         status: DownloadStatus.completed,
+        voiceType: 'dad',
+        language: 'ko',
       ),
     );
 

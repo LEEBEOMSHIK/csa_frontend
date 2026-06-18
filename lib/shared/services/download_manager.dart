@@ -201,6 +201,8 @@ class DownloadManager {
         downloadedAt: DateTime.now(),
         expiresAt: DateTime.now().add(ttl),
         status: DownloadStatus.downloading,
+        voiceType: voiceType,
+        language: language,
       ),
     );
 
@@ -291,6 +293,8 @@ class DownloadManager {
           downloadedAt: DateTime.now(),
           expiresAt: DateTime.now().add(ttl),
           status: DownloadStatus.completed,
+          voiceType: voiceType,
+          language: language,
         ),
       );
       controller.add(1.0);
@@ -313,6 +317,8 @@ class DownloadManager {
           totalSizeBytes: 0,
           downloadedAt: DateTime.now(),
           status: DownloadStatus.failed,
+          voiceType: voiceType,
+          language: language,
         ),
       );
       controller.addError(e);

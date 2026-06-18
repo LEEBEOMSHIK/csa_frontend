@@ -3,6 +3,12 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+// ignore_for_file: depend_on_referenced_packages
+// hive 는 hive_flutter 의 transitive dependency. 어댑터 read/write 를 박스 없이
+// 단위 검증하기 위해 내부 binary impl 을 직접 사용한다.
+import 'package:hive/src/binary/binary_reader_impl.dart';
+import 'package:hive/src/binary/binary_writer_impl.dart';
+import 'package:hive/src/hive_impl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_response.dart';
@@ -153,6 +159,8 @@ void main() {
         downloadedAt: DateTime.now(),
         expiresAt: DateTime.now().subtract(const Duration(days: 1)),
         status: DownloadStatus.completed,
+        voiceType: 'dad',
+        language: 'ko',
       ),
     );
     metaBox.put(
@@ -163,6 +171,8 @@ void main() {
         totalSizeBytes: 0,
         downloadedAt: DateTime.now(),
         status: DownloadStatus.downloading,
+        voiceType: 'dad',
+        language: 'ko',
       ),
     );
 
@@ -190,6 +200,8 @@ void main() {
         downloadedAt: DateTime.now(),
         expiresAt: DateTime.now().subtract(const Duration(days: 1)),
         status: DownloadStatus.completed,
+        voiceType: 'dad',
+        language: 'ko',
       ),
     );
 
@@ -409,6 +421,8 @@ void main() {
       downloadedAt: DateTime.fromMillisecondsSinceEpoch(1000000),
       expiresAt: DateTime.fromMillisecondsSinceEpoch(2000000),
       status: DownloadStatus.completed,
+      voiceType: 'mom',
+      language: 'ja',
     );
     await metaBox.put('rt', entry);
     final loaded = metaBox.get('rt')!;
@@ -416,5 +430,49 @@ void main() {
     expect(loaded.totalSizeBytes, 1234);
     expect(loaded.expiresAt, DateTime.fromMillisecondsSinceEpoch(2000000));
     expect(loaded.status, DownloadStatus.completed);
+    expect(loaded.voiceType, 'mom');
+    expect(loaded.language, 'ja');
+  });
+
+  test('legacy bytes without voice/lang decode to default values', () {
+    // voice/lang append 이전(구) write 형식으로 직렬화한 바이트를 만든 뒤
+    // 현재 adapter.read 로 디코드해 EOF 안전·기본값 폴백을 검증한다.
+    final registry = HiveImpl();
+    final writer = BinaryWriterImpl(registry)
+      ..writeString('legacy')
+      ..writeString('slide')
+      ..writeInt(777)
+      ..writeInt(
+        DateTime.fromMillisecondsSinceEpoch(1000000).millisecondsSinceEpoch,
+      )
+      ..writeBool(false)
+      ..writeInt(DownloadStatus.completed.index);
+    final adapter = OfflineMetaEntryAdapter();
+    final reader = BinaryReaderImpl(writer.toBytes(), registry);
+    final decoded = adapter.read(reader);
+    expect(decoded.fairytaleId, 'legacy');
+    expect(decoded.totalSizeBytes, 777);
+    expect(decoded.status, DownloadStatus.completed);
+    expect(decoded.voiceType, 'dad');
+    expect(decoded.language, 'ko');
+  });
+
+  test('downloadSlide persists voiceType/language into meta (ja + mom)',
+      () async {
+    await manager.downloadSlide(
+      fairytaleId: 42,
+      voiceType: 'mom',
+      language: 'ja',
+    );
+
+    final meta = metaBox.get('42')!;
+    expect(meta.status, DownloadStatus.completed);
+    expect(meta.voiceType, 'mom');
+    expect(meta.language, 'ja');
+
+    // Hive 디스크 라운드트립 후에도 보존되는지 확인(회귀 방지).
+    final reopened = metaBox.get('42')!;
+    expect(reopened.voiceType, 'mom');
+    expect(reopened.language, 'ja');
   });
 }

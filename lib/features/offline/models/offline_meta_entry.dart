@@ -10,6 +10,8 @@ class OfflineMetaEntry {
   final DateTime downloadedAt;
   final DateTime? expiresAt; // TTL (null = 무기한 — 정책상 사용하지 않음)
   final DownloadStatus status;
+  final String voiceType;
+  final String language;
 
   const OfflineMetaEntry({
     required this.fairytaleId,
@@ -18,6 +20,8 @@ class OfflineMetaEntry {
     required this.downloadedAt,
     this.expiresAt,
     required this.status,
+    required this.voiceType,
+    required this.language,
   });
 
   bool get isCompleted => status == DownloadStatus.completed;
@@ -30,6 +34,8 @@ class OfflineMetaEntry {
     DownloadStatus? status,
     DateTime? downloadedAt,
     DateTime? expiresAt,
+    String? voiceType,
+    String? language,
   }) {
     return OfflineMetaEntry(
       fairytaleId: fairytaleId,
@@ -38,6 +44,8 @@ class OfflineMetaEntry {
       downloadedAt: downloadedAt ?? this.downloadedAt,
       expiresAt: expiresAt ?? this.expiresAt,
       status: status ?? this.status,
+      voiceType: voiceType ?? this.voiceType,
+      language: language ?? this.language,
     );
   }
 }
@@ -57,6 +65,9 @@ class OfflineMetaEntryAdapter extends TypeAdapter<OfflineMetaEntry> {
         ? DateTime.fromMillisecondsSinceEpoch(reader.readInt())
         : null;
     final statusIndex = reader.readInt();
+    // 하위 호환: voice/lang 없이 저장된 구 엔트리는 남은 바이트가 없으므로 기본값 사용.
+    final voiceType = reader.availableBytes > 0 ? reader.readString() : 'dad';
+    final language = reader.availableBytes > 0 ? reader.readString() : 'ko';
     return OfflineMetaEntry(
       fairytaleId: fairytaleId,
       format: format,
@@ -64,6 +75,8 @@ class OfflineMetaEntryAdapter extends TypeAdapter<OfflineMetaEntry> {
       downloadedAt: downloadedAt,
       expiresAt: expiresAt,
       status: DownloadStatus.values[statusIndex],
+      voiceType: voiceType,
+      language: language,
     );
   }
 
@@ -78,5 +91,7 @@ class OfflineMetaEntryAdapter extends TypeAdapter<OfflineMetaEntry> {
       writer.writeInt(obj.expiresAt!.millisecondsSinceEpoch);
     }
     writer.writeInt(obj.status.index);
+    writer.writeString(obj.voiceType);
+    writer.writeString(obj.language);
   }
 }

@@ -116,19 +116,25 @@ class _OfflineStorageScreenState extends State<OfflineStorageScreen> {
   }
 
   Future<void> _onOpen(_OfflineItem item) async {
-    final restored = restoreOfflineVoiceLang(item.slide);
+    // 메타에 명시 저장된 voice/lang 을 우선 사용하고, 구 엔트리(빈 값)면
+    // 오디오 키 역파싱 폴백으로 하위 호환을 유지한다.
+    final fallback = restoreOfflineVoiceLang(item.slide);
+    final voiceType =
+        item.meta.voiceType.isNotEmpty ? item.meta.voiceType : fallback.voiceType;
+    final language =
+        item.meta.language.isNotEmpty ? item.meta.language : fallback.language;
     final response = FairytaleGenerateResponse.fromOfflineSlide(
       item.slide,
-      language: restored.language,
-      voiceType: restored.voiceType,
+      language: language,
+      voiceType: voiceType,
     );
     if (!mounted) return;
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => FairytaleSlideScreen(
           fairytale: response,
-          lang: restored.language,
-          voiceType: restored.voiceType,
+          lang: language,
+          voiceType: voiceType,
         ),
       ),
     );
