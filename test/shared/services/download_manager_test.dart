@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -65,7 +67,7 @@ void main() {
       fairytaleService: MyFairytaleService(api: _FakeApi()),
       store: OfflineStore.instance,
       documentsDirProvider: () async => tempDir,
-      fileDownloader: (url, savePath, {onReceiveProgress}) async {
+      fileDownloader: (url, savePath, {onReceiveProgress, cancelToken}) async {
         savedPaths.add(savePath);
         await File(savePath).create(recursive: true);
         await File(savePath).writeAsString('bytes');
@@ -212,6 +214,191 @@ void main() {
     expect(slideBox.isEmpty, isTrue);
     expect(metaBox.isEmpty, isTrue);
     expect(Directory('${tempDir.path}/offline/42').existsSync(), isFalse);
+  });
+
+  test('cancel during download cleans up files and meta, no failed state',
+      () async {
+    // 첫 파일 다운로드 시점에 취소를 트리거하고, 취소된 토큰이면 dio cancel 예외를 던지는 fake.
+    final downloadStarted = Completer<void>();
+    final cancelManager = DownloadManager(
+      fairytaleService: MyFairytaleService(api: _FakeApi()),
+      store: OfflineStore.instance,
+      documentsDirProvider: () async => tempDir,
+      fileDownloader: (url, savePath, {onReceiveProgress, cancelToken}) async {
+        if (cancelToken != null && cancelToken.isCancelled) {
+          throw DioException(
+            requestOptions: RequestOptions(path: url),
+            type: DioExceptionType.cancel,
+          );
+        }
+        if (!downloadStarted.isCompleted) downloadStarted.complete();
+        await File(savePath).create(recursive: true);
+        await File(savePath).writeAsString('bytes');
+      },
+    );
+
+    final future = cancelManager.downloadSlide(
+      fairytaleId: 42,
+      voiceType: 'dad',
+      language: 'ko',
+    );
+    await downloadStarted.future;
+    await cancelManager.cancel('42');
+    await future;
+
+    expect(cancelManager.isOfflineAvailable('42'), isFalse);
+    expect(slideBox.containsKey('42'), isFalse);
+    // 취소는 failed 가 아니라 메타 제거(미저장)로 정리된다.
+    expect(metaBox.containsKey('42'), isFalse);
+    // 부분 저장 디렉터리/파일 잔존 없음.
+    expect(Directory('${tempDir.path}/offline/42').existsSync(), isFalse);
+    expect(cancelManager.isDownloading('42'), isFalse);
+  });
+
+  test('cancel completes via progress stream without error event', () async {
+    final downloadStarted = Completer<void>();
+    final cancelManager = DownloadManager(
+      fairytaleService: MyFairytaleService(api: _FakeApi()),
+      store: OfflineStore.instance,
+      documentsDirProvider: () async => tempDir,
+      fileDownloader: (url, savePath, {onReceiveProgress, cancelToken}) async {
+        if (cancelToken != null && cancelToken.isCancelled) {
+          throw DioException(
+            requestOptions: RequestOptions(path: url),
+            type: DioExceptionType.cancel,
+          );
+        }
+        if (!downloadStarted.isCompleted) downloadStarted.complete();
+        await File(savePath).create(recursive: true);
+        await File(savePath).writeAsString('bytes');
+      },
+    );
+
+    final errors = <Object>[];
+    final sub =
+        cancelManager.progressStream('42').listen((_) {}, onError: errors.add);
+
+    final future = cancelManager.downloadSlide(
+      fairytaleId: 42,
+      voiceType: 'dad',
+      language: 'ko',
+    );
+    await downloadStarted.future;
+    await cancelManager.cancel('42');
+    // 취소는 정상 흐름이므로 downloadSlide future 가 throw 하지 않는다.
+    await expectLater(future, completes);
+
+    await sub.cancel();
+    expect(errors, isEmpty);
+    expect(metaBox.get('42'), isNull);
+  });
+
+  test('cancel does not block subsequent queue item', () async {
+    final firstStarted = Completer<void>();
+    final cancelManager = DownloadManager(
+      fairytaleService: MyFairytaleService(api: _FakeApi()),
+      store: OfflineStore.instance,
+      documentsDirProvider: () async => tempDir,
+      fileDownloader: (url, savePath, {onReceiveProgress, cancelToken}) async {
+        if (cancelToken != null && cancelToken.isCancelled) {
+          throw DioException(
+            requestOptions: RequestOptions(path: url),
+            type: DioExceptionType.cancel,
+          );
+        }
+        if (!firstStarted.isCompleted) firstStarted.complete();
+        await File(savePath).create(recursive: true);
+        await File(savePath).writeAsString('bytes');
+      },
+    );
+
+    final first = cancelManager.downloadSlide(
+      fairytaleId: 42,
+      voiceType: 'dad',
+      language: 'ko',
+    );
+    // 두 번째 항목은 같은 id 큐 직렬화를 검증하기 위해 첫 작업 취소 후 진행.
+    await firstStarted.future;
+    await cancelManager.cancel('42');
+    await first;
+
+    expect(cancelManager.isOfflineAvailable('42'), isFalse);
+
+    // 취소 후 다음 다운로드가 정상 진행되어 저장까지 완료되는지 확인(큐 비차단).
+    await cancelManager.downloadSlide(
+      fairytaleId: 42,
+      voiceType: 'dad',
+      language: 'ko',
+    );
+    expect(cancelManager.isOfflineAvailable('42'), isTrue);
+    expect(metaBox.get('42')!.status, DownloadStatus.completed);
+  });
+
+  test('cancel on already completed id is a safe no-op', () async {
+    await manager.downloadSlide(
+      fairytaleId: 42,
+      voiceType: 'dad',
+      language: 'ko',
+    );
+    expect(manager.isOfflineAvailable('42'), isTrue);
+
+    // 진행 중이 아닌 id 취소는 아무 동작도 하지 않아야 한다(저장본 보존).
+    await manager.cancel('42');
+
+    expect(manager.isOfflineAvailable('42'), isTrue);
+    expect(metaBox.get('42')!.status, DownloadStatus.completed);
+  });
+
+  test('cancel while queued cancels before any network call', () async {
+    final firstRelease = Completer<void>();
+    final firstStarted = Completer<void>();
+    final downloadedUrls = <String>[];
+    final cancelManager = DownloadManager(
+      fairytaleService: MyFairytaleService(api: _FakeApi()),
+      store: OfflineStore.instance,
+      documentsDirProvider: () async => tempDir,
+      fileDownloader: (url, savePath, {onReceiveProgress, cancelToken}) async {
+        if (cancelToken != null && cancelToken.isCancelled) {
+          throw DioException(
+            requestOptions: RequestOptions(path: url),
+            type: DioExceptionType.cancel,
+          );
+        }
+        downloadedUrls.add(url);
+        if (!firstStarted.isCompleted) firstStarted.complete();
+        // 첫 작업을 붙잡아 두어 둘째 작업이 큐 대기 상태에 머물게 한다.
+        await firstRelease.future;
+        await File(savePath).create(recursive: true);
+        await File(savePath).writeAsString('bytes');
+      },
+    );
+
+    final first = cancelManager.downloadSlide(
+      fairytaleId: 42,
+      voiceType: 'dad',
+      language: 'ko',
+    );
+    await firstStarted.future;
+
+    // 둘째 작업은 큐 대기 — 시작 전 취소한다.
+    final second = cancelManager.downloadSlide(
+      fairytaleId: 7,
+      voiceType: 'dad',
+      language: 'ko',
+    );
+    expect(cancelManager.isDownloading('7'), isTrue);
+    await cancelManager.cancel('7');
+
+    firstRelease.complete();
+    await first;
+    await second;
+
+    // 둘째(7) 는 네트워크 호출 없이 취소되어 저장되지 않음.
+    expect(cancelManager.isOfflineAvailable('7'), isFalse);
+    expect(metaBox.containsKey('7'), isFalse);
+    expect(downloadedUrls.every((u) => !u.contains('7')), isTrue);
+    // 첫 작업(42) 은 정상 완료.
+    expect(cancelManager.isOfflineAvailable('42'), isTrue);
   });
 
   test('offline meta entry serializes through hive round-trip', () async {

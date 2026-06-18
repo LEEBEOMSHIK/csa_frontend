@@ -38,6 +38,10 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
   /// 다운로드 진행 중인 동화 id 집합
   final Set<int> _downloading = {};
 
+  /// 사용자가 취소한 다운로드 id 집합 — 취소 후 완료 future 가 성공 피드백을
+  /// 띄우지 않도록 구분한다.
+  final Set<int> _cancelled = {};
+
   MyFairytaleService get _service =>
       widget.service ?? MyFairytaleService.instance;
 
@@ -187,7 +191,10 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
   Future<void> _onSaveOffline(MyFairytale item) async {
     if (!item.isCompleted || item.format != 'slide') return;
     final l10n = AppLocalizations.of(context)!;
-    setState(() => _downloading.add(item.id));
+    setState(() {
+      _downloading.add(item.id);
+      _cancelled.remove(item.id);
+    });
     try {
       await _downloadManager.downloadSlide(
         fairytaleId: item.id,
@@ -195,16 +202,54 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
         language: item.language,
       );
       if (!mounted) return;
+      // 사용자가 취소한 경우엔 저장 성공 피드백을 띄우지 않는다.
+      if (_cancelled.contains(item.id)) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(l10n.offlineSaveSuccess)));
     } catch (_) {
-      if (!mounted) return;
+      if (!mounted || _cancelled.contains(item.id)) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(l10n.offlineSaveFailed)));
     } finally {
-      if (mounted) setState(() => _downloading.remove(item.id));
+      if (mounted) {
+        setState(() {
+          _downloading.remove(item.id);
+          _cancelled.remove(item.id);
+        });
+      }
+    }
+  }
+
+  Future<void> _onCancelOffline(MyFairytale item) async {
+    if (!_downloading.contains(item.id)) return;
+    final l10n = AppLocalizations.of(context)!;
+    setState(() => _cancelled.add(item.id));
+    try {
+      await _downloadManager.cancel(item.id.toString());
+      if (!mounted) return;
+      // 취소 직전에 다운로드가 이미 완료되어 저장본이 유지된 경우,
+      // "취소했어요"가 아니라 저장 완료 안내로 분기하고 상태를 저장됨으로 정리한다.
+      if (_downloadManager.isOfflineAvailable(item.id.toString())) {
+        setState(() {
+          _cancelled.remove(item.id);
+          _downloading.remove(item.id);
+        });
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.offlineSaveSuccess)));
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.offlineCancelSuccess)));
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _cancelled.remove(item.id));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.offlineCancelFailed)));
     }
   }
 
@@ -335,6 +380,7 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
                     onDelete: () => _onDelete(_items[i]),
                     onSaveOffline: () => _onSaveOffline(_items[i]),
                     onDeleteOffline: () => _onDeleteOffline(_items[i]),
+                    onCancelOffline: () => _onCancelOffline(_items[i]),
                   ),
                 );
               },
@@ -357,6 +403,7 @@ class _FairytaleCard extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onSaveOffline;
   final VoidCallback onDeleteOffline;
+  final VoidCallback onCancelOffline;
 
   const _FairytaleCard({
     required this.item,
@@ -369,6 +416,7 @@ class _FairytaleCard extends StatelessWidget {
     required this.onDelete,
     required this.onSaveOffline,
     required this.onDeleteOffline,
+    required this.onCancelOffline,
   });
 
   @override
@@ -440,6 +488,7 @@ class _FairytaleCard extends StatelessWidget {
                 isDownloading: isDownloading,
                 onSave: onSaveOffline,
                 onDelete: onDeleteOffline,
+                onCancel: onCancelOffline,
               ),
             if (item.isCompleted)
               IconButton(
@@ -476,6 +525,7 @@ class _OfflineButton extends StatelessWidget {
   final bool isDownloading;
   final VoidCallback onSave;
   final VoidCallback onDelete;
+  final VoidCallback onCancel;
 
   const _OfflineButton({
     required this.l10n,
@@ -484,18 +534,26 @@ class _OfflineButton extends StatelessWidget {
     required this.isDownloading,
     required this.onSave,
     required this.onDelete,
+    required this.onCancel,
   });
 
   @override
   Widget build(BuildContext context) {
     if (isDownloading) {
+      // 진행 중: 스피너 위에 X 를 겹쳐 탭 시 즉시 취소한다.
       return IconButton(
-        tooltip: l10n.offlineDownloading,
-        onPressed: null,
-        icon: const SizedBox(
+        tooltip: l10n.offlineCancelAction,
+        onPressed: onCancel,
+        icon: SizedBox(
           width: 18,
           height: 18,
-          child: CircularProgressIndicator(strokeWidth: 2),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              CircularProgressIndicator(strokeWidth: 2, color: accent),
+              const Icon(Icons.close_rounded, size: 12, color: Color(0xFF888888)),
+            ],
+          ),
         ),
       );
     }

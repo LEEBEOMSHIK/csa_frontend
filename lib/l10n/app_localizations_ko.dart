@@ -570,6 +570,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get offlineDownloading => '저장 중...';
 
   @override
+  String get offlineCancelAction => '다운로드 취소';
+
+  @override
+  String get offlineCancelSuccess => '다운로드를 취소했어요';
+
+  @override
+  String get offlineCancelFailed => '다운로드를 취소하지 못했어요';
+
+  @override
   String get offlineDeleteAction => '오프라인 삭제';
 
   @override

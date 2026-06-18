@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:csa_frontend/features/my/services/my_fairytale_service.dart';
@@ -16,7 +17,8 @@ class DownloadManager {
     MyFairytaleService? fairytaleService,
     OfflineStore? store,
     Future<void> Function(String url, String savePath,
-            {void Function(int, int)? onReceiveProgress})?
+            {void Function(int, int)? onReceiveProgress,
+            CancelToken? cancelToken})?
         fileDownloader,
     Future<Directory> Function()? documentsDirProvider,
   })  : _fairytaleService = fairytaleService ?? MyFairytaleService.instance,
@@ -33,10 +35,15 @@ class DownloadManager {
   final MyFairytaleService _fairytaleService;
   final OfflineStore _store;
   final Future<void> Function(String url, String savePath,
-      {void Function(int, int)? onReceiveProgress}) _fileDownloader;
+          {void Function(int, int)? onReceiveProgress,
+          CancelToken? cancelToken})
+      _fileDownloader;
   final Future<Directory> Function() _documentsDirProvider;
 
   final Map<String, StreamController<double>> _progressControllers = {};
+
+  /// 진행 중 다운로드의 취소 토큰(fairytaleId별). 취소 또는 종료 시 제거된다.
+  final Map<String, CancelToken> _cancelTokens = {};
 
   /// 동시 다운로드 1개 큐 — 진행 중인 작업 완료까지 다음 작업이 대기한다.
   Future<void> _queue = Future<void>.value();
@@ -45,11 +52,13 @@ class DownloadManager {
     String url,
     String savePath, {
     void Function(int, int)? onReceiveProgress,
+    CancelToken? cancelToken,
   }) {
     return ApiClient.instance.downloadFile(
       url,
       savePath,
       onReceiveProgress: onReceiveProgress,
+      cancelToken: cancelToken,
     );
   }
 
@@ -63,6 +72,21 @@ class DownloadManager {
       fairytaleId,
       () => StreamController<double>.broadcast(),
     );
+  }
+
+  /// 해당 동화의 다운로드가 진행(또는 큐 대기) 중인지 여부.
+  bool isDownloading(String fairytaleId) =>
+      _cancelTokens.containsKey(fairytaleId);
+
+  /// 진행 중(또는 큐 대기 중)인 다운로드를 취소한다.
+  /// dio CancelToken 으로 전송을 중단하고, 부분 저장 파일과 미완료 메타를 정리한다.
+  /// 이미 완료됐거나 진행 중이 아니면 아무 동작도 하지 않는다.
+  Future<void> cancel(String fairytaleId) async {
+    final token = _cancelTokens[fairytaleId];
+    if (token == null) return;
+    if (!token.isCancelled) {
+      token.cancel('cancelled by user');
+    }
   }
 
   bool isOfflineAvailable(String fairytaleId) {
@@ -138,14 +162,19 @@ class DownloadManager {
     required String voiceType,
     required String language,
   }) {
+    final id = fairytaleId.toString();
+    // 큐 대기 중에도 취소가 가능하도록 토큰을 시작 시점에 등록한다.
+    final token = _cancelTokens.putIfAbsent(id, CancelToken.new);
+
     final result = _queue.then(
       (_) => _runDownloadSlide(
         fairytaleId: fairytaleId,
         voiceType: voiceType,
         language: language,
+        cancelToken: token,
       ),
     );
-    // 실패가 큐 전체를 막지 않도록 swallow 한 future 로 다음 작업을 잇는다.
+    // 실패/취소가 큐 전체를 막지 않도록 swallow 한 future 로 다음 작업을 잇는다.
     _queue = result.catchError((_) {});
     return result;
   }
@@ -154,6 +183,7 @@ class DownloadManager {
     required int fairytaleId,
     required String voiceType,
     required String language,
+    required CancelToken cancelToken,
   }) async {
     final id = fairytaleId.toString();
     final controller = _controllerFor(id);
@@ -175,6 +205,10 @@ class DownloadManager {
     );
 
     try {
+      // 큐 대기 중 취소된 경우 네트워크 호출 전에 중단한다.
+      if (cancelToken.isCancelled) {
+        throw _CancelledException();
+      }
       final response = await _fairytaleService.fetchSlides(fairytaleId);
       final pages = response.pages;
 
@@ -205,7 +239,11 @@ class DownloadManager {
       final total = tasks.isEmpty ? 1 : tasks.length;
       var done = 0;
       for (final task in tasks) {
-        await _fileDownloader(task.url, task.savePath);
+        await _fileDownloader(
+          task.url,
+          task.savePath,
+          cancelToken: cancelToken,
+        );
         done++;
         controller.add(done / total);
       }
@@ -257,9 +295,16 @@ class DownloadManager {
       );
       controller.add(1.0);
     } catch (e) {
-      // 부분 저장 파일 정리 후 실패 상태 기록 (방치 금지 규칙 준수).
+      final cancelled = cancelToken.isCancelled || e is _CancelledException;
+      // 부분 저장 파일 정리 (방치 금지 규칙 준수).
       await _deleteFiles(id);
       await _store.slideBox.delete(id);
+      if (cancelled) {
+        // 취소는 에러가 아닌 정상 흐름 — 미저장 상태로 되돌리고 항목을 제거한다.
+        await _store.metaBox.delete(id);
+        if (!controller.isClosed) controller.add(0.0);
+        return;
+      }
       await _store.metaBox.put(
         id,
         OfflineMetaEntry(
@@ -272,6 +317,8 @@ class DownloadManager {
       );
       controller.addError(e);
       rethrow;
+    } finally {
+      _cancelTokens.remove(id);
     }
   }
 
@@ -334,3 +381,6 @@ class _DownloadTask {
   final String savePath;
   const _DownloadTask({required this.url, required this.savePath});
 }
+
+/// 큐 대기 중 취소를 정상 취소로 구분하기 위한 내부 sentinel.
+class _CancelledException implements Exception {}

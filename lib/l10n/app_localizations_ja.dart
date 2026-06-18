@@ -570,6 +570,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get offlineDownloading => '保存中...';
 
   @override
+  String get offlineCancelAction => 'ダウンロードを中止';
+
+  @override
+  String get offlineCancelSuccess => 'ダウンロードを中止しました';
+
+  @override
+  String get offlineCancelFailed => 'ダウンロードを中止できませんでした';
+
+  @override
   String get offlineDeleteAction => 'オフライン削除';
 
   @override

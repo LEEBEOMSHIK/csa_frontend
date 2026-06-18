@@ -1196,6 +1196,24 @@ abstract class AppLocalizations {
   /// **'저장 중...'**
   String get offlineDownloading;
 
+  /// No description provided for @offlineCancelAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'다운로드 취소'**
+  String get offlineCancelAction;
+
+  /// No description provided for @offlineCancelSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'다운로드를 취소했어요'**
+  String get offlineCancelSuccess;
+
+  /// No description provided for @offlineCancelFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'다운로드를 취소하지 못했어요'**
+  String get offlineCancelFailed;
+
   /// No description provided for @offlineDeleteAction.
   ///
   /// In ko, this message translates to:
