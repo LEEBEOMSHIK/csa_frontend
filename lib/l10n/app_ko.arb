@@ -261,6 +261,8 @@
   "offlineStorageDeleteAllMessage": "저장한 동화를 모두 삭제할까요?",
   "offlineStorageDeleteAllDone": "모두 삭제했어요",
   "offlineStorageCancel": "취소",
+  "offlinePremiumRequired": "오프라인 저장은 프리미엄 전용 기능이에요",
+  "offlineLockedAction": "프리미엄 전용",
   "characterSaveTitle": "캐릭터 저장",
   "characterNameHint": "캐릭터 이름",
   "characterSaveAction": "저장",

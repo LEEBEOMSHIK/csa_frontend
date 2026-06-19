@@ -643,6 +643,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get offlineStorageCancel => 'キャンセル';
 
   @override
+  String get offlinePremiumRequired => 'オフライン保存はプレミアム限定の機能です';
+
+  @override
+  String get offlineLockedAction => 'プレミアム限定';
+
+  @override
   String get characterSaveTitle => 'キャラクター保存';
 
   @override

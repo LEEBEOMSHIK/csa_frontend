@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:csa_frontend/features/my/models/user_settings.dart';
 import 'package:csa_frontend/features/my/services/user_settings_service.dart';
+import 'package:csa_frontend/utils/locale_provider.dart';
 
 void main() {
   test('fetchSettings parses camelCase boolean flags', () async {
@@ -18,6 +19,52 @@ void main() {
     expect(settings.locale, 'ja');
     expect(settings.textNotiEnabled, true);
     expect(settings.pushNotiEnabled, false);
+  });
+
+  test('fetchSettings parses subscriptionTier and syncs isPremiumNotifier',
+      () async {
+    final api = _FakeApi(getResponse: {
+      'locale': 'ko',
+      'textNotiEnabled': true,
+      'pushNotiEnabled': true,
+      'subscriptionTier': 'PREMIUM',
+    });
+    final service = UserSettingsService(api: api);
+
+    final settings = await service.fetchSettings();
+
+    expect(settings.subscriptionTier, 'PREMIUM');
+    expect(settings.isPremium, true);
+    expect(isPremiumNotifier.value, true);
+  });
+
+  test('UserSettings defaults missing subscriptionTier to FREE', () {
+    final settings = UserSettings.fromJson({
+      'locale': 'ko',
+      'textNotiEnabled': true,
+      'pushNotiEnabled': true,
+    });
+
+    expect(settings.subscriptionTier, 'FREE');
+    expect(settings.isPremium, false);
+  });
+
+  test('setSubscriptionTier posts tier and updates cache', () async {
+    isPremiumNotifier.value = false;
+    final api = _FakeApi(postResponse: {
+      'locale': 'ko',
+      'textNotiEnabled': true,
+      'pushNotiEnabled': true,
+      'subscriptionTier': 'PREMIUM',
+    });
+    final service = UserSettingsService(api: api);
+
+    final updated = await service.setSubscriptionTier('PREMIUM');
+
+    expect(api.postPath, '/users/settings/subscription');
+    expect(api.postData, {'tier': 'PREMIUM'});
+    expect(updated.isPremium, true);
+    expect(isPremiumNotifier.value, true);
   });
 
   test('updateSettings sends all three fields and parses response', () async {
@@ -83,6 +130,7 @@ void main() {
 class _FakeApi implements UserSettingsApiClient {
   final dynamic getResponse;
   final dynamic putResponse;
+  final dynamic postResponse;
 
   String? getPath;
   String? putPath;
@@ -90,7 +138,7 @@ class _FakeApi implements UserSettingsApiClient {
   String? postPath;
   Object? postData;
 
-  _FakeApi({this.getResponse, this.putResponse});
+  _FakeApi({this.getResponse, this.putResponse, this.postResponse});
 
   @override
   Future<dynamic> get(String path) async {
@@ -109,6 +157,6 @@ class _FakeApi implements UserSettingsApiClient {
   Future<dynamic> post(String path, {Object? data}) async {
     postPath = path;
     postData = data;
-    return null;
+    return postResponse;
   }
 }

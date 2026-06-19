@@ -261,6 +261,8 @@
   "offlineStorageDeleteAllMessage": "保存した童話をすべて削除しますか？",
   "offlineStorageDeleteAllDone": "すべて削除しました",
   "offlineStorageCancel": "キャンセル",
+  "offlinePremiumRequired": "オフライン保存はプレミアム限定の機能です",
+  "offlineLockedAction": "プレミアム限定",
   "characterSaveTitle": "キャラクター保存",
   "characterNameHint": "キャラクター名",
   "characterSaveAction": "保存",

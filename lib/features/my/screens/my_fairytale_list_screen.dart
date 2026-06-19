@@ -9,6 +9,7 @@ import 'package:csa_frontend/shared/services/api_client.dart';
 import 'package:csa_frontend/shared/services/connectivity_service.dart';
 import 'package:csa_frontend/shared/services/download_manager.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
+import 'package:csa_frontend/utils/locale_provider.dart';
 
 class MyFairytaleListScreen extends StatefulWidget {
   final MyFairytaleService? service;
@@ -191,6 +192,14 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
   Future<void> _onSaveOffline(MyFairytale item) async {
     if (!item.isCompleted || item.format != 'slide') return;
     final l10n = AppLocalizations.of(context)!;
+    // 게이트: 신규 다운로드는 PREMIUM 전용. FREE면 다운로드를 시작하지 않고
+    // 업셀 안내만 노출한다(기존 저장본 재생/삭제/취소는 게이트하지 않음).
+    if (!isPremiumNotifier.value) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.offlinePremiumRequired)));
+      return;
+    }
     setState(() {
       _downloading.add(item.id);
       _cancelled.remove(item.id);
@@ -369,18 +378,22 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
                   padding: const EdgeInsets.all(16),
                   itemCount: _items.length,
                   separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (_, i) => _FairytaleCard(
-                    item: _items[i],
-                    accent: _accent,
-                    l10n: l10n,
-                    isOffline: _isOffline(_items[i]),
-                    isDownloading: _downloading.contains(_items[i].id),
-                    onOpen: () => _onOpen(_items[i]),
-                    onToggleShare: () => _onToggleShare(_items[i]),
-                    onDelete: () => _onDelete(_items[i]),
-                    onSaveOffline: () => _onSaveOffline(_items[i]),
-                    onDeleteOffline: () => _onDeleteOffline(_items[i]),
-                    onCancelOffline: () => _onCancelOffline(_items[i]),
+                  itemBuilder: (_, i) => ValueListenableBuilder<bool>(
+                    valueListenable: isPremiumNotifier,
+                    builder: (_, isPremium, _) => _FairytaleCard(
+                      item: _items[i],
+                      accent: _accent,
+                      l10n: l10n,
+                      isPremium: isPremium,
+                      isOffline: _isOffline(_items[i]),
+                      isDownloading: _downloading.contains(_items[i].id),
+                      onOpen: () => _onOpen(_items[i]),
+                      onToggleShare: () => _onToggleShare(_items[i]),
+                      onDelete: () => _onDelete(_items[i]),
+                      onSaveOffline: () => _onSaveOffline(_items[i]),
+                      onDeleteOffline: () => _onDeleteOffline(_items[i]),
+                      onCancelOffline: () => _onCancelOffline(_items[i]),
+                    ),
                   ),
                 );
               },
@@ -396,6 +409,7 @@ class _FairytaleCard extends StatelessWidget {
   final MyFairytale item;
   final Color accent;
   final AppLocalizations l10n;
+  final bool isPremium;
   final bool isOffline;
   final bool isDownloading;
   final VoidCallback onOpen;
@@ -409,6 +423,7 @@ class _FairytaleCard extends StatelessWidget {
     required this.item,
     required this.accent,
     required this.l10n,
+    required this.isPremium,
     required this.isOffline,
     required this.isDownloading,
     required this.onOpen,
@@ -484,6 +499,7 @@ class _FairytaleCard extends StatelessWidget {
               _OfflineButton(
                 l10n: l10n,
                 accent: accent,
+                isPremium: isPremium,
                 isOffline: isOffline,
                 isDownloading: isDownloading,
                 onSave: onSaveOffline,
@@ -521,6 +537,7 @@ class _FairytaleCard extends StatelessWidget {
 class _OfflineButton extends StatelessWidget {
   final AppLocalizations l10n;
   final Color accent;
+  final bool isPremium;
   final bool isOffline;
   final bool isDownloading;
   final VoidCallback onSave;
@@ -530,6 +547,7 @@ class _OfflineButton extends StatelessWidget {
   const _OfflineButton({
     required this.l10n,
     required this.accent,
+    required this.isPremium,
     required this.isOffline,
     required this.isDownloading,
     required this.onSave,
@@ -562,6 +580,18 @@ class _OfflineButton extends StatelessWidget {
         tooltip: l10n.offlineDeleteAction,
         onPressed: onDelete,
         icon: Icon(Icons.offline_pin_rounded, color: accent, size: 22),
+      );
+    }
+    // FREE: 잠금 톤 + 잠금 아이콘. 탭 시 onSave 가 업셀 안내로 분기한다.
+    if (!isPremium) {
+      return IconButton(
+        tooltip: l10n.offlineLockedAction,
+        onPressed: onSave,
+        icon: const Icon(
+          Icons.lock_outline_rounded,
+          color: Color(0xFFD0D0D0),
+          size: 22,
+        ),
       );
     }
     return IconButton(

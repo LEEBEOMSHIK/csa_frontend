@@ -3,17 +3,25 @@ class UserSettings {
   final bool textNotiEnabled;
   final bool pushNotiEnabled;
 
+  /// 구독 등급 ("FREE" | "PREMIUM"). 읽기 전용 — 서버가 내려준다.
+  /// 누락/구버전 응답은 안전하게 'FREE'로 처리한다.
+  final String subscriptionTier;
+
   const UserSettings({
     required this.locale,
     required this.textNotiEnabled,
     required this.pushNotiEnabled,
+    this.subscriptionTier = 'FREE',
   });
+
+  bool get isPremium => subscriptionTier == 'PREMIUM';
 
   factory UserSettings.fromJson(Map<String, dynamic> json) {
     return UserSettings(
       locale: json['locale'] as String? ?? 'ko',
       textNotiEnabled: json['textNotiEnabled'] as bool? ?? true,
       pushNotiEnabled: json['pushNotiEnabled'] as bool? ?? true,
+      subscriptionTier: json['subscriptionTier'] as String? ?? 'FREE',
     );
   }
 
@@ -29,11 +37,13 @@ class UserSettings {
     String? locale,
     bool? textNotiEnabled,
     bool? pushNotiEnabled,
+    String? subscriptionTier,
   }) {
     return UserSettings(
       locale: locale ?? this.locale,
       textNotiEnabled: textNotiEnabled ?? this.textNotiEnabled,
       pushNotiEnabled: pushNotiEnabled ?? this.pushNotiEnabled,
+      subscriptionTier: subscriptionTier ?? this.subscriptionTier,
     );
   }
 }

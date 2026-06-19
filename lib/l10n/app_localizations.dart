@@ -1334,6 +1334,18 @@ abstract class AppLocalizations {
   /// **'취소'**
   String get offlineStorageCancel;
 
+  /// No description provided for @offlinePremiumRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인 저장은 프리미엄 전용 기능이에요'**
+  String get offlinePremiumRequired;
+
+  /// No description provided for @offlineLockedAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'프리미엄 전용'**
+  String get offlineLockedAction;
+
   /// No description provided for @characterSaveTitle.
   ///
   /// In ko, this message translates to:

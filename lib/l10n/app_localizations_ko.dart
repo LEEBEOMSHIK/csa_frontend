@@ -643,6 +643,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get offlineStorageCancel => '취소';
 
   @override
+  String get offlinePremiumRequired => '오프라인 저장은 프리미엄 전용 기능이에요';
+
+  @override
+  String get offlineLockedAction => '프리미엄 전용';
+
+  @override
   String get characterSaveTitle => '캐릭터 저장';
 
   @override
