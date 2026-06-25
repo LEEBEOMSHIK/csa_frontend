@@ -390,6 +390,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fairytaleTabShared => '🌟 공유 동화';
 
   @override
+  String get sharedFairytaleEmpty => '아직 공유된 동화가 없어요';
+
+  @override
+  String get sharedFairytaleError => '공유 동화를 불러오지 못했어요';
+
+  @override
+  String get sharedFairytaleRetry => '다시 시도';
+
+  @override
   String voiceBadge(String name) {
     return '$name 목소리';
   }

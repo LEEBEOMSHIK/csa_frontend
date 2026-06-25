@@ -34,8 +34,20 @@ class MyFairytaleService {
         .toList();
   }
 
+  Future<List<MyFairytale>> fetchSharedFairytales() async {
+    final data = await _api.get('/fairytale/shared');
+    return (data as List<dynamic>)
+        .map((e) => MyFairytale.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
   Future<FairytaleGenerateResponse> fetchSlides(int id) async {
     final data = await _api.get('/fairytale/$id/slides');
+    return FairytaleGenerateResponse.fromJson(data as Map<String, dynamic>);
+  }
+
+  Future<FairytaleGenerateResponse> fetchSharedSlides(int id) async {
+    final data = await _api.get('/fairytale/shared/$id/slides');
     return FairytaleGenerateResponse.fromJson(data as Map<String, dynamic>);
   }
 

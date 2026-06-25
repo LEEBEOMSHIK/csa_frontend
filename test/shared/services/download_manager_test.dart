@@ -117,6 +117,33 @@ void main() {
     expect(meta.expiresAt, isNotNull);
   });
 
+  test(
+    'downloadSlide can fetch shared fairytale slides through public path',
+    () async {
+      final api = _RecordingApi();
+      final sharedManager = DownloadManager(
+        fairytaleService: MyFairytaleService(api: api),
+        store: OfflineStore.instance,
+        documentsDirProvider: () async => tempDir,
+        fileDownloader:
+            (url, savePath, {onReceiveProgress, cancelToken}) async {
+              await File(savePath).create(recursive: true);
+              await File(savePath).writeAsString('bytes');
+            },
+      );
+
+      await sharedManager.downloadSlide(
+        fairytaleId: 42,
+        voiceType: 'dad',
+        language: 'ko',
+        shared: true,
+      );
+
+      expect(api.requestedPaths, contains('/fairytale/shared/42/slides'));
+      expect(sharedManager.isOfflineAvailable('42'), isTrue);
+    },
+  );
+
   test('fromOfflineSlide maps local paths into response', () async {
     await manager.downloadSlide(
       fairytaleId: 42,
@@ -182,35 +209,40 @@ void main() {
     expect(metaBox.containsKey('100'), isFalse);
   });
 
-  test('availableMeta/totalUsedBytes/savedCount aggregate saved entries',
-      () async {
-    await manager.downloadSlide(
-      fairytaleId: 42,
-      voiceType: 'dad',
-      language: 'ko',
-    );
-
-    // 만료 항목은 집계에서 제외되어야 한다.
-    metaBox.put(
-      '99',
-      OfflineMetaEntry(
-        fairytaleId: '99',
-        format: 'slide',
-        totalSizeBytes: 5000,
-        downloadedAt: DateTime.now(),
-        expiresAt: DateTime.now().subtract(const Duration(days: 1)),
-        status: DownloadStatus.completed,
+  test(
+    'availableMeta/totalUsedBytes/savedCount aggregate saved entries',
+    () async {
+      await manager.downloadSlide(
+        fairytaleId: 42,
         voiceType: 'dad',
         language: 'ko',
-      ),
-    );
+      );
 
-    expect(manager.savedCount(), 1);
-    expect(manager.availableMeta().length, 1);
-    expect(manager.availableMeta().first.fairytaleId, '42');
-    expect(manager.totalUsedBytes(), manager.availableMeta().first.totalSizeBytes);
-    expect(manager.totalUsedBytes(), greaterThan(0));
-  });
+      // 만료 항목은 집계에서 제외되어야 한다.
+      metaBox.put(
+        '99',
+        OfflineMetaEntry(
+          fairytaleId: '99',
+          format: 'slide',
+          totalSizeBytes: 5000,
+          downloadedAt: DateTime.now(),
+          expiresAt: DateTime.now().subtract(const Duration(days: 1)),
+          status: DownloadStatus.completed,
+          voiceType: 'dad',
+          language: 'ko',
+        ),
+      );
+
+      expect(manager.savedCount(), 1);
+      expect(manager.availableMeta().length, 1);
+      expect(manager.availableMeta().first.fairytaleId, '42');
+      expect(
+        manager.totalUsedBytes(),
+        manager.availableMeta().first.totalSizeBytes,
+      );
+      expect(manager.totalUsedBytes(), greaterThan(0));
+    },
+  );
 
   test('deleteAll removes every saved entry and files', () async {
     await manager.downloadSlide(
@@ -228,44 +260,47 @@ void main() {
     expect(Directory('${tempDir.path}/offline/42').existsSync(), isFalse);
   });
 
-  test('cancel during download cleans up files and meta, no failed state',
-      () async {
-    // 첫 파일 다운로드 시점에 취소를 트리거하고, 취소된 토큰이면 dio cancel 예외를 던지는 fake.
-    final downloadStarted = Completer<void>();
-    final cancelManager = DownloadManager(
-      fairytaleService: MyFairytaleService(api: _FakeApi()),
-      store: OfflineStore.instance,
-      documentsDirProvider: () async => tempDir,
-      fileDownloader: (url, savePath, {onReceiveProgress, cancelToken}) async {
-        if (cancelToken != null && cancelToken.isCancelled) {
-          throw DioException(
-            requestOptions: RequestOptions(path: url),
-            type: DioExceptionType.cancel,
-          );
-        }
-        if (!downloadStarted.isCompleted) downloadStarted.complete();
-        await File(savePath).create(recursive: true);
-        await File(savePath).writeAsString('bytes');
-      },
-    );
+  test(
+    'cancel during download cleans up files and meta, no failed state',
+    () async {
+      // 첫 파일 다운로드 시점에 취소를 트리거하고, 취소된 토큰이면 dio cancel 예외를 던지는 fake.
+      final downloadStarted = Completer<void>();
+      final cancelManager = DownloadManager(
+        fairytaleService: MyFairytaleService(api: _FakeApi()),
+        store: OfflineStore.instance,
+        documentsDirProvider: () async => tempDir,
+        fileDownloader:
+            (url, savePath, {onReceiveProgress, cancelToken}) async {
+              if (cancelToken != null && cancelToken.isCancelled) {
+                throw DioException(
+                  requestOptions: RequestOptions(path: url),
+                  type: DioExceptionType.cancel,
+                );
+              }
+              if (!downloadStarted.isCompleted) downloadStarted.complete();
+              await File(savePath).create(recursive: true);
+              await File(savePath).writeAsString('bytes');
+            },
+      );
 
-    final future = cancelManager.downloadSlide(
-      fairytaleId: 42,
-      voiceType: 'dad',
-      language: 'ko',
-    );
-    await downloadStarted.future;
-    await cancelManager.cancel('42');
-    await future;
+      final future = cancelManager.downloadSlide(
+        fairytaleId: 42,
+        voiceType: 'dad',
+        language: 'ko',
+      );
+      await downloadStarted.future;
+      await cancelManager.cancel('42');
+      await future;
 
-    expect(cancelManager.isOfflineAvailable('42'), isFalse);
-    expect(slideBox.containsKey('42'), isFalse);
-    // 취소는 failed 가 아니라 메타 제거(미저장)로 정리된다.
-    expect(metaBox.containsKey('42'), isFalse);
-    // 부분 저장 디렉터리/파일 잔존 없음.
-    expect(Directory('${tempDir.path}/offline/42').existsSync(), isFalse);
-    expect(cancelManager.isDownloading('42'), isFalse);
-  });
+      expect(cancelManager.isOfflineAvailable('42'), isFalse);
+      expect(slideBox.containsKey('42'), isFalse);
+      // 취소는 failed 가 아니라 메타 제거(미저장)로 정리된다.
+      expect(metaBox.containsKey('42'), isFalse);
+      // 부분 저장 디렉터리/파일 잔존 없음.
+      expect(Directory('${tempDir.path}/offline/42').existsSync(), isFalse);
+      expect(cancelManager.isDownloading('42'), isFalse);
+    },
+  );
 
   test('cancel completes via progress stream without error event', () async {
     final downloadStarted = Completer<void>();
@@ -287,8 +322,9 @@ void main() {
     );
 
     final errors = <Object>[];
-    final sub =
-        cancelManager.progressStream('42').listen((_) {}, onError: errors.add);
+    final sub = cancelManager
+        .progressStream('42')
+        .listen((_) {}, onError: errors.add);
 
     final future = cancelManager.downloadSlide(
       fairytaleId: 42,
@@ -457,22 +493,56 @@ void main() {
     expect(decoded.language, 'ko');
   });
 
-  test('downloadSlide persists voiceType/language into meta (ja + mom)',
-      () async {
-    await manager.downloadSlide(
-      fairytaleId: 42,
-      voiceType: 'mom',
-      language: 'ja',
-    );
+  test(
+    'downloadSlide persists voiceType/language into meta (ja + mom)',
+    () async {
+      await manager.downloadSlide(
+        fairytaleId: 42,
+        voiceType: 'mom',
+        language: 'ja',
+      );
 
-    final meta = metaBox.get('42')!;
-    expect(meta.status, DownloadStatus.completed);
-    expect(meta.voiceType, 'mom');
-    expect(meta.language, 'ja');
+      final meta = metaBox.get('42')!;
+      expect(meta.status, DownloadStatus.completed);
+      expect(meta.voiceType, 'mom');
+      expect(meta.language, 'ja');
 
-    // Hive 디스크 라운드트립 후에도 보존되는지 확인(회귀 방지).
-    final reopened = metaBox.get('42')!;
-    expect(reopened.voiceType, 'mom');
-    expect(reopened.language, 'ja');
-  });
+      // Hive 디스크 라운드트립 후에도 보존되는지 확인(회귀 방지).
+      final reopened = metaBox.get('42')!;
+      expect(reopened.voiceType, 'mom');
+      expect(reopened.language, 'ja');
+    },
+  );
+}
+
+class _RecordingApi implements MyFairytaleApiClient {
+  final List<String> requestedPaths = [];
+
+  @override
+  Future<dynamic> get(String path) async {
+    requestedPaths.add(path);
+    if (path == '/fairytale/shared/42/slides') {
+      return {
+        'id': 42,
+        'title': '공유 오프라인 동화',
+        'language': 'ko',
+        'voiceType': 'dad',
+        'pages': [
+          {
+            'pageIndex': 1,
+            'text': '공유 첫 페이지',
+            'imageUrl': 'https://cdn.example.com/shared-p1.png',
+            'audioUrl': 'https://cdn.example.com/shared-p1.mp3',
+          },
+        ],
+      };
+    }
+    throw StateError('unexpected $path');
+  }
+
+  @override
+  Future<dynamic> post(String path) => throw UnimplementedError();
+
+  @override
+  Future<dynamic> delete(String path) => throw UnimplementedError();
 }

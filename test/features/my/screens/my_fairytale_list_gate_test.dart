@@ -13,8 +13,9 @@ import 'package:csa_frontend/utils/locale_provider.dart';
 /// 항상 온라인으로 보고하는 connectivity source.
 class _OnlineSource implements ConnectivitySource {
   @override
-  Future<List<ConnectivityResult>> checkConnectivity() async =>
-      [ConnectivityResult.wifi];
+  Future<List<ConnectivityResult>> checkConnectivity() async => [
+    ConnectivityResult.wifi,
+  ];
 
   @override
   Stream<List<ConnectivityResult>> get onConnectivityChanged =>
@@ -53,9 +54,7 @@ class _OnlineApi implements MyFairytaleApiClient {
 /// 저장본은 없음(isOfflineAvailable=false)으로 고정해 다운로드 버튼이 노출되게 한다.
 class _RecordingDownloadManager extends DownloadManager {
   _RecordingDownloadManager()
-      : super(
-          fairytaleService: MyFairytaleService(api: _OnlineApi()),
-        );
+    : super(fairytaleService: MyFairytaleService(api: _OnlineApi()));
 
   int downloadCalls = 0;
 
@@ -70,21 +69,22 @@ class _RecordingDownloadManager extends DownloadManager {
     required int fairytaleId,
     required String voiceType,
     required String language,
+    bool shared = false,
   }) async {
     downloadCalls++;
   }
 }
 
 Widget _wrap(Widget child) => MaterialApp(
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('ko'), Locale('ja')],
-      home: child,
-    );
+  localizationsDelegates: const [
+    AppLocalizations.delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+  ],
+  supportedLocales: const [Locale('ko'), Locale('ja')],
+  home: child,
+);
 
 void main() {
   late _RecordingDownloadManager manager;
@@ -101,8 +101,9 @@ void main() {
     isPremiumNotifier.value = false;
   });
 
-  testWidgets('FREE user tapping offline save shows upsell, no download',
-      (tester) async {
+  testWidgets('FREE user tapping offline save shows upsell, no download', (
+    tester,
+  ) async {
     isPremiumNotifier.value = false;
 
     await tester.pumpWidget(
@@ -128,8 +129,9 @@ void main() {
     expect(find.text('오프라인 저장은 프리미엄 전용 기능이에요'), findsOneWidget);
   });
 
-  testWidgets('PREMIUM user tapping offline save starts download',
-      (tester) async {
+  testWidgets('PREMIUM user tapping offline save starts download', (
+    tester,
+  ) async {
     isPremiumNotifier.value = true;
 
     await tester.pumpWidget(

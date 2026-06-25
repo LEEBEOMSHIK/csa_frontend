@@ -16,16 +16,19 @@ class DownloadManager {
   DownloadManager({
     MyFairytaleService? fairytaleService,
     OfflineStore? store,
-    Future<void> Function(String url, String savePath,
-            {void Function(int, int)? onReceiveProgress,
-            CancelToken? cancelToken})?
-        fileDownloader,
+    Future<void> Function(
+      String url,
+      String savePath, {
+      void Function(int, int)? onReceiveProgress,
+      CancelToken? cancelToken,
+    })?
+    fileDownloader,
     Future<Directory> Function()? documentsDirProvider,
-  })  : _fairytaleService = fairytaleService ?? MyFairytaleService.instance,
-        _store = store ?? OfflineStore.instance,
-        _fileDownloader = fileDownloader ?? _defaultFileDownloader,
-        _documentsDirProvider =
-            documentsDirProvider ?? getApplicationDocumentsDirectory;
+  }) : _fairytaleService = fairytaleService ?? MyFairytaleService.instance,
+       _store = store ?? OfflineStore.instance,
+       _fileDownloader = fileDownloader ?? _defaultFileDownloader,
+       _documentsDirProvider =
+           documentsDirProvider ?? getApplicationDocumentsDirectory;
 
   static final DownloadManager instance = DownloadManager();
 
@@ -34,10 +37,13 @@ class DownloadManager {
 
   final MyFairytaleService _fairytaleService;
   final OfflineStore _store;
-  final Future<void> Function(String url, String savePath,
-          {void Function(int, int)? onReceiveProgress,
-          CancelToken? cancelToken})
-      _fileDownloader;
+  final Future<void> Function(
+    String url,
+    String savePath, {
+    void Function(int, int)? onReceiveProgress,
+    CancelToken? cancelToken,
+  })
+  _fileDownloader;
   final Future<Directory> Function() _documentsDirProvider;
 
   final Map<String, StreamController<double>> _progressControllers = {};
@@ -161,6 +167,7 @@ class DownloadManager {
     required int fairytaleId,
     required String voiceType,
     required String language,
+    bool shared = false,
   }) {
     final id = fairytaleId.toString();
     // 큐 대기 중에도 취소가 가능하도록 토큰을 시작 시점에 등록한다.
@@ -171,6 +178,7 @@ class DownloadManager {
         fairytaleId: fairytaleId,
         voiceType: voiceType,
         language: language,
+        shared: shared,
         cancelToken: token,
       ),
     );
@@ -183,6 +191,7 @@ class DownloadManager {
     required int fairytaleId,
     required String voiceType,
     required String language,
+    required bool shared,
     required CancelToken cancelToken,
   }) async {
     final id = fairytaleId.toString();
@@ -211,7 +220,9 @@ class DownloadManager {
       if (cancelToken.isCancelled) {
         throw _CancelledException();
       }
-      final response = await _fairytaleService.fetchSlides(fairytaleId);
+      final response = shared
+          ? await _fairytaleService.fetchSharedSlides(fairytaleId)
+          : await _fairytaleService.fetchSlides(fairytaleId);
       final pages = response.pages;
 
       // 다운로드 대상: 페이지별 이미지 + 선택 목소리 오디오.
@@ -263,8 +274,9 @@ class DownloadManager {
           OfflineSlidePage(
             pageIndex: page.pageIndex,
             text: page.text,
-            localImagePath:
-                (page.imageUrl?.trim().isNotEmpty ?? false) ? imagePath : '',
+            localImagePath: (page.imageUrl?.trim().isNotEmpty ?? false)
+                ? imagePath
+                : '',
             localAudioPaths: audioPaths,
           ),
         );
@@ -277,8 +289,9 @@ class DownloadManager {
         OfflineSlideEntry(
           fairytaleId: id,
           title: response.title,
-          thumbnailLocalPath:
-              localPages.isNotEmpty ? localPages.first.localImagePath : '',
+          thumbnailLocalPath: localPages.isNotEmpty
+              ? localPages.first.localImagePath
+              : '',
           pages: localPages,
           downloadedAt: DateTime.now(),
         ),

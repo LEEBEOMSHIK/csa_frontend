@@ -848,6 +848,24 @@ abstract class AppLocalizations {
   /// **'🌟 공유 동화'**
   String get fairytaleTabShared;
 
+  /// No description provided for @sharedFairytaleEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 공유된 동화가 없어요'**
+  String get sharedFairytaleEmpty;
+
+  /// No description provided for @sharedFairytaleError.
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 동화를 불러오지 못했어요'**
+  String get sharedFairytaleError;
+
+  /// No description provided for @sharedFairytaleRetry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get sharedFairytaleRetry;
+
   /// No description provided for @voiceBadge.
   ///
   /// In ko, this message translates to:

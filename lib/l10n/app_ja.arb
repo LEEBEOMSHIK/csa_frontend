@@ -152,6 +152,9 @@
   "fairytaleTabClassic": "📚 めいさくどうわ",
   "fairytaleTabAi": "🤖 AIどうわ",
   "fairytaleTabShared": "🌟 みんなのどうわ",
+  "sharedFairytaleEmpty": "まだ公開された童話がありません",
+  "sharedFairytaleError": "みんなの童話を読み込めませんでした",
+  "sharedFairytaleRetry": "再試行",
   "voiceBadge": "{name}のこえ",
   "@voiceBadge": {
     "placeholders": {
