@@ -59,6 +59,9 @@ flutter pub get
 # 디버그 실행 (연결된 디바이스 또는 에뮬레이터 필요)
 flutter run
 
+# 웹 디버그 실행 (다른 프로젝트와 포트 충돌 방지)
+flutter run -d chrome --web-port 3001
+
 # 특정 플랫폼 지정 실행
 flutter run -d android
 flutter run -d ios

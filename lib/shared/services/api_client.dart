@@ -7,11 +7,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 // - Android 에뮬레이터: 10.0.2.2 (호스트 머신 별칭, localhost는 에뮬레이터 자신)
 // TODO: 실서버 확정 후 환경별 URL로 교체
 String _resolveBaseUrl() {
-  if (kIsWeb) return 'http://localhost:8080';
+  if (kIsWeb) return 'http://localhost:18080';
   if (defaultTargetPlatform == TargetPlatform.android) {
-    return 'http://10.0.2.2:8080';
+    return 'http://10.0.2.2:18080';
   }
-  return 'http://localhost:8080';
+  return 'http://localhost:18080';
 }
 
 const Duration _connectTimeout = Duration(seconds: 10);
