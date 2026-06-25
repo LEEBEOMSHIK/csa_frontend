@@ -19,8 +19,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  bool _debugPanelVisible = true;
-
   @override
   void initState() {
     super.initState();
@@ -58,18 +56,10 @@ class _MainScreenState extends State<MainScreen> {
       valueListenable: mainTabNotifier,
       builder: (context, currentIndex, _) {
         return Scaffold(
-          body: IndexedStack(
-            index: currentIndex,
-            children: _screens,
-          ),
+          body: IndexedStack(index: currentIndex, children: _screens),
           bottomNavigationBar: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (widget.debugLoginData != null && _debugPanelVisible)
-                _DebugDataPanel(
-                  data: widget.debugLoginData!,
-                  onClose: () => setState(() => _debugPanelVisible = false),
-                ),
               _BottomNav(
                 currentIndex: currentIndex,
                 onTap: (i) => mainTabNotifier.value = i,
@@ -97,9 +87,7 @@ class _BottomNav extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
-        border: Border(
-          top: BorderSide(color: Color(0xFFF0F0F0), width: 1),
-        ),
+        border: Border(top: BorderSide(color: Color(0xFFF0F0F0), width: 1)),
       ),
       child: SafeArea(
         top: false,
@@ -194,80 +182,6 @@ class _BottomNav extends StatelessWidget {
   }
 }
 
-class _DebugDataPanel extends StatelessWidget {
-  final Map<String, dynamic> data;
-  final VoidCallback onClose;
-
-  const _DebugDataPanel({required this.data, required this.onClose});
-
-  @override
-  Widget build(BuildContext context) {
-    final entries = data.entries.toList();
-    return Container(
-      width: double.infinity,
-      color: const Color(0xFF1A1A2E),
-      padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text(
-                '[DEBUG] /auth/login response',
-                style: TextStyle(
-                  color: Color(0xFF00FF88),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'monospace',
-                ),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: onClose,
-                child: const Icon(Icons.close, color: Color(0xFF888888), size: 16),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          ...entries.map((e) => Padding(
-                padding: const EdgeInsets.only(bottom: 2),
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '${e.key}: ',
-                        style: const TextStyle(
-                          color: Color(0xFF82AAFF),
-                          fontSize: 11,
-                          fontFamily: 'monospace',
-                        ),
-                      ),
-                      TextSpan(
-                        text: _format(e.value),
-                        style: const TextStyle(
-                          color: Color(0xFFFFCB6B),
-                          fontSize: 11,
-                          fontFamily: 'monospace',
-                        ),
-                      ),
-                    ],
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              )),
-        ],
-      ),
-    );
-  }
-
-  String _format(dynamic value) {
-    if (value is String && value.length > 40) {
-      return '${value.substring(0, 40)}…';
-    }
-    return '$value';
-  }
-}
-
 class _NavItem extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -307,8 +221,7 @@ class _NavItem extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 10,
-                fontWeight:
-                    isSelected ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected ? activeColor : inactiveColor,
               ),
             ),

@@ -27,13 +27,10 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
-  void _navigateToHome(
-    BuildContext context, {
-    Map<String, dynamic>? debugData,
-  }) {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => MainScreen(debugLoginData: debugData)),
-    );
+  void _navigateToHome(BuildContext context) {
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const MainScreen()));
   }
 
   Future<void> _testJwt(BuildContext context) async {
@@ -84,14 +81,7 @@ class LoginScreen extends StatelessWidget {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('JWT OK — ${me['email']}')));
-      _navigateToHome(
-        context,
-        debugData: {
-          ...tokens,
-          'me_email': me['email'],
-          'me_id': me['id'] ?? me['userId'],
-        },
-      );
+      _navigateToHome(context);
     } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(
