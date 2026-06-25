@@ -487,6 +487,51 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settingsTermAgreeError => '동의 처리에 실패했어요';
 
   @override
+  String get premiumTitle => '프리미엄';
+
+  @override
+  String get premiumActiveTitle => 'PREMIUM 이용 중';
+
+  @override
+  String get premiumActiveSubtitle => '오프라인 저장 기능을 사용할 수 있어요.';
+
+  @override
+  String get premiumFreeTitle => 'FREE 이용 중';
+
+  @override
+  String get premiumFreeSubtitle => '프리미엄 구독으로 오프라인 저장을 열 수 있어요.';
+
+  @override
+  String get premiumPlanTitle => '월간 구독';
+
+  @override
+  String get premiumProductName => '프리미엄 월간 구독';
+
+  @override
+  String get premiumLoading => '상품 정보를 불러오는 중...';
+
+  @override
+  String get premiumUnavailable => '결제 사용 불가';
+
+  @override
+  String get premiumStartButton => '프리미엄 시작';
+
+  @override
+  String get premiumRestoreButton => '구매 복원';
+
+  @override
+  String get premiumPurchaseStarted => '결제 창을 열었어요';
+
+  @override
+  String get premiumRestoreStarted => '구매 복원을 요청했어요';
+
+  @override
+  String get premiumPurchaseFailed => '결제를 완료하지 못했어요';
+
+  @override
+  String get premiumProductNotFound => '프리미엄 상품을 찾을 수 없어요';
+
+  @override
   String get loginAppTitle => '이야기 숲';
 
   @override

@@ -1034,6 +1034,96 @@ abstract class AppLocalizations {
   /// **'동의 처리에 실패했어요'**
   String get settingsTermAgreeError;
 
+  /// No description provided for @premiumTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'프리미엄'**
+  String get premiumTitle;
+
+  /// No description provided for @premiumActiveTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'PREMIUM 이용 중'**
+  String get premiumActiveTitle;
+
+  /// No description provided for @premiumActiveSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인 저장 기능을 사용할 수 있어요.'**
+  String get premiumActiveSubtitle;
+
+  /// No description provided for @premiumFreeTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'FREE 이용 중'**
+  String get premiumFreeTitle;
+
+  /// No description provided for @premiumFreeSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'프리미엄 구독으로 오프라인 저장을 열 수 있어요.'**
+  String get premiumFreeSubtitle;
+
+  /// No description provided for @premiumPlanTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'월간 구독'**
+  String get premiumPlanTitle;
+
+  /// No description provided for @premiumProductName.
+  ///
+  /// In ko, this message translates to:
+  /// **'프리미엄 월간 구독'**
+  String get premiumProductName;
+
+  /// No description provided for @premiumLoading.
+  ///
+  /// In ko, this message translates to:
+  /// **'상품 정보를 불러오는 중...'**
+  String get premiumLoading;
+
+  /// No description provided for @premiumUnavailable.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 사용 불가'**
+  String get premiumUnavailable;
+
+  /// No description provided for @premiumStartButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'프리미엄 시작'**
+  String get premiumStartButton;
+
+  /// No description provided for @premiumRestoreButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 복원'**
+  String get premiumRestoreButton;
+
+  /// No description provided for @premiumPurchaseStarted.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 창을 열었어요'**
+  String get premiumPurchaseStarted;
+
+  /// No description provided for @premiumRestoreStarted.
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 복원을 요청했어요'**
+  String get premiumRestoreStarted;
+
+  /// No description provided for @premiumPurchaseFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제를 완료하지 못했어요'**
+  String get premiumPurchaseFailed;
+
+  /// No description provided for @premiumProductNotFound.
+  ///
+  /// In ko, this message translates to:
+  /// **'프리미엄 상품을 찾을 수 없어요'**
+  String get premiumProductNotFound;
+
   /// No description provided for @loginAppTitle.
   ///
   /// In ko, this message translates to:

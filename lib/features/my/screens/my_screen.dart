@@ -3,6 +3,7 @@ import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/my/models/user_settings.dart';
 import 'package:csa_frontend/features/my/screens/my_fairytale_list_screen.dart';
 import 'package:csa_frontend/features/my/screens/offline_storage_screen.dart';
+import 'package:csa_frontend/features/my/screens/premium_purchase_screen.dart';
 import 'package:csa_frontend/features/my/services/user_settings_service.dart';
 import 'package:csa_frontend/shared/services/download_manager.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
@@ -45,11 +46,9 @@ class _MyScreenState extends State<MyScreen> {
   }
 
   Future<void> _openOfflineStorage() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const OfflineStorageScreen(),
-      ),
-    );
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const OfflineStorageScreen()));
     // 목록 화면에서 삭제가 일어났을 수 있으므로 복귀 시 요약을 갱신한다.
     _refreshOfflineSummary();
   }
@@ -70,10 +69,10 @@ class _MyScreenState extends State<MyScreen> {
   }
 
   UserSettings _currentSettings() => UserSettings(
-        locale: localeNotifier.value.languageCode,
-        textNotiEnabled: _textNotiEnabled,
-        pushNotiEnabled: _pushNotiEnabled,
-      );
+    locale: localeNotifier.value.languageCode,
+    textNotiEnabled: _textNotiEnabled,
+    pushNotiEnabled: _pushNotiEnabled,
+  );
 
   String get _selectedLanguageName =>
       localeNotifier.value.languageCode == 'ja' ? '日本語' : '한국어';
@@ -101,8 +100,7 @@ class _MyScreenState extends State<MyScreen> {
       if (push != null) _pushNotiEnabled = push;
     });
     try {
-      final updated =
-          await _settingsService.updateSettings(_currentSettings());
+      final updated = await _settingsService.updateSettings(_currentSettings());
       textNotiNotifier.value = updated.textNotiEnabled;
       pushNotiNotifier.value = updated.pushNotiEnabled;
     } catch (_) {
@@ -117,9 +115,9 @@ class _MyScreenState extends State<MyScreen> {
   void _showSaveError() {
     if (!mounted) return;
     final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.settingsSaveError)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.settingsSaveError)));
   }
 
   Future<void> _agreeTerm(TermType type, String title) async {
@@ -147,14 +145,14 @@ class _MyScreenState extends State<MyScreen> {
     try {
       await _settingsService.agreeTerm(type, _currentTermVersion);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.settingsTermAgreed)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.settingsTermAgreed)));
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.settingsTermAgreeError)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.settingsTermAgreeError)));
     }
   }
 
@@ -284,7 +282,14 @@ class _MyScreenState extends State<MyScreen> {
                       ),
                     ),
                   ),
-                  _SubRow(label: l10n.settingsPurchaseHistory, onTap: () {}),
+                  _SubRow(
+                    label: l10n.settingsPurchaseHistory,
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => PremiumPurchaseScreen(),
+                      ),
+                    ),
+                  ),
                   _SubRow(label: l10n.settingsFavoriteHistory, onTap: () {}),
                   const _ThickDivider(),
                   // 동화 설정
@@ -352,8 +357,8 @@ class _MyScreenState extends State<MyScreen> {
                   ),
                   _SubRow(
                     label: l10n.settingsFinanceTerms,
-                    onTap: () => _agreeTerm(
-                        TermType.finance, l10n.settingsFinanceTerms),
+                    onTap: () =>
+                        _agreeTerm(TermType.finance, l10n.settingsFinanceTerms),
                   ),
                   _SubRow(
                     label: l10n.settingsPrivacy,
@@ -541,8 +546,7 @@ class _LanguageOption extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 15,
-                fontWeight:
-                    isSelected ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected
                     ? const Color(0xFF4A90D9)
                     : const Color(0xFF333333),
@@ -603,8 +607,7 @@ class _ToggleRow extends StatelessWidget {
               ),
               child: AnimatedAlign(
                 duration: const Duration(milliseconds: 200),
-                alignment:
-                    value ? Alignment.centerRight : Alignment.centerLeft,
+                alignment: value ? Alignment.centerRight : Alignment.centerLeft,
                 child: Container(
                   width: 22,
                   height: 22,

@@ -487,6 +487,51 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settingsTermAgreeError => '同意処理に失敗しました';
 
   @override
+  String get premiumTitle => 'プレミアム';
+
+  @override
+  String get premiumActiveTitle => 'PREMIUM利用中';
+
+  @override
+  String get premiumActiveSubtitle => 'オフライン保存を利用できます。';
+
+  @override
+  String get premiumFreeTitle => 'FREE利用中';
+
+  @override
+  String get premiumFreeSubtitle => 'プレミアム登録でオフライン保存を使えます。';
+
+  @override
+  String get premiumPlanTitle => '月額プラン';
+
+  @override
+  String get premiumProductName => 'プレミアム月額プラン';
+
+  @override
+  String get premiumLoading => '商品情報を読み込み中...';
+
+  @override
+  String get premiumUnavailable => '決済を利用できません';
+
+  @override
+  String get premiumStartButton => 'プレミアムを開始';
+
+  @override
+  String get premiumRestoreButton => '購入を復元';
+
+  @override
+  String get premiumPurchaseStarted => '決済画面を開きました';
+
+  @override
+  String get premiumRestoreStarted => '購入復元をリクエストしました';
+
+  @override
+  String get premiumPurchaseFailed => '決済を完了できませんでした';
+
+  @override
+  String get premiumProductNotFound => 'プレミアム商品が見つかりません';
+
+  @override
   String get loginAppTitle => '物語の森';
 
   @override

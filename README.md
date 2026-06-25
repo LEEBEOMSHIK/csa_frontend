@@ -91,6 +91,10 @@ flutter run --dart-define=API_KEY=your_key_here
 
 `.env` 파일 사용 시 반드시 `.gitignore`에 등록할 것.
 
+### 7. PREMIUM 결제 테스트
+
+앱의 프리미엄 구독 product ID는 `premium_monthly`입니다. 실제 Google Play 결제 UI 테스트는 Play Console에 동일한 product ID의 구독 상품을 만들고, 테스트 트랙 또는 라이선스 테스터 계정으로 진행합니다. 로컬 백엔드는 stub 검증기로 `/subscriptions/verify` 흐름을 테스트할 수 있습니다.
+
 ---
 
 ## 디렉터리 구조
