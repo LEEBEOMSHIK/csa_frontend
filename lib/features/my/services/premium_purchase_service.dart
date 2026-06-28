@@ -224,6 +224,9 @@ class InAppPurchasePremiumStore implements PremiumPurchaseStore {
   }
 
   PremiumPurchaseDetails _mapPurchase(PurchaseDetails purchase) {
+    // iOS에서 StoreKit 2가 활성화되면 serverVerificationData는 JWS
+    // (header.payload.signature)로 전달되며, 그대로 purchaseToken으로 백엔드에
+    // 전송되어 Apple JWS 검증기가 처리한다. Android(Google)는 영향받지 않는다.
     return PremiumPurchaseDetails(
       productId: purchase.productID,
       purchaseToken: purchase.verificationData.serverVerificationData,
