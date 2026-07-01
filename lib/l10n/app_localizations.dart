@@ -866,6 +866,24 @@ abstract class AppLocalizations {
   /// **'다시 시도'**
   String get sharedFairytaleRetry;
 
+  /// No description provided for @fairytaleListError.
+  ///
+  /// In ko, this message translates to:
+  /// **'동화를 불러오지 못했어요'**
+  String get fairytaleListError;
+
+  /// No description provided for @fairytaleListEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 동화가 없어요'**
+  String get fairytaleListEmpty;
+
+  /// No description provided for @fairytaleListRetry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get fairytaleListRetry;
+
   /// No description provided for @voiceBadge.
   ///
   /// In ko, this message translates to:

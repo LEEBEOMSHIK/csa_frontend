@@ -155,6 +155,9 @@
   "sharedFairytaleEmpty": "まだ公開された童話がありません",
   "sharedFairytaleError": "みんなの童話を読み込めませんでした",
   "sharedFairytaleRetry": "再試行",
+  "fairytaleListError": "童話を読み込めませんでした",
+  "fairytaleListEmpty": "まだ童話がありません",
+  "fairytaleListRetry": "再試行",
   "voiceBadge": "{name}のこえ",
   "@voiceBadge": {
     "placeholders": {

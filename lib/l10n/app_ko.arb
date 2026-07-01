@@ -155,6 +155,9 @@
   "sharedFairytaleEmpty": "아직 공유된 동화가 없어요",
   "sharedFairytaleError": "공유 동화를 불러오지 못했어요",
   "sharedFairytaleRetry": "다시 시도",
+  "fairytaleListError": "동화를 불러오지 못했어요",
+  "fairytaleListEmpty": "아직 동화가 없어요",
+  "fairytaleListRetry": "다시 시도",
   "voiceBadge": "{name} 목소리",
   "@voiceBadge": {
     "placeholders": {

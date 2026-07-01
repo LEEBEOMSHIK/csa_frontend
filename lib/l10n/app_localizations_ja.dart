@@ -399,6 +399,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get sharedFairytaleRetry => '再試行';
 
   @override
+  String get fairytaleListError => '童話を読み込めませんでした';
+
+  @override
+  String get fairytaleListEmpty => 'まだ童話がありません';
+
+  @override
+  String get fairytaleListRetry => '再試行';
+
+  @override
   String voiceBadge(String name) {
     return '$nameのこえ';
   }

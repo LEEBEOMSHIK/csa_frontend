@@ -399,6 +399,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get sharedFairytaleRetry => '다시 시도';
 
   @override
+  String get fairytaleListError => '동화를 불러오지 못했어요';
+
+  @override
+  String get fairytaleListEmpty => '아직 동화가 없어요';
+
+  @override
+  String get fairytaleListRetry => '다시 시도';
+
+  @override
   String voiceBadge(String name) {
     return '$name 목소리';
   }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_response.dart';
 import 'package:csa_frontend/features/fairytale_create/screens/fairytale_slide_screen.dart';
+import 'package:csa_frontend/features/home/models/fairytale.dart';
+import 'package:csa_frontend/features/home/screens/fairytale_detail_screen.dart';
+import 'package:csa_frontend/features/home/services/fairytale_service.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/my/models/my_fairytale.dart';
 import 'package:csa_frontend/features/my/services/my_fairytale_service.dart';
@@ -12,8 +15,14 @@ import 'package:csa_frontend/utils/locale_provider.dart';
 class FairytaleListScreen extends StatelessWidget {
   final MyFairytaleService? service;
   final DownloadManager? downloadManager;
+  final CatalogService? catalogService;
 
-  const FairytaleListScreen({super.key, this.service, this.downloadManager});
+  const FairytaleListScreen({
+    super.key,
+    this.service,
+    this.downloadManager,
+    this.catalogService,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +57,9 @@ class FairytaleListScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            _FairytaleGrid(items: _classicTales),
+            _ClassicFairytaleGrid(
+              service: catalogService ?? FairytaleService.instance,
+            ),
             _FairytaleGrid(items: _aiTales),
             _SharedFairytaleGrid(
               service: service ?? MyFairytaleService.instance,
@@ -167,6 +178,200 @@ class _FairytaleGrid extends StatelessWidget {
       },
     );
   }
+}
+
+class _ClassicFairytaleGrid extends StatefulWidget {
+  final CatalogService service;
+
+  const _ClassicFairytaleGrid({required this.service});
+
+  @override
+  State<_ClassicFairytaleGrid> createState() => _ClassicFairytaleGridState();
+}
+
+class _ClassicFairytaleGridState extends State<_ClassicFairytaleGrid> {
+  late Future<List<FairytaleItem>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = widget.service.getFairytales();
+  }
+
+  @override
+  void didUpdateWidget(covariant _ClassicFairytaleGrid oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.service != widget.service) {
+      _future = widget.service.getFairytales();
+    }
+  }
+
+  void _reload() {
+    setState(() => _future = widget.service.getFairytales());
+  }
+
+  void _open(FairytaleItem item, String lang) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => FairytaleDetailScreen(item: item, lang: lang),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final lang = localeNotifier.value.languageCode;
+    return FutureBuilder<List<FairytaleItem>>(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(color: AppColors.library),
+          );
+        }
+        if (snapshot.hasError) {
+          return _SharedStateView(
+            icon: Icons.cloud_off_rounded,
+            message: l10n.fairytaleListError,
+            retryLabel: l10n.fairytaleListRetry,
+            onRetry: _reload,
+          );
+        }
+        final items = snapshot.data ?? const <FairytaleItem>[];
+        if (items.isEmpty) {
+          return _SharedStateView(
+            icon: Icons.auto_stories_outlined,
+            message: l10n.fairytaleListEmpty,
+          );
+        }
+        return GridView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: items.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.75,
+          ),
+          itemBuilder: (context, index) {
+            final item = items[index];
+            return _ClassicFairytaleCard(
+              item: item,
+              lang: lang,
+              onTap: () => _open(item, lang),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _ClassicFairytaleCard extends StatelessWidget {
+  final FairytaleItem item;
+  final String lang;
+  final VoidCallback onTap;
+
+  const _ClassicFairytaleCard({
+    required this.item,
+    required this.lang,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = _classicCardColor(item.colorHex);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.07),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.18),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(18),
+                  ),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.auto_stories_rounded,
+                    size: 48,
+                    color: color,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.titleFor(lang),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  if (item.rating != null) ...[
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.star_rounded,
+                          size: 12,
+                          color: Color(0xFFFFB300),
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          item.rating!.toStringAsFixed(1),
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Color _classicCardColor(String? hex) {
+  if (hex != null) {
+    var value = hex.trim();
+    if (value.startsWith('#')) value = value.substring(1);
+    if (value.length == 6) {
+      final parsed = int.tryParse('FF$value', radix: 16);
+      if (parsed != null) return Color(parsed);
+    }
+  }
+  return AppColors.library;
 }
 
 class _SharedFairytaleGrid extends StatefulWidget {
@@ -715,45 +920,6 @@ class _FairytaleItem {
     required this.likes,
   });
 }
-
-const List<_FairytaleItem> _classicTales = [
-  _FairytaleItem(
-    emoji: '👸',
-    title: '신데렐라',
-    color: Color(0xFF9B5DE5),
-    likes: 128,
-  ),
-  _FairytaleItem(
-    emoji: '🍎',
-    title: '백설공주',
-    color: Color(0xFFEF476F),
-    likes: 95,
-  ),
-  _FairytaleItem(
-    emoji: '🐺',
-    title: '빨간 모자',
-    color: Color(0xFFFF6B6B),
-    likes: 87,
-  ),
-  _FairytaleItem(
-    emoji: '🦢',
-    title: '미운 오리 새끼',
-    color: Color(0xFF118AB2),
-    likes: 74,
-  ),
-  _FairytaleItem(
-    emoji: '🧱',
-    title: '아기 돼지 삼형제',
-    color: Color(0xFFFFAA5E),
-    likes: 110,
-  ),
-  _FairytaleItem(
-    emoji: '🌹',
-    title: '잠자는 숲속의 공주',
-    color: Color(0xFF06D6A0),
-    likes: 66,
-  ),
-];
 
 const List<_FairytaleItem> _aiTales = [
   _FairytaleItem(

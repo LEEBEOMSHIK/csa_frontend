@@ -3,6 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:csa_frontend/features/fairytale_list/screens/fairytale_list_screen.dart';
+import 'package:csa_frontend/features/home/models/fairytale.dart';
+import 'package:csa_frontend/features/home/services/fairytale_service.dart';
 import 'package:csa_frontend/features/my/services/my_fairytale_service.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/shared/services/download_manager.dart';
@@ -29,7 +31,14 @@ void main() {
     final api = _FakeSharedApi();
     final service = MyFairytaleService(api: api);
 
-    await tester.pumpWidget(_wrap(FairytaleListScreen(service: service)));
+    await tester.pumpWidget(
+      _wrap(
+        FairytaleListScreen(
+          service: service,
+          catalogService: _FakeCatalogService(),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('🌟 공유 동화'));
@@ -58,6 +67,7 @@ void main() {
         FairytaleListScreen(
           service: MyFairytaleService(api: api),
           downloadManager: manager,
+          catalogService: _FakeCatalogService(),
         ),
       ),
     );
@@ -72,6 +82,42 @@ void main() {
     expect(manager.lastFairytaleId, 7);
     expect(manager.lastShared, isTrue);
   });
+
+  testWidgets('renders classic fairytales on the default classic tab', (
+    tester,
+  ) async {
+    final catalog = _FakeCatalogService(
+      items: const [
+        FairytaleItem(id: 1, title: '고전 동화 A', categories: []),
+        FairytaleItem(id: 2, title: '고전 동화 B', categories: []),
+      ],
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        FairytaleListScreen(
+          service: MyFairytaleService(api: _FakeSharedApi()),
+          catalogService: catalog,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('고전 동화 A'), findsOneWidget);
+    expect(find.text('고전 동화 B'), findsOneWidget);
+  });
+}
+
+class _FakeCatalogService implements CatalogService {
+  final List<FairytaleItem> items;
+
+  _FakeCatalogService({this.items = const []});
+
+  @override
+  Future<List<FairytaleItem>> getFairytales({
+    String? category,
+    String? sort,
+  }) async => items;
 }
 
 class _FakeSharedApi implements MyFairytaleApiClient {
