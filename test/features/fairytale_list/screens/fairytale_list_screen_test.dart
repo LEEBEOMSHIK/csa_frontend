@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:csa_frontend/features/fairytale_list/screens/fairytale_list_screen.dart';
 import 'package:csa_frontend/features/home/models/fairytale.dart';
+import 'package:csa_frontend/features/home/models/fairytale_category.dart';
 import 'package:csa_frontend/features/home/services/fairytale_service.dart';
 import 'package:csa_frontend/features/my/services/my_fairytale_service.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
@@ -106,18 +107,62 @@ void main() {
     expect(find.text('고전 동화 A'), findsOneWidget);
     expect(find.text('고전 동화 B'), findsOneWidget);
   });
+
+  testWidgets('tapping a category chip reloads with category param', (
+    tester,
+  ) async {
+    final catalog = _FakeCatalogService(
+      items: const [FairytaleItem(id: 1, title: '고전 동화 A', categories: [])],
+      categories: const [
+        FairytaleCategory(
+          categoryKey: 'adventure',
+          nameKo: '모험',
+          nameJa: 'ぼうけん',
+          count: 3,
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        FairytaleListScreen(
+          service: MyFairytaleService(api: _FakeSharedApi()),
+          catalogService: catalog,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(catalog.requestedCategories.last, isNull);
+
+    await tester.tap(find.text('#모험'));
+    await tester.pumpAndSettle();
+
+    expect(catalog.requestedCategories.last, 'adventure');
+  });
 }
 
 class _FakeCatalogService implements CatalogService {
   final List<FairytaleItem> items;
+  final List<FairytaleCategory> categories;
 
-  _FakeCatalogService({this.items = const []});
+  final List<String?> requestedCategories = [];
+  final List<String?> requestedSorts = [];
+
+  _FakeCatalogService({this.items = const [], this.categories = const []});
 
   @override
   Future<List<FairytaleItem>> getFairytales({
     String? category,
     String? sort,
-  }) async => items;
+  }) async {
+    requestedCategories.add(category);
+    requestedSorts.add(sort);
+    return items;
+  }
+
+  @override
+  Future<List<FairytaleCategory>> getCategories() async => categories;
 }
 
 class _FakeSharedApi implements MyFairytaleApiClient {

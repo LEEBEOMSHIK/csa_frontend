@@ -408,6 +408,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fairytaleListRetry => '다시 시도';
 
   @override
+  String get fairytaleFilterAll => '전체';
+
+  @override
+  String get fairytaleSortLabel => '정렬';
+
+  @override
+  String get fairytaleSortLatest => '최신순';
+
+  @override
+  String get fairytaleSortRating => '평점순';
+
+  @override
+  String get fairytaleSortTitle => '제목순';
+
+  @override
   String voiceBadge(String name) {
     return '$name 목소리';
   }

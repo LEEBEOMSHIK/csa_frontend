@@ -158,6 +158,11 @@
   "fairytaleListError": "童話を読み込めませんでした",
   "fairytaleListEmpty": "まだ童話がありません",
   "fairytaleListRetry": "再試行",
+  "fairytaleFilterAll": "すべて",
+  "fairytaleSortLabel": "並び替え",
+  "fairytaleSortLatest": "新着順",
+  "fairytaleSortRating": "評価順",
+  "fairytaleSortTitle": "タイトル順",
   "voiceBadge": "{name}のこえ",
   "@voiceBadge": {
     "placeholders": {

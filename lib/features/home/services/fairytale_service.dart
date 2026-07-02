@@ -5,12 +5,14 @@ import 'package:csa_frontend/shared/services/api_client.dart';
 
 abstract class CatalogService {
   Future<List<FairytaleItem>> getFairytales({String? category, String? sort});
+  Future<List<FairytaleCategory>> getCategories();
 }
 
 class FairytaleService implements CatalogService {
   FairytaleService._();
   static final FairytaleService instance = FairytaleService._();
 
+  @override
   Future<List<FairytaleCategory>> getCategories() async {
     final data = await ApiClient.instance.get('/fairytale/categories');
     return (data as List<dynamic>)

@@ -884,6 +884,36 @@ abstract class AppLocalizations {
   /// **'다시 시도'**
   String get fairytaleListRetry;
 
+  /// No description provided for @fairytaleFilterAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get fairytaleFilterAll;
+
+  /// No description provided for @fairytaleSortLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'정렬'**
+  String get fairytaleSortLabel;
+
+  /// No description provided for @fairytaleSortLatest.
+  ///
+  /// In ko, this message translates to:
+  /// **'최신순'**
+  String get fairytaleSortLatest;
+
+  /// No description provided for @fairytaleSortRating.
+  ///
+  /// In ko, this message translates to:
+  /// **'평점순'**
+  String get fairytaleSortRating;
+
+  /// No description provided for @fairytaleSortTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목순'**
+  String get fairytaleSortTitle;
+
   /// No description provided for @voiceBadge.
   ///
   /// In ko, this message translates to:

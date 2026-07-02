@@ -408,6 +408,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fairytaleListRetry => '再試行';
 
   @override
+  String get fairytaleFilterAll => 'すべて';
+
+  @override
+  String get fairytaleSortLabel => '並び替え';
+
+  @override
+  String get fairytaleSortLatest => '新着順';
+
+  @override
+  String get fairytaleSortRating => '評価順';
+
+  @override
+  String get fairytaleSortTitle => 'タイトル順';
+
+  @override
   String voiceBadge(String name) {
     return '$nameのこえ';
   }

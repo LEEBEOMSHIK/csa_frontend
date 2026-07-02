@@ -158,6 +158,11 @@
   "fairytaleListError": "동화를 불러오지 못했어요",
   "fairytaleListEmpty": "아직 동화가 없어요",
   "fairytaleListRetry": "다시 시도",
+  "fairytaleFilterAll": "전체",
+  "fairytaleSortLabel": "정렬",
+  "fairytaleSortLatest": "최신순",
+  "fairytaleSortRating": "평점순",
+  "fairytaleSortTitle": "제목순",
   "voiceBadge": "{name} 목소리",
   "@voiceBadge": {
     "placeholders": {
