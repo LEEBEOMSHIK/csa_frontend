@@ -2,11 +2,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+// 빌드타임 baseUrl 오버라이드. String.fromEnvironment는 const 컨텍스트에서만
+// 동작하므로 top-level const로 읽는다. 미지정 시 빈 문자열.
+const String _baseUrlOverride = String.fromEnvironment('API_BASE_URL');
+
 // 플랫폼별 백엔드 호스트
 // - 웹 / iOS 시뮬레이터 / 데스크톱: localhost
 // - Android 에뮬레이터: 10.0.2.2 (호스트 머신 별칭, localhost는 에뮬레이터 자신)
-// TODO: 실서버 확정 후 환경별 URL로 교체
+// 실서버 지정 시 `--dart-define=API_BASE_URL=https://api.example.com` 로 오버라이드하고,
+// 미지정이면 아래 로컬 기본값으로 폴백한다.
 String _resolveBaseUrl() {
+  if (_baseUrlOverride.isNotEmpty) return _baseUrlOverride;
   if (kIsWeb) return 'http://localhost:18080';
   if (defaultTargetPlatform == TargetPlatform.android) {
     return 'http://10.0.2.2:18080';
