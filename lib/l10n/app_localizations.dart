@@ -1561,6 +1561,72 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'읽어줄 내용이 없어요'**
   String get ttsNoContent;
+
+  /// No description provided for @characterSupportedBadge.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 캐릭터와 함께'**
+  String get characterSupportedBadge;
+
+  /// No description provided for @characterSupportedDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 캐릭터와 함께 읽을 수 있는 동화예요'**
+  String get characterSupportedDetail;
+
+  /// No description provided for @curatedReaderCharacterPicker.
+  ///
+  /// In ko, this message translates to:
+  /// **'캐릭터 선택'**
+  String get curatedReaderCharacterPicker;
+
+  /// No description provided for @curatedReaderCharacterPickerTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'동화에 함께할 캐릭터'**
+  String get curatedReaderCharacterPickerTitle;
+
+  /// No description provided for @curatedReaderNoCharacter.
+  ///
+  /// In ko, this message translates to:
+  /// **'캐릭터 없이 읽기'**
+  String get curatedReaderNoCharacter;
+
+  /// No description provided for @curatedReaderPrevious.
+  ///
+  /// In ko, this message translates to:
+  /// **'이전 페이지'**
+  String get curatedReaderPrevious;
+
+  /// No description provided for @curatedReaderNext.
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 페이지'**
+  String get curatedReaderNext;
+
+  /// No description provided for @curatedReaderPage.
+  ///
+  /// In ko, this message translates to:
+  /// **'{current} / {total}'**
+  String curatedReaderPage(int current, int total);
+
+  /// No description provided for @curatedReaderError.
+  ///
+  /// In ko, this message translates to:
+  /// **'동화를 불러오지 못했어요'**
+  String get curatedReaderError;
+
+  /// No description provided for @curatedReaderRetry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get curatedReaderRetry;
+
+  /// No description provided for @curatedReaderImageError.
+  ///
+  /// In ko, this message translates to:
+  /// **'삽화를 불러오지 못했어요'**
+  String get curatedReaderImageError;
 }
 
 class _AppLocalizationsDelegate

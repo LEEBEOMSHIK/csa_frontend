@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/my/models/user_settings.dart';
-import 'package:csa_frontend/features/my/screens/my_fairytale_list_screen.dart';
 import 'package:csa_frontend/features/my/screens/offline_storage_screen.dart';
 import 'package:csa_frontend/features/my/screens/premium_purchase_screen.dart';
 import 'package:csa_frontend/features/my/services/user_settings_service.dart';
@@ -40,8 +39,8 @@ class _MyScreenState extends State<MyScreen> {
   void _refreshOfflineSummary() {
     if (!mounted) return;
     setState(() {
-      _offlineCount = _downloadManager.savedCount();
-      _offlineBytes = _downloadManager.totalUsedBytes();
+      _offlineCount = _downloadManager.curatedSavedCount();
+      _offlineBytes = _downloadManager.curatedTotalUsedBytes();
     });
   }
 
@@ -274,14 +273,6 @@ class _MyScreenState extends State<MyScreen> {
                   const _ThickDivider(),
                   // 활동 내역 섹션
                   _SectionHeader(title: l10n.settingsSectionActivity),
-                  _SubRow(
-                    label: l10n.settingsMyFairytales,
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const MyFairytaleListScreen(),
-                      ),
-                    ),
-                  ),
                   _SubRow(
                     label: l10n.settingsPurchaseHistory,
                     onTap: () => Navigator.of(context).push(

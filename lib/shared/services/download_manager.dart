@@ -140,6 +140,21 @@ class DownloadManager {
     return entries;
   }
 
+  /// 초기 출시에서 노출할 큐레이션 동화 오프라인 메타만 반환한다.
+  /// 출처가 없는 기존 저장본은 legacy로 해석해 보존하되 목록에는 노출하지 않는다.
+  List<OfflineMetaEntry> availableCuratedMeta() {
+    return availableMeta()
+        .where((meta) => meta.contentOrigin == OfflineContentOrigin.curated)
+        .toList();
+  }
+
+  OfflineSlideEntry? getCuratedSlide(String fairytaleId) {
+    if (!_store.isInitialized) return null;
+    final meta = _store.metaBox.get(fairytaleId);
+    if (meta?.contentOrigin != OfflineContentOrigin.curated) return null;
+    return getSlide(fairytaleId);
+  }
+
   /// 완료·미만료 저장본의 총 사용 용량(바이트) 합산.
   int totalUsedBytes() {
     var total = 0;
@@ -149,8 +164,18 @@ class DownloadManager {
     return total;
   }
 
+  int curatedTotalUsedBytes() {
+    var total = 0;
+    for (final meta in availableCuratedMeta()) {
+      total += meta.totalSizeBytes;
+    }
+    return total;
+  }
+
   /// 저장된(완료·미만료) 동화 개수.
   int savedCount() => availableMeta().length;
+
+  int curatedSavedCount() => availableCuratedMeta().length;
 
   /// 저장된 모든 슬라이드 동화를 삭제한다(파일 + Hive 메타/본문).
   Future<void> deleteAll() async {
@@ -158,6 +183,12 @@ class DownloadManager {
     final ids = _store.metaBox.keys.cast<String>().toList();
     for (final id in ids) {
       await delete(id);
+    }
+  }
+
+  Future<void> deleteAllCurated() async {
+    for (final meta in availableCuratedMeta()) {
+      await delete(meta.fairytaleId);
     }
   }
 

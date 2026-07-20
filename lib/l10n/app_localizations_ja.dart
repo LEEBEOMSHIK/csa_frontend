@@ -755,4 +755,39 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get ttsNoContent => '読み上げる内容がありません';
+
+  @override
+  String get characterSupportedBadge => 'マイキャラといっしょ';
+
+  @override
+  String get characterSupportedDetail => 'マイキャラといっしょに読めるどうわです';
+
+  @override
+  String get curatedReaderCharacterPicker => 'キャラクターを選ぶ';
+
+  @override
+  String get curatedReaderCharacterPickerTitle => 'どうわに登場するキャラクター';
+
+  @override
+  String get curatedReaderNoCharacter => 'キャラクターなしで読む';
+
+  @override
+  String get curatedReaderPrevious => '前のページ';
+
+  @override
+  String get curatedReaderNext => '次のページ';
+
+  @override
+  String curatedReaderPage(int current, int total) {
+    return '$current / $total';
+  }
+
+  @override
+  String get curatedReaderError => 'どうわを読み込めませんでした';
+
+  @override
+  String get curatedReaderRetry => 'もう一度試す';
+
+  @override
+  String get curatedReaderImageError => 'イラストを読み込めませんでした';
 }

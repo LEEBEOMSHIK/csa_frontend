@@ -2,6 +2,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 enum DownloadStatus { downloading, completed, failed }
 
+enum OfflineContentOrigin { legacy, curated }
+
 /// offline_meta_box 에 저장되는 다운로드 상태/용량/TTL 메타데이터.
 class OfflineMetaEntry {
   final String fairytaleId;
@@ -12,6 +14,7 @@ class OfflineMetaEntry {
   final DownloadStatus status;
   final String voiceType;
   final String language;
+  final OfflineContentOrigin contentOrigin;
 
   const OfflineMetaEntry({
     required this.fairytaleId,
@@ -22,12 +25,12 @@ class OfflineMetaEntry {
     required this.status,
     required this.voiceType,
     required this.language,
+    this.contentOrigin = OfflineContentOrigin.legacy,
   });
 
   bool get isCompleted => status == DownloadStatus.completed;
 
-  bool isExpired(DateTime now) =>
-      expiresAt != null && now.isAfter(expiresAt!);
+  bool isExpired(DateTime now) => expiresAt != null && now.isAfter(expiresAt!);
 
   OfflineMetaEntry copyWith({
     int? totalSizeBytes,
@@ -36,6 +39,7 @@ class OfflineMetaEntry {
     DateTime? expiresAt,
     String? voiceType,
     String? language,
+    OfflineContentOrigin? contentOrigin,
   }) {
     return OfflineMetaEntry(
       fairytaleId: fairytaleId,
@@ -46,6 +50,7 @@ class OfflineMetaEntry {
       status: status ?? this.status,
       voiceType: voiceType ?? this.voiceType,
       language: language ?? this.language,
+      contentOrigin: contentOrigin ?? this.contentOrigin,
     );
   }
 }
@@ -68,6 +73,10 @@ class OfflineMetaEntryAdapter extends TypeAdapter<OfflineMetaEntry> {
     // 하위 호환: voice/lang 없이 저장된 구 엔트리는 남은 바이트가 없으므로 기본값 사용.
     final voiceType = reader.availableBytes > 0 ? reader.readString() : 'dad';
     final language = reader.availableBytes > 0 ? reader.readString() : 'ko';
+    final originName = reader.availableBytes > 0 ? reader.readString() : null;
+    final contentOrigin =
+        OfflineContentOrigin.values.asNameMap()[originName] ??
+        OfflineContentOrigin.legacy;
     return OfflineMetaEntry(
       fairytaleId: fairytaleId,
       format: format,
@@ -77,6 +86,7 @@ class OfflineMetaEntryAdapter extends TypeAdapter<OfflineMetaEntry> {
       status: DownloadStatus.values[statusIndex],
       voiceType: voiceType,
       language: language,
+      contentOrigin: contentOrigin,
     );
   }
 
@@ -93,5 +103,6 @@ class OfflineMetaEntryAdapter extends TypeAdapter<OfflineMetaEntry> {
     writer.writeInt(obj.status.index);
     writer.writeString(obj.voiceType);
     writer.writeString(obj.language);
+    writer.writeString(obj.contentOrigin.name);
   }
 }

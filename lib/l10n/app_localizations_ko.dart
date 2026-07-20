@@ -755,4 +755,39 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ttsNoContent => '읽어줄 내용이 없어요';
+
+  @override
+  String get characterSupportedBadge => '내 캐릭터와 함께';
+
+  @override
+  String get characterSupportedDetail => '내 캐릭터와 함께 읽을 수 있는 동화예요';
+
+  @override
+  String get curatedReaderCharacterPicker => '캐릭터 선택';
+
+  @override
+  String get curatedReaderCharacterPickerTitle => '동화에 함께할 캐릭터';
+
+  @override
+  String get curatedReaderNoCharacter => '캐릭터 없이 읽기';
+
+  @override
+  String get curatedReaderPrevious => '이전 페이지';
+
+  @override
+  String get curatedReaderNext => '다음 페이지';
+
+  @override
+  String curatedReaderPage(int current, int total) {
+    return '$current / $total';
+  }
+
+  @override
+  String get curatedReaderError => '동화를 불러오지 못했어요';
+
+  @override
+  String get curatedReaderRetry => '다시 시도';
+
+  @override
+  String get curatedReaderImageError => '삽화를 불러오지 못했어요';
 }

@@ -37,10 +37,10 @@ class _OfflineStorageScreenState extends State<OfflineStorageScreen> {
   }
 
   List<_OfflineItem> _loadItems() {
-    final metas = _downloadManager.availableMeta();
+    final metas = _downloadManager.availableCuratedMeta();
     final result = <_OfflineItem>[];
     for (final meta in metas) {
-      final slide = _downloadManager.getSlide(meta.fairytaleId);
+      final slide = _downloadManager.getCuratedSlide(meta.fairytaleId);
       if (slide == null) continue;
       result.add(_OfflineItem(meta: meta, slide: slide));
     }
@@ -75,7 +75,7 @@ class _OfflineStorageScreenState extends State<OfflineStorageScreen> {
       confirmLabel: l10n.offlineStorageDeleteAll,
     );
     if (confirmed != true) return;
-    await _downloadManager.deleteAll();
+    await _downloadManager.deleteAllCurated();
     if (!mounted) return;
     _refresh();
     ScaffoldMessenger.of(
@@ -93,10 +93,7 @@ class _OfflineStorageScreenState extends State<OfflineStorageScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.w800),
-        ),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
         content: Text(message),
         actions: [
           TextButton(
@@ -119,10 +116,12 @@ class _OfflineStorageScreenState extends State<OfflineStorageScreen> {
     // 메타에 명시 저장된 voice/lang 을 우선 사용하고, 구 엔트리(빈 값)면
     // 오디오 키 역파싱 폴백으로 하위 호환을 유지한다.
     final fallback = restoreOfflineVoiceLang(item.slide);
-    final voiceType =
-        item.meta.voiceType.isNotEmpty ? item.meta.voiceType : fallback.voiceType;
-    final language =
-        item.meta.language.isNotEmpty ? item.meta.language : fallback.language;
+    final voiceType = item.meta.voiceType.isNotEmpty
+        ? item.meta.voiceType
+        : fallback.voiceType;
+    final language = item.meta.language.isNotEmpty
+        ? item.meta.language
+        : fallback.language;
     final response = FairytaleGenerateResponse.fromOfflineSlide(
       item.slide,
       language: language,
@@ -158,7 +157,7 @@ class _OfflineStorageScreenState extends State<OfflineStorageScreen> {
                     child: Text(
                       l10n.offlineStorageSummary(
                         _items.length,
-                        formatBytes(_downloadManager.totalUsedBytes()),
+                        formatBytes(_downloadManager.curatedTotalUsedBytes()),
                       ),
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

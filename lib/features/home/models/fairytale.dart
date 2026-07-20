@@ -7,6 +7,7 @@ class FairytaleItem {
   final double? rating;
   final String? colorHex;
   final String? themeTag;
+  final bool characterSupported;
   final List<String> categories;
 
   const FairytaleItem({
@@ -18,6 +19,7 @@ class FairytaleItem {
     this.rating,
     this.colorHex,
     this.themeTag,
+    this.characterSupported = false,
     required this.categories,
   });
 
@@ -31,6 +33,7 @@ class FairytaleItem {
       rating: (json['rating'] as num?)?.toDouble(),
       colorHex: json['colorHex'] as String?,
       themeTag: json['themeTag'] as String?,
+      characterSupported: json['characterSupported'] as bool? ?? false,
       categories: (json['categories'] as List<dynamic>).cast<String>(),
     );
   }

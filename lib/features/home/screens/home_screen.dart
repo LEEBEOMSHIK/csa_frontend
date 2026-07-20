@@ -48,8 +48,11 @@ class _HomeScreenState extends State<HomeScreen>
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                const Icon(Icons.chevron_left,
-                    color: Color(0xFF333333), size: 24),
+                const Icon(
+                  Icons.chevron_left,
+                  color: Color(0xFF333333),
+                  size: 24,
+                ),
                 const Spacer(),
                 Text(
                   l10n.homeTitle,
@@ -60,8 +63,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
                 const Spacer(),
-                const Icon(Icons.search,
-                    color: Color(0xFF333333), size: 20),
+                const Icon(Icons.search, color: Color(0xFF333333), size: 20),
               ],
             ),
           ),
@@ -74,9 +76,13 @@ class _HomeScreenState extends State<HomeScreen>
               indicatorColor: const Color(0xFF333333),
               indicatorWeight: 2,
               labelStyle: const TextStyle(
-                  fontWeight: FontWeight.w700, fontSize: 14),
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
               unselectedLabelStyle: const TextStyle(
-                  fontWeight: FontWeight.w500, fontSize: 14),
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
               tabs: [
                 Tab(text: l10n.homeTabStory),
                 Tab(text: l10n.homeTabPicture),
@@ -92,9 +98,10 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Text(
                     l10n.homeTabPicture,
                     style: const TextStyle(
-                        color: Color(0xFFAAAAAA),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500),
+                      color: Color(0xFFAAAAAA),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ],
@@ -143,7 +150,9 @@ class _StoryTabState extends State<_StoryTab> {
       final results = await Future.wait([
         if (_categories.isEmpty) FairytaleService.instance.getCategories(),
         FairytaleService.instance.getHomePage(
-            categoryKey: categoryKey, lang: lang),
+          categoryKey: categoryKey,
+          lang: lang,
+        ),
       ]);
       if (!mounted) return;
       setState(() {
@@ -171,7 +180,8 @@ class _StoryTabState extends State<_StoryTab> {
 
     if (_loading && _homeData == null) {
       return const Center(
-          child: CircularProgressIndicator(color: Color(0xFFFE9EC7)));
+        child: CircularProgressIndicator(color: Color(0xFFFE9EC7)),
+      );
     }
 
     return ValueListenableBuilder<Locale>(
@@ -194,16 +204,17 @@ class _StoryTabState extends State<_StoryTab> {
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 10),
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
                       itemCount: _categories.length,
-                      separatorBuilder: (context, idx) => const SizedBox(width: 8),
+                      separatorBuilder: (context, idx) =>
+                          const SizedBox(width: 8),
                       itemBuilder: (_, i) {
                         final cat = _categories[i];
-                        final selected =
-                            _selectedCategory == cat.categoryKey;
+                        final selected = _selectedCategory == cat.categoryKey;
                         return _TagChip(
-                          label:
-                              '#${lang == 'ja' ? cat.nameJa : cat.nameKo}',
+                          label: '#${lang == 'ja' ? cat.nameJa : cat.nameKo}',
                           selected: selected,
                           onTap: () => _onCategoryTap(cat.categoryKey),
                         );
@@ -226,16 +237,15 @@ class _StoryTabState extends State<_StoryTab> {
                           viewportFraction: 0.42,
                           enableInfiniteScroll: false,
                           padEnds: false,
-                          scrollPhysics:
-                              const BouncingScrollPhysics(),
+                          scrollPhysics: const BouncingScrollPhysics(),
                         ),
                         items: themes
-                            .map((item) => Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 10),
-                                  child: _ThemeCard(
-                                      item: item, lang: lang),
-                                ))
+                            .map(
+                              (item) => Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _ThemeCard(item: item, lang: lang),
+                              ),
+                            )
                             .toList(),
                       ),
                     ),
@@ -246,9 +256,10 @@ class _StoryTabState extends State<_StoryTab> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                       child: _SectionHeader(
-                          title: l10n.homeSectionNew,
-                          showMore: true,
-                          moreLabel: l10n.homeMoreBtn),
+                        title: l10n.homeSectionNew,
+                        showMore: true,
+                        moreLabel: l10n.homeMoreBtn,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     Padding(
@@ -259,16 +270,15 @@ class _StoryTabState extends State<_StoryTab> {
                           viewportFraction: 0.42,
                           enableInfiniteScroll: false,
                           padEnds: false,
-                          scrollPhysics:
-                              const BouncingScrollPhysics(),
+                          scrollPhysics: const BouncingScrollPhysics(),
                         ),
                         items: newItems
-                            .map((item) => Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 10),
-                                  child: _StoryCard(
-                                      item: item, lang: lang),
-                                ))
+                            .map(
+                              (item) => Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _StoryCard(item: item, lang: lang),
+                              ),
+                            )
                             .toList(),
                       ),
                     ),
@@ -279,9 +289,10 @@ class _StoryTabState extends State<_StoryTab> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                       child: _SectionHeader(
-                          title: l10n.homeSectionReco,
-                          showMore: true,
-                          moreLabel: l10n.homeMoreBtn),
+                        title: l10n.homeSectionReco,
+                        showMore: true,
+                        moreLabel: l10n.homeMoreBtn,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     Padding(
@@ -292,16 +303,15 @@ class _StoryTabState extends State<_StoryTab> {
                           viewportFraction: 0.42,
                           enableInfiniteScroll: false,
                           padEnds: false,
-                          scrollPhysics:
-                              const BouncingScrollPhysics(),
+                          scrollPhysics: const BouncingScrollPhysics(),
                         ),
                         items: recommended
-                            .map((item) => Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 10),
-                                  child: _RecoCard(
-                                      item: item, lang: lang),
-                                ))
+                            .map(
+                              (item) => Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _RecoCard(item: item, lang: lang),
+                              ),
+                            )
                             .toList(),
                       ),
                     ),
@@ -319,7 +329,9 @@ class _StoryTabState extends State<_StoryTab> {
                   width: 16,
                   height: 16,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Color(0xFFFE9EC7)),
+                    strokeWidth: 2,
+                    color: Color(0xFFFE9EC7),
+                  ),
                 ),
               ),
           ],
@@ -350,9 +362,7 @@ class _TagChip extends StatelessWidget {
           color: selected ? const Color(0xFFFE9EC7) : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: selected
-                ? const Color(0xFFFE9EC7)
-                : const Color(0xFFEEEEEE),
+            color: selected ? const Color(0xFFFE9EC7) : const Color(0xFFEEEEEE),
           ),
         ),
         child: Text(
@@ -395,8 +405,7 @@ class _SectionHeader extends StatelessWidget {
         if (showMore)
           Text(
             moreLabel,
-            style:
-                const TextStyle(fontSize: 12, color: Color(0xFFAAAAAA)),
+            style: const TextStyle(fontSize: 12, color: Color(0xFFAAAAAA)),
           ),
       ],
     );
@@ -411,6 +420,7 @@ class _ThemeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final color = _parseColor(item.colorHex) ?? const Color(0xFF7EC8C8);
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -420,41 +430,44 @@ class _ThemeCard extends StatelessWidget {
         ),
       ),
       child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 120,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              if (item.themeTag != null)
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 120,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (item.themeTag != null)
+                  Text(
+                    item.themeTag!,
+                    style: const TextStyle(fontSize: 10, color: Colors.white70),
+                  ),
+                const SizedBox(height: 2),
                 Text(
-                  item.themeTag!,
+                  item.titleFor(lang),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      fontSize: 10, color: Colors.white70),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
-              const SizedBox(height: 2),
-              Text(
-                item.titleFor(lang),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+                if (item.characterSupported) ...[
+                  const SizedBox(height: 4),
+                  _CharacterSupportedBadge(label: l10n.characterSupportedBadge),
+                ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
       ),
     );
   }
@@ -467,6 +480,7 @@ class _StoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final color = _parseColor(item.colorHex) ?? const Color(0xFFFFD6A5);
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -496,16 +510,25 @@ class _StoryCard extends StatelessWidget {
               color: Color(0xFF333333),
             ),
           ),
+          if (item.characterSupported) ...[
+            const SizedBox(height: 3),
+            _CharacterSupportedBadge(label: l10n.characterSupportedBadge),
+          ],
           if (item.rating != null)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.star_rounded,
-                    size: 11, color: Color(0xFFFFB300)),
+                const Icon(
+                  Icons.star_rounded,
+                  size: 11,
+                  color: Color(0xFFFFB300),
+                ),
                 Text(
                   item.rating!.toStringAsFixed(1),
                   style: const TextStyle(
-                      fontSize: 10, color: Color(0xFF888888)),
+                    fontSize: 10,
+                    color: Color(0xFF888888),
+                  ),
                 ),
               ],
             ),
@@ -522,6 +545,7 @@ class _RecoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final color = _parseColor(item.colorHex) ?? const Color(0xFFFFB7B2);
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -553,8 +577,41 @@ class _RecoCard extends StatelessWidget {
               color: Color(0xFF333333),
             ),
           ),
+          if (item.characterSupported) ...[
+            const SizedBox(height: 3),
+            _CharacterSupportedBadge(label: l10n.characterSupportedBadge),
+          ],
         ],
       ),
+    );
+  }
+}
+
+class _CharacterSupportedBadge extends StatelessWidget {
+  final String label;
+
+  const _CharacterSupportedBadge({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(Icons.face_rounded, size: 12, color: Color(0xFF6B8CFF)),
+        const SizedBox(width: 3),
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF6B8CFF),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

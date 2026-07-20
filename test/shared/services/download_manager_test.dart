@@ -244,6 +244,46 @@ void main() {
     },
   );
 
+  test('curated offline APIs exclude preserved legacy entries', () async {
+    await manager.downloadSlide(
+      fairytaleId: 42,
+      voiceType: 'dad',
+      language: 'ko',
+    );
+    await slideBox.put(
+      'curated-1',
+      OfflineSlideEntry(
+        fairytaleId: 'curated-1',
+        title: '큐레이션 동화',
+        thumbnailLocalPath: '',
+        pages: const [],
+        downloadedAt: DateTime.now(),
+      ),
+    );
+    await metaBox.put(
+      'curated-1',
+      OfflineMetaEntry(
+        fairytaleId: 'curated-1',
+        format: 'slide',
+        totalSizeBytes: 123,
+        downloadedAt: DateTime.now(),
+        status: DownloadStatus.completed,
+        voiceType: 'dad',
+        language: 'ko',
+        contentOrigin: OfflineContentOrigin.curated,
+      ),
+    );
+
+    expect(manager.availableCuratedMeta().map((meta) => meta.fairytaleId), [
+      'curated-1',
+    ]);
+    expect(manager.getCuratedSlide('42'), isNull);
+    expect(manager.getCuratedSlide('curated-1'), isNotNull);
+    expect(manager.curatedSavedCount(), 1);
+    expect(manager.curatedTotalUsedBytes(), 123);
+    expect(slideBox.containsKey('42'), isTrue);
+  });
+
   test('deleteAll removes every saved entry and files', () async {
     await manager.downloadSlide(
       fairytaleId: 42,
@@ -491,6 +531,29 @@ void main() {
     expect(decoded.status, DownloadStatus.completed);
     expect(decoded.voiceType, 'dad');
     expect(decoded.language, 'ko');
+    expect(decoded.contentOrigin, OfflineContentOrigin.legacy);
+  });
+
+  test('entries written before content origin remain legacy', () {
+    final registry = HiveImpl();
+    final writer = BinaryWriterImpl(registry)
+      ..writeString('legacy')
+      ..writeString('slide')
+      ..writeInt(777)
+      ..writeInt(
+        DateTime.fromMillisecondsSinceEpoch(1000000).millisecondsSinceEpoch,
+      )
+      ..writeBool(false)
+      ..writeInt(DownloadStatus.completed.index)
+      ..writeString('mom')
+      ..writeString('ja');
+    final adapter = OfflineMetaEntryAdapter();
+    final reader = BinaryReaderImpl(writer.toBytes(), registry);
+    final decoded = adapter.read(reader);
+
+    expect(decoded.voiceType, 'mom');
+    expect(decoded.language, 'ja');
+    expect(decoded.contentOrigin, OfflineContentOrigin.legacy);
   });
 
   test(

@@ -1,6 +1,7 @@
 import 'package:csa_frontend/features/home/models/fairytale.dart';
 import 'package:csa_frontend/features/home/models/fairytale_category.dart';
 import 'package:csa_frontend/features/home/models/fairytale_detail.dart';
+import 'package:csa_frontend/features/home/models/curated_slides_manifest.dart';
 import 'package:csa_frontend/shared/services/api_client.dart';
 
 abstract class CatalogService {
@@ -24,7 +25,10 @@ class FairytaleService implements CatalogService {
     final params = <String, dynamic>{};
     if (categoryKey != null) params['category'] = categoryKey;
     if (lang != null) params['lang'] = lang;
-    final data = await ApiClient.instance.get('/fairytale/home', params: params);
+    final data = await ApiClient.instance.get(
+      '/fairytale/home',
+      params: params,
+    );
     return HomePageData.fromJson(data as Map<String, dynamic>);
   }
 
@@ -36,7 +40,10 @@ class FairytaleService implements CatalogService {
     final params = <String, dynamic>{};
     if (category != null && category.isNotEmpty) params['category'] = category;
     if (sort != null && sort.isNotEmpty) params['sort'] = sort;
-    final data = await ApiClient.instance.get('/fairytale/list', params: params);
+    final data = await ApiClient.instance.get(
+      '/fairytale/list',
+      params: params,
+    );
     return (data as List<dynamic>)
         .map((e) => FairytaleItem.fromJson(e as Map<String, dynamic>))
         .toList();
@@ -45,5 +52,10 @@ class FairytaleService implements CatalogService {
   Future<FairytaleDetailData> getDetail(int id) async {
     final data = await ApiClient.instance.get('/fairytale/$id/detail');
     return FairytaleDetailData.fromJson(data as Map<String, dynamic>);
+  }
+
+  Future<CuratedSlidesManifest> getCuratedSlides(int id) async {
+    final data = await ApiClient.instance.get('/fairytale/$id/curated-slides');
+    return CuratedSlidesManifest.fromJson(data as Map<String, dynamic>);
   }
 }

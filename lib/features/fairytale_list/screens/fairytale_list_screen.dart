@@ -473,9 +473,7 @@ class _ClassicFilterChip extends StatelessWidget {
           color: selected ? const Color(0xFFFE9EC7) : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: selected
-                ? const Color(0xFFFE9EC7)
-                : const Color(0xFFEEEEEE),
+            color: selected ? const Color(0xFFFE9EC7) : const Color(0xFFEEEEEE),
           ),
         ),
         child: Text(
@@ -504,6 +502,7 @@ class _ClassicFairytaleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final color = _classicCardColor(item.colorHex);
     return GestureDetector(
       onTap: onTap,
@@ -555,6 +554,12 @@ class _ClassicFairytaleCard extends StatelessWidget {
                       color: AppColors.textPrimary,
                     ),
                   ),
+                  if (item.characterSupported) ...[
+                    const SizedBox(height: 4),
+                    _CharacterSupportedBadge(
+                      label: l10n.characterSupportedBadge,
+                    ),
+                  ],
                   if (item.rating != null) ...[
                     const SizedBox(height: 4),
                     Row(
@@ -581,6 +586,35 @@ class _ClassicFairytaleCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _CharacterSupportedBadge extends StatelessWidget {
+  final String label;
+
+  const _CharacterSupportedBadge({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(Icons.face_rounded, size: 12, color: AppColors.library),
+        const SizedBox(width: 3),
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 10,
+              color: AppColors.library,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

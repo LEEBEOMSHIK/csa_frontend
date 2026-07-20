@@ -6,6 +6,9 @@ class FairytaleDetailData {
   final int pageCount;
   final String? fullContentKo;
   final String? fullContentJa;
+  final bool characterSupported;
+  final String? characterRenderMode;
+  final String? contentVersion;
 
   const FairytaleDetailData({
     required this.authorKo,
@@ -15,10 +18,14 @@ class FairytaleDetailData {
     required this.pageCount,
     this.fullContentKo,
     this.fullContentJa,
+    this.characterSupported = false,
+    this.characterRenderMode,
+    this.contentVersion,
   });
 
   String authorFor(String lang) => lang == 'ja' ? authorJa : authorKo;
-  String? fullContentFor(String lang) => lang == 'ja' ? fullContentJa : fullContentKo;
+  String? fullContentFor(String lang) =>
+      lang == 'ja' ? fullContentJa : fullContentKo;
 
   factory FairytaleDetailData.fromJson(Map<String, dynamic> json) {
     return FairytaleDetailData(
@@ -29,6 +36,9 @@ class FairytaleDetailData {
       pageCount: json['pageCount'] as int,
       fullContentKo: json['fullContentKo'] as String?,
       fullContentJa: json['fullContentJa'] as String?,
+      characterSupported: json['characterSupported'] as bool? ?? false,
+      characterRenderMode: json['characterRenderMode'] as String?,
+      contentVersion: json['contentVersion'] as String?,
     );
   }
 }

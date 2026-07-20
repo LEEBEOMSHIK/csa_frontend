@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:csa_frontend/features/favorites/services/favorite_service.dart';
 import 'package:csa_frontend/features/home/models/fairytale.dart';
 import 'package:csa_frontend/features/home/models/fairytale_detail.dart';
+import 'package:csa_frontend/features/home/screens/curated_reader_screen.dart';
 import 'package:csa_frontend/features/home/services/fairytale_service.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/shared/services/tts_service.dart';
@@ -44,10 +45,12 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
       await TtsService.instance.stop();
       return;
     }
-    final text = _detail?.fullContentFor(lang) ?? widget.item.descriptionFor(lang);
+    final text =
+        _detail?.fullContentFor(lang) ?? widget.item.descriptionFor(lang);
     if (text == null || text.trim().isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(l10n.ttsNoContent)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.ttsNoContent)));
       return;
     }
     final voice = await _pickVoice(l10n);
@@ -78,15 +81,22 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
               Text(
                 l10n.ttsSelectVoice,
                 style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF333333)),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF333333),
+                ),
               ),
               const SizedBox(height: 12),
-              ...voices.entries.map((e) => ListTile(
-                    leading: const Icon(Icons.record_voice_over_rounded,
-                        color: Color(0xFFFE9EC7)),
-                    title: Text(e.value),
-                    onTap: () => Navigator.of(ctx).pop(e.key),
-                  )),
+              ...voices.entries.map(
+                (e) => ListTile(
+                  leading: const Icon(
+                    Icons.record_voice_over_rounded,
+                    color: Color(0xFFFE9EC7),
+                  ),
+                  title: Text(e.value),
+                  onTap: () => Navigator.of(ctx).pop(e.key),
+                ),
+              ),
             ],
           ),
         ),
@@ -109,8 +119,9 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
   }
 
   Color _categoryColor() {
-    final cat =
-        widget.item.categories.isNotEmpty ? widget.item.categories.first : '';
+    final cat = widget.item.categories.isNotEmpty
+        ? widget.item.categories.first
+        : '';
     const colors = <String, Color>{
       '모험': Color(0xFF6B8CFF),
       '가족': Color(0xFFFF8FAB),
@@ -148,9 +159,20 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(isFav ? l10n.detailFavoriteRemoved : l10n.detailFavoriteAdded),
+        content: Text(
+          isFav ? l10n.detailFavoriteRemoved : l10n.detailFavoriteAdded,
+        ),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _openCuratedReader(String title) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            CuratedReaderScreen(fairytaleId: widget.item.id, title: title),
       ),
     );
   }
@@ -181,15 +203,14 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
                 height: 300,
                 child: Stack(
                   children: [
-                    Positioned.fill(
-                      child: Container(color: heroColor),
-                    ),
+                    Positioned.fill(child: Container(color: heroColor)),
                     Positioned(
                       top: 0,
                       left: 0,
                       right: 0,
                       child: Container(
-                          height: MediaQuery.of(context).padding.top),
+                        height: MediaQuery.of(context).padding.top,
+                      ),
                     ),
                     // Back button
                     Positioned(
@@ -218,10 +239,7 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
                       right: 16,
                       child: Column(
                         children: [
-                          _RoundIconBtn(
-                            icon: Icons.auto_stories,
-                            onTap: null,
-                          ),
+                          _RoundIconBtn(icon: Icons.auto_stories, onTap: null),
                           const SizedBox(height: 8),
                           // 읽어주기(TTS) — 읽는 중이면 정지 아이콘
                           ValueListenableBuilder<bool>(
@@ -238,7 +256,9 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
                           ValueListenableBuilder<List<FairytaleItem>>(
                             valueListenable: favoritesNotifier,
                             builder: (context, favorites, _) {
-                              final isFav = favorites.any((f) => f.id == widget.item.id);
+                              final isFav = favorites.any(
+                                (f) => f.id == widget.item.id,
+                              );
                               return GestureDetector(
                                 onTap: () => _toggleFavorite(context),
                                 child: Container(
@@ -246,12 +266,16 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
                                   height: 32,
                                   decoration: BoxDecoration(
                                     color: isFav
-                                        ? const Color(0xFFFF4D6D).withValues(alpha: 0.85)
+                                        ? const Color(
+                                            0xFFFF4D6D,
+                                          ).withValues(alpha: 0.85)
                                         : Colors.white.withValues(alpha: 0.2),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
-                                    isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                                    isFav
+                                        ? Icons.favorite_rounded
+                                        : Icons.favorite_border_rounded,
                                     size: 18,
                                     color: Colors.white,
                                   ),
@@ -318,6 +342,16 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
                             ),
                           ),
                         ],
+                        if ((_detail?.characterSupported ??
+                                widget.item.characterSupported) &&
+                            (_detail?.characterRenderMode == null ||
+                                _detail!.characterRenderMode ==
+                                    'LOCAL_OVERLAY')) ...[
+                          const SizedBox(height: 16),
+                          _CharacterSupportedNotice(
+                            message: l10n.characterSupportedDetail,
+                          ),
+                        ],
                         // Detail info section (author, age, duration, pages — with icons)
                         if (_loadingDetail) ...[
                           const SizedBox(height: 16),
@@ -334,7 +368,10 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
                         ] else if (_detail != null) ...[
                           const SizedBox(height: 16),
                           _DetailInfoRow(
-                              detail: _detail!, lang: lang, l10n: l10n),
+                            detail: _detail!,
+                            lang: lang,
+                            l10n: l10n,
+                          ),
                           if (_detail!.fullContentFor(lang) != null) ...[
                             const SizedBox(height: 16),
                             Text(
@@ -357,7 +394,7 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
                         const SizedBox(height: 16),
                         // Read button — styled by fairy tale category
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () => _openCuratedReader(title),
                           child: Container(
                             height: 52,
                             width: double.infinity,
@@ -369,8 +406,11 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.menu_book_outlined,
-                                    color: Colors.white, size: 18),
+                                const Icon(
+                                  Icons.menu_book_outlined,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
                                 const SizedBox(width: 8),
                                 Text(
                                   categoryLabel.isNotEmpty
@@ -395,6 +435,40 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+class _CharacterSupportedNotice extends StatelessWidget {
+  final String message;
+
+  const _CharacterSupportedNotice({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEFF4FF),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.face_rounded, color: Color(0xFF6B8CFF)),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              message,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF333333),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -493,10 +567,7 @@ class _InfoChip extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 10,
-            color: Color(0xFF888888),
-          ),
+          style: const TextStyle(fontSize: 10, color: Color(0xFF888888)),
         ),
       ],
     );
@@ -518,8 +589,11 @@ class _OfflineSaveSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Icon(Icons.download_outlined,
-                size: 16, color: Color(0xFF888888)),
+            const Icon(
+              Icons.download_outlined,
+              size: 16,
+              color: Color(0xFF888888),
+            ),
             const SizedBox(width: 6),
             Text(
               l10n.detailOfflineSave,
@@ -551,8 +625,11 @@ class _OfflineSaveSection extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.save_alt_outlined,
-                    size: 18, color: Color(0xFF7EC8C8)),
+                const Icon(
+                  Icons.save_alt_outlined,
+                  size: 18,
+                  color: Color(0xFF7EC8C8),
+                ),
                 const SizedBox(width: 8),
                 Text(
                   l10n.detailDownloadSaveBtn,
@@ -596,7 +673,11 @@ class _DownloadModalState extends State<_DownloadModal> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       padding: EdgeInsets.fromLTRB(
-          20, 16, 20, MediaQuery.of(context).padding.bottom + 24),
+        20,
+        16,
+        20,
+        MediaQuery.of(context).padding.bottom + 24,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -663,13 +744,18 @@ class _DownloadModalState extends State<_DownloadModal> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.cancel_outlined,
-                      size: 18, color: Color(0xFF888888)),
+                  const Icon(
+                    Icons.cancel_outlined,
+                    size: 18,
+                    color: Color(0xFF888888),
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     l10n.detailDownloadCancel,
                     style: const TextStyle(
-                        fontSize: 14, color: Color(0xFF555555)),
+                      fontSize: 14,
+                      color: Color(0xFF555555),
+                    ),
                   ),
                 ],
               ),
@@ -712,9 +798,7 @@ class _FormatOption extends StatelessWidget {
           color: selected ? const Color(0xFFFFF5F8) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: selected
-                ? const Color(0xFFFFA7A7)
-                : const Color(0xFFEEEEEE),
+            color: selected ? const Color(0xFFFFA7A7) : const Color(0xFFEEEEEE),
             width: selected ? 1.5 : 1,
           ),
         ),
@@ -746,21 +830,23 @@ class _FormatOption extends StatelessWidget {
                   Text(
                     desc,
                     style: const TextStyle(
-                        fontSize: 12, color: Color(0xFF888888)),
+                      fontSize: 12,
+                      color: Color(0xFF888888),
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     size,
                     style: const TextStyle(
-                        fontSize: 11, color: Color(0xFFAAAAAA)),
+                      fontSize: 11,
+                      color: Color(0xFFAAAAAA),
+                    ),
                   ),
                 ],
               ),
             ),
             Icon(
-              selected
-                  ? Icons.check_circle
-                  : Icons.radio_button_unchecked,
+              selected ? Icons.check_circle : Icons.radio_button_unchecked,
               color: selected
                   ? const Color(0xFFFFA7A7)
                   : const Color(0xFFCCCCCC),
@@ -810,19 +896,17 @@ class _RatingRow extends StatelessWidget {
     return Row(
       children: [
         ...List.generate(
-            5,
-            (i) => Icon(
-                  i < full
-                      ? Icons.star_rounded
-                      : Icons.star_outline_rounded,
-                  size: 14,
-                  color: const Color(0xFFFFB300),
-                )),
+          5,
+          (i) => Icon(
+            i < full ? Icons.star_rounded : Icons.star_outline_rounded,
+            size: 14,
+            color: const Color(0xFFFFB300),
+          ),
+        ),
         const SizedBox(width: 4),
         Text(
           rating.toStringAsFixed(1),
-          style:
-              const TextStyle(fontSize: 12, color: Color(0xFF888888)),
+          style: const TextStyle(fontSize: 12, color: Color(0xFF888888)),
         ),
       ],
     );

@@ -298,5 +298,22 @@
   "characterNone": "없음",
   "characterSelectHint": "왼쪽에서 꾸밀 부위를 선택해 보세요",
   "ttsSelectVoice": "읽어줄 목소리를 선택하세요",
-  "ttsNoContent": "읽어줄 내용이 없어요"
+  "ttsNoContent": "읽어줄 내용이 없어요",
+  "characterSupportedBadge": "내 캐릭터와 함께",
+  "characterSupportedDetail": "내 캐릭터와 함께 읽을 수 있는 동화예요",
+  "curatedReaderCharacterPicker": "캐릭터 선택",
+  "curatedReaderCharacterPickerTitle": "동화에 함께할 캐릭터",
+  "curatedReaderNoCharacter": "캐릭터 없이 읽기",
+  "curatedReaderPrevious": "이전 페이지",
+  "curatedReaderNext": "다음 페이지",
+  "curatedReaderPage": "{current} / {total}",
+  "@curatedReaderPage": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "curatedReaderError": "동화를 불러오지 못했어요",
+  "curatedReaderRetry": "다시 시도",
+  "curatedReaderImageError": "삽화를 불러오지 못했어요"
 }

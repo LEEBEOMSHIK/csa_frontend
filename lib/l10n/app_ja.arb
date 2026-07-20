@@ -298,5 +298,22 @@
   "characterNone": "なし",
   "characterSelectHint": "左から飾る部位を選んでみよう",
   "ttsSelectVoice": "読み上げる声を選んでください",
-  "ttsNoContent": "読み上げる内容がありません"
+  "ttsNoContent": "読み上げる内容がありません",
+  "characterSupportedBadge": "マイキャラといっしょ",
+  "characterSupportedDetail": "マイキャラといっしょに読めるどうわです",
+  "curatedReaderCharacterPicker": "キャラクターを選ぶ",
+  "curatedReaderCharacterPickerTitle": "どうわに登場するキャラクター",
+  "curatedReaderNoCharacter": "キャラクターなしで読む",
+  "curatedReaderPrevious": "前のページ",
+  "curatedReaderNext": "次のページ",
+  "curatedReaderPage": "{current} / {total}",
+  "@curatedReaderPage": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "curatedReaderError": "どうわを読み込めませんでした",
+  "curatedReaderRetry": "もう一度試す",
+  "curatedReaderImageError": "イラストを読み込めませんでした"
 }

@@ -1,5 +1,7 @@
 /// 서버에 저장된 캐릭터 (백엔드 CharacterDto 매핑)
 class SavedCharacter {
+  static const variantSlotCount = 9;
+
   final int id;
   final String name;
   final List<int> variants;
@@ -24,4 +26,6 @@ class SavedCharacter {
           : null,
     );
   }
+
+  bool get hasRenderableVariants => variants.length == variantSlotCount;
 }

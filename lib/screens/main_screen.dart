@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/character/screens/character_screen.dart';
-import 'package:csa_frontend/features/fairytale_create/screens/fairytale_create_screen.dart';
 import 'package:csa_frontend/features/home/screens/home_screen.dart';
 import 'package:csa_frontend/features/favorites/screens/favorites_screen.dart';
 import 'package:csa_frontend/features/favorites/services/favorite_service.dart';
@@ -44,7 +43,6 @@ class _MainScreenState extends State<MainScreen> {
 
   static const List<Widget> _screens = [
     CharacterScreen(),
-    FairytaleCreateScreen(),
     HomeScreen(),
     FavoritesScreen(),
     MyScreen(),
@@ -104,19 +102,9 @@ class _BottomNav extends StatelessWidget {
                 activeColor: _activeColor,
                 inactiveColor: _inactiveColor,
               ),
-              _NavItem(
-                icon: Icons.auto_stories_rounded,
-                label: l10n.navFairytale,
-                index: 1,
-                currentIndex: currentIndex,
-                onTap: onTap,
-                activeColor: _activeColor,
-                inactiveColor: _inactiveColor,
-              ),
-              // 가운데 홈 버튼
               Expanded(
                 child: GestureDetector(
-                  onTap: () => onTap(2),
+                  onTap: () => onTap(1),
                   behavior: HitTestBehavior.opaque,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -146,7 +134,7 @@ class _BottomNav extends StatelessWidget {
                         l10n.navHome,
                         style: TextStyle(
                           fontSize: 10,
-                          fontWeight: currentIndex == 2
+                          fontWeight: currentIndex == 1
                               ? FontWeight.w700
                               : FontWeight.w500,
                           color: _activeColor,
@@ -159,7 +147,7 @@ class _BottomNav extends StatelessWidget {
               _NavItem(
                 icon: Icons.favorite_rounded,
                 label: l10n.navFavorites,
-                index: 3,
+                index: 2,
                 currentIndex: currentIndex,
                 onTap: onTap,
                 activeColor: _activeColor,
@@ -168,7 +156,7 @@ class _BottomNav extends StatelessWidget {
               _NavItem(
                 icon: Icons.person_rounded,
                 label: l10n.navMy,
-                index: 4,
+                index: 3,
                 currentIndex: currentIndex,
                 onTap: onTap,
                 activeColor: _activeColor,
