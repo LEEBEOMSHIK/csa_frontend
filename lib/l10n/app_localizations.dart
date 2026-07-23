@@ -2102,6 +2102,48 @@ abstract class AppLocalizations {
   /// **'반려'**
   String get adminReportRejectAction;
 
+  /// No description provided for @adminLoginTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'관리자 로그인'**
+  String get adminLoginTitle;
+
+  /// No description provided for @adminLoginSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'관리자 권한이 있는 계정으로 로그인하세요'**
+  String get adminLoginSubtitle;
+
+  /// No description provided for @adminLoginWithGoogle.
+  ///
+  /// In ko, this message translates to:
+  /// **'Google로 로그인'**
+  String get adminLoginWithGoogle;
+
+  /// No description provided for @adminLoginTestLogin.
+  ///
+  /// In ko, this message translates to:
+  /// **'테스트 로그인'**
+  String get adminLoginTestLogin;
+
+  /// No description provided for @adminLoginNoPermission.
+  ///
+  /// In ko, this message translates to:
+  /// **'관리자 권한이 없습니다'**
+  String get adminLoginNoPermission;
+
+  /// No description provided for @adminLoginFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인에 실패했습니다'**
+  String get adminLoginFailed;
+
+  /// No description provided for @adminLogout.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그아웃'**
+  String get adminLogout;
+
   /// No description provided for @reportButtonLabel.
   ///
   /// In ko, this message translates to:

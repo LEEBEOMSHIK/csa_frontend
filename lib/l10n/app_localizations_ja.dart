@@ -1029,6 +1029,27 @@ class AppLocalizationsJa extends AppLocalizations {
   String get adminReportRejectAction => '却下';
 
   @override
+  String get adminLoginTitle => '管理者ログイン';
+
+  @override
+  String get adminLoginSubtitle => '管理者権限のあるアカウントでログインしてください';
+
+  @override
+  String get adminLoginWithGoogle => 'Googleでログイン';
+
+  @override
+  String get adminLoginTestLogin => 'テストログイン';
+
+  @override
+  String get adminLoginNoPermission => '管理者権限がありません';
+
+  @override
+  String get adminLoginFailed => 'ログインに失敗しました';
+
+  @override
+  String get adminLogout => 'ログアウト';
+
+  @override
   String get reportButtonLabel => '通報する';
 
   @override

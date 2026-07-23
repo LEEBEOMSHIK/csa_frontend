@@ -1029,6 +1029,27 @@ class AppLocalizationsKo extends AppLocalizations {
   String get adminReportRejectAction => '반려';
 
   @override
+  String get adminLoginTitle => '관리자 로그인';
+
+  @override
+  String get adminLoginSubtitle => '관리자 권한이 있는 계정으로 로그인하세요';
+
+  @override
+  String get adminLoginWithGoogle => 'Google로 로그인';
+
+  @override
+  String get adminLoginTestLogin => '테스트 로그인';
+
+  @override
+  String get adminLoginNoPermission => '관리자 권한이 없습니다';
+
+  @override
+  String get adminLoginFailed => '로그인에 실패했습니다';
+
+  @override
+  String get adminLogout => '로그아웃';
+
+  @override
   String get reportButtonLabel => '신고하기';
 
   @override

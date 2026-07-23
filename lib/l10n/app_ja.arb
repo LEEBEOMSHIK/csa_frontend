@@ -401,6 +401,14 @@
   "adminReportResolveAction": "対応完了",
   "adminReportRejectAction": "却下",
 
+  "adminLoginTitle": "管理者ログイン",
+  "adminLoginSubtitle": "管理者権限のあるアカウントでログインしてください",
+  "adminLoginWithGoogle": "Googleでログイン",
+  "adminLoginTestLogin": "テストログイン",
+  "adminLoginNoPermission": "管理者権限がありません",
+  "adminLoginFailed": "ログインに失敗しました",
+  "adminLogout": "ログアウト",
+
   "reportButtonLabel": "通報する",
   "reportDialogTitle": "通報する",
   "reportReasonLabel": "通報理由",
