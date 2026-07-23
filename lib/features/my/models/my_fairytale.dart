@@ -8,6 +8,7 @@ class MyFairytale {
   final String? thumbnailUrl;
   final int pageCount;
   final DateTime? createdAt;
+  final int? ownerId;
 
   const MyFairytale({
     required this.id,
@@ -19,6 +20,7 @@ class MyFairytale {
     this.thumbnailUrl,
     required this.pageCount,
     this.createdAt,
+    this.ownerId,
   });
 
   bool get isCompleted => status == 'COMPLETED';
@@ -36,6 +38,7 @@ class MyFairytale {
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt'] as String)
           : null,
+      ownerId: json['ownerId'] as int?,
     );
   }
 
@@ -50,6 +53,7 @@ class MyFairytale {
       thumbnailUrl: thumbnailUrl,
       pageCount: pageCount,
       createdAt: createdAt,
+      ownerId: ownerId,
     );
   }
 }

@@ -33,6 +33,7 @@ class UserSettingsService {
     final data = await _api.get('/users/settings');
     final settings = UserSettings.fromJson(data as Map<String, dynamic>);
     isPremiumNotifier.value = settings.isPremium;
+    isAdminNotifier.value = settings.isAdmin;
     return settings;
   }
 

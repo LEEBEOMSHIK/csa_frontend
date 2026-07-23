@@ -1627,6 +1627,564 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'삽화를 불러오지 못했어요'**
   String get curatedReaderImageError;
+
+  /// No description provided for @adminMenuTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'관리자'**
+  String get adminMenuTitle;
+
+  /// No description provided for @adminUsersTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'유저 관리'**
+  String get adminUsersTitle;
+
+  /// No description provided for @adminFairytalesTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'동화 관리'**
+  String get adminFairytalesTitle;
+
+  /// No description provided for @adminSubscriptionsTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 관리'**
+  String get adminSubscriptionsTitle;
+
+  /// No description provided for @adminReportsTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'신고 처리'**
+  String get adminReportsTitle;
+
+  /// No description provided for @adminSearchHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'검색어를 입력하세요'**
+  String get adminSearchHint;
+
+  /// No description provided for @adminEmptyList.
+  ///
+  /// In ko, this message translates to:
+  /// **'표시할 항목이 없어요'**
+  String get adminEmptyList;
+
+  /// No description provided for @adminLoadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'목록을 불러오지 못했어요'**
+  String get adminLoadError;
+
+  /// No description provided for @adminRetry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get adminRetry;
+
+  /// No description provided for @adminCancel.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get adminCancel;
+
+  /// No description provided for @adminConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'확인'**
+  String get adminConfirm;
+
+  /// No description provided for @adminActionSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'처리했어요'**
+  String get adminActionSuccess;
+
+  /// No description provided for @adminActionError.
+  ///
+  /// In ko, this message translates to:
+  /// **'처리하지 못했어요'**
+  String get adminActionError;
+
+  /// No description provided for @adminUserDetailTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'유저 상세'**
+  String get adminUserDetailTitle;
+
+  /// No description provided for @adminUserFieldId.
+  ///
+  /// In ko, this message translates to:
+  /// **'ID'**
+  String get adminUserFieldId;
+
+  /// No description provided for @adminUserFieldEmail.
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일'**
+  String get adminUserFieldEmail;
+
+  /// No description provided for @adminUserFieldName.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름'**
+  String get adminUserFieldName;
+
+  /// No description provided for @adminUserFieldProvider.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입 경로'**
+  String get adminUserFieldProvider;
+
+  /// No description provided for @adminUserFieldRole.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한'**
+  String get adminUserFieldRole;
+
+  /// No description provided for @adminUserFieldStatus.
+  ///
+  /// In ko, this message translates to:
+  /// **'상태'**
+  String get adminUserFieldStatus;
+
+  /// No description provided for @adminUserFieldCreatedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입일'**
+  String get adminUserFieldCreatedAt;
+
+  /// No description provided for @adminUserStatusActive.
+  ///
+  /// In ko, this message translates to:
+  /// **'활성'**
+  String get adminUserStatusActive;
+
+  /// No description provided for @adminUserStatusSuspended.
+  ///
+  /// In ko, this message translates to:
+  /// **'정지'**
+  String get adminUserStatusSuspended;
+
+  /// No description provided for @adminUserSuspendAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 정지'**
+  String get adminUserSuspendAction;
+
+  /// No description provided for @adminUserActivateAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 활성화'**
+  String get adminUserActivateAction;
+
+  /// No description provided for @adminUserSuspendConfirmTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 정지'**
+  String get adminUserSuspendConfirmTitle;
+
+  /// No description provided for @adminUserSuspendConfirmMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 유저를 정지할까요?'**
+  String get adminUserSuspendConfirmMessage;
+
+  /// No description provided for @adminUserActivateConfirmTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 활성화'**
+  String get adminUserActivateConfirmTitle;
+
+  /// No description provided for @adminUserActivateConfirmMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 유저를 다시 활성화할까요?'**
+  String get adminUserActivateConfirmMessage;
+
+  /// No description provided for @adminFairytaleFilterStatus.
+  ///
+  /// In ko, this message translates to:
+  /// **'상태'**
+  String get adminFairytaleFilterStatus;
+
+  /// No description provided for @adminFairytaleFilterShared.
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 여부'**
+  String get adminFairytaleFilterShared;
+
+  /// No description provided for @adminFairytaleSharedYes.
+  ///
+  /// In ko, this message translates to:
+  /// **'공유됨'**
+  String get adminFairytaleSharedYes;
+
+  /// No description provided for @adminFairytaleSharedNo.
+  ///
+  /// In ko, this message translates to:
+  /// **'비공개'**
+  String get adminFairytaleSharedNo;
+
+  /// No description provided for @adminFairytaleDetailTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'동화 상세'**
+  String get adminFairytaleDetailTitle;
+
+  /// No description provided for @adminFairytaleFieldId.
+  ///
+  /// In ko, this message translates to:
+  /// **'ID'**
+  String get adminFairytaleFieldId;
+
+  /// No description provided for @adminFairytaleFieldTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목'**
+  String get adminFairytaleFieldTitle;
+
+  /// No description provided for @adminFairytaleFieldOwner.
+  ///
+  /// In ko, this message translates to:
+  /// **'작성자'**
+  String get adminFairytaleFieldOwner;
+
+  /// No description provided for @adminFairytaleFieldFormat.
+  ///
+  /// In ko, this message translates to:
+  /// **'형식'**
+  String get adminFairytaleFieldFormat;
+
+  /// No description provided for @adminFairytaleFieldStatus.
+  ///
+  /// In ko, this message translates to:
+  /// **'상태'**
+  String get adminFairytaleFieldStatus;
+
+  /// No description provided for @adminFairytaleFieldLanguage.
+  ///
+  /// In ko, this message translates to:
+  /// **'언어'**
+  String get adminFairytaleFieldLanguage;
+
+  /// No description provided for @adminFairytaleFieldShared.
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 여부'**
+  String get adminFairytaleFieldShared;
+
+  /// No description provided for @adminFairytaleFieldChapterCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'챕터 수'**
+  String get adminFairytaleFieldChapterCount;
+
+  /// No description provided for @adminFairytaleFieldCreatedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'생성일'**
+  String get adminFairytaleFieldCreatedAt;
+
+  /// No description provided for @adminFairytaleUnshareAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'강제 비공개'**
+  String get adminFairytaleUnshareAction;
+
+  /// No description provided for @adminFairytaleDeleteAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제'**
+  String get adminFairytaleDeleteAction;
+
+  /// No description provided for @adminFairytaleUnshareConfirmTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'강제 비공개'**
+  String get adminFairytaleUnshareConfirmTitle;
+
+  /// No description provided for @adminFairytaleUnshareConfirmMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 동화를 강제로 비공개 전환할까요?'**
+  String get adminFairytaleUnshareConfirmMessage;
+
+  /// No description provided for @adminFairytaleDeleteConfirmTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'동화 삭제'**
+  String get adminFairytaleDeleteConfirmTitle;
+
+  /// No description provided for @adminFairytaleDeleteConfirmMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 동화를 삭제할까요? 되돌릴 수 없어요.'**
+  String get adminFairytaleDeleteConfirmMessage;
+
+  /// No description provided for @adminSubscriptionFilterPlatform.
+  ///
+  /// In ko, this message translates to:
+  /// **'플랫폼'**
+  String get adminSubscriptionFilterPlatform;
+
+  /// No description provided for @adminSubscriptionFilterStatus.
+  ///
+  /// In ko, this message translates to:
+  /// **'상태'**
+  String get adminSubscriptionFilterStatus;
+
+  /// No description provided for @adminSubscriptionDetailTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 상세'**
+  String get adminSubscriptionDetailTitle;
+
+  /// No description provided for @adminSubscriptionFieldId.
+  ///
+  /// In ko, this message translates to:
+  /// **'ID'**
+  String get adminSubscriptionFieldId;
+
+  /// No description provided for @adminSubscriptionFieldUser.
+  ///
+  /// In ko, this message translates to:
+  /// **'유저'**
+  String get adminSubscriptionFieldUser;
+
+  /// No description provided for @adminSubscriptionFieldPlatform.
+  ///
+  /// In ko, this message translates to:
+  /// **'플랫폼'**
+  String get adminSubscriptionFieldPlatform;
+
+  /// No description provided for @adminSubscriptionFieldProductId.
+  ///
+  /// In ko, this message translates to:
+  /// **'상품 ID'**
+  String get adminSubscriptionFieldProductId;
+
+  /// No description provided for @adminSubscriptionFieldStatus.
+  ///
+  /// In ko, this message translates to:
+  /// **'상태'**
+  String get adminSubscriptionFieldStatus;
+
+  /// No description provided for @adminSubscriptionFieldEnvironment.
+  ///
+  /// In ko, this message translates to:
+  /// **'환경'**
+  String get adminSubscriptionFieldEnvironment;
+
+  /// No description provided for @adminSubscriptionFieldPeriodEnd.
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 만료일'**
+  String get adminSubscriptionFieldPeriodEnd;
+
+  /// No description provided for @adminSubscriptionFieldAutoRenew.
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 갱신'**
+  String get adminSubscriptionFieldAutoRenew;
+
+  /// No description provided for @adminReportFilterStatus.
+  ///
+  /// In ko, this message translates to:
+  /// **'처리 상태'**
+  String get adminReportFilterStatus;
+
+  /// No description provided for @adminReportFilterType.
+  ///
+  /// In ko, this message translates to:
+  /// **'대상 유형'**
+  String get adminReportFilterType;
+
+  /// No description provided for @adminReportStatusPending.
+  ///
+  /// In ko, this message translates to:
+  /// **'대기 중'**
+  String get adminReportStatusPending;
+
+  /// No description provided for @adminReportStatusResolved.
+  ///
+  /// In ko, this message translates to:
+  /// **'처리 완료'**
+  String get adminReportStatusResolved;
+
+  /// No description provided for @adminReportStatusRejected.
+  ///
+  /// In ko, this message translates to:
+  /// **'반려됨'**
+  String get adminReportStatusRejected;
+
+  /// No description provided for @adminReportDetailTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'신고 상세'**
+  String get adminReportDetailTitle;
+
+  /// No description provided for @adminReportFieldId.
+  ///
+  /// In ko, this message translates to:
+  /// **'ID'**
+  String get adminReportFieldId;
+
+  /// No description provided for @adminReportFieldReporter.
+  ///
+  /// In ko, this message translates to:
+  /// **'신고자'**
+  String get adminReportFieldReporter;
+
+  /// No description provided for @adminReportFieldTargetType.
+  ///
+  /// In ko, this message translates to:
+  /// **'대상 유형'**
+  String get adminReportFieldTargetType;
+
+  /// No description provided for @adminReportFieldTargetId.
+  ///
+  /// In ko, this message translates to:
+  /// **'대상 ID'**
+  String get adminReportFieldTargetId;
+
+  /// No description provided for @adminReportFieldReason.
+  ///
+  /// In ko, this message translates to:
+  /// **'사유'**
+  String get adminReportFieldReason;
+
+  /// No description provided for @adminReportFieldDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'상세 내용'**
+  String get adminReportFieldDetail;
+
+  /// No description provided for @adminReportFieldStatus.
+  ///
+  /// In ko, this message translates to:
+  /// **'처리 상태'**
+  String get adminReportFieldStatus;
+
+  /// No description provided for @adminReportFieldCreatedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'신고일'**
+  String get adminReportFieldCreatedAt;
+
+  /// No description provided for @adminReportFieldResolvedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'처리일'**
+  String get adminReportFieldResolvedAt;
+
+  /// No description provided for @adminReportFieldAdminNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'관리자 메모'**
+  String get adminReportFieldAdminNote;
+
+  /// No description provided for @adminReportNoteHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'처리 메모를 입력하세요 (선택)'**
+  String get adminReportNoteHint;
+
+  /// No description provided for @adminReportResolveAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'처리 완료'**
+  String get adminReportResolveAction;
+
+  /// No description provided for @adminReportRejectAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'반려'**
+  String get adminReportRejectAction;
+
+  /// No description provided for @reportButtonLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'신고하기'**
+  String get reportButtonLabel;
+
+  /// No description provided for @reportDialogTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'신고하기'**
+  String get reportDialogTitle;
+
+  /// No description provided for @reportReasonLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'신고 사유'**
+  String get reportReasonLabel;
+
+  /// No description provided for @reportReasonInappropriate.
+  ///
+  /// In ko, this message translates to:
+  /// **'부적절한 콘텐츠'**
+  String get reportReasonInappropriate;
+
+  /// No description provided for @reportReasonSpam.
+  ///
+  /// In ko, this message translates to:
+  /// **'스팸/광고'**
+  String get reportReasonSpam;
+
+  /// No description provided for @reportReasonOther.
+  ///
+  /// In ko, this message translates to:
+  /// **'기타'**
+  String get reportReasonOther;
+
+  /// No description provided for @reportDetailHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'상세 내용 (선택)'**
+  String get reportDetailHint;
+
+  /// No description provided for @reportSubmit.
+  ///
+  /// In ko, this message translates to:
+  /// **'신고 접수'**
+  String get reportSubmit;
+
+  /// No description provided for @reportCancel.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get reportCancel;
+
+  /// No description provided for @reportSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'신고가 접수되었어요'**
+  String get reportSuccess;
+
+  /// No description provided for @reportError.
+  ///
+  /// In ko, this message translates to:
+  /// **'신고 접수에 실패했어요'**
+  String get reportError;
+
+  /// No description provided for @reportMenuTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'신고하기'**
+  String get reportMenuTitle;
+
+  /// No description provided for @reportContentOption.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘텐츠 신고'**
+  String get reportContentOption;
+
+  /// No description provided for @reportUserOption.
+  ///
+  /// In ko, this message translates to:
+  /// **'작성자 신고'**
+  String get reportUserOption;
 }
 
 class _AppLocalizationsDelegate

@@ -8,6 +8,7 @@ import 'package:csa_frontend/features/home/services/fairytale_service.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/my/models/my_fairytale.dart';
 import 'package:csa_frontend/features/my/services/my_fairytale_service.dart';
+import 'package:csa_frontend/features/report/widgets/report_dialog.dart';
 import 'package:csa_frontend/shared/services/api_client.dart';
 import 'package:csa_frontend/shared/services/download_manager.dart';
 import 'package:csa_frontend/utils/app_colors.dart';
@@ -902,6 +903,15 @@ class _SharedFairytaleCard extends StatelessWidget {
                   Positioned.fill(child: _SharedThumbnail(item: item)),
                   Positioned(
                     top: 6,
+                    left: 6,
+                    child: _ReportButton(
+                      l10n: l10n,
+                      fairytaleId: item.id,
+                      ownerId: item.ownerId,
+                    ),
+                  ),
+                  Positioned(
+                    top: 6,
                     right: 6,
                     child: _SharedOfflineButton(
                       l10n: l10n,
@@ -1083,6 +1093,91 @@ class _SharedOfflineButton extends StatelessWidget {
         icon: icon,
         iconSize: 20,
         constraints: const BoxConstraints.tightFor(width: 38, height: 38),
+        padding: EdgeInsets.zero,
+      ),
+    );
+  }
+}
+
+class _ReportButton extends StatelessWidget {
+  final AppLocalizations l10n;
+  final int fairytaleId;
+  final int? ownerId;
+
+  const _ReportButton({
+    required this.l10n,
+    required this.fairytaleId,
+    this.ownerId,
+  });
+
+  void _openReportDialog(BuildContext context, String targetType, int targetId) {
+    showDialog(
+      context: context,
+      builder: (_) => ReportDialog(targetType: targetType, targetId: targetId),
+    );
+  }
+
+  void _openMenu(BuildContext context) {
+    final owner = ownerId;
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    l10n.reportMenuTitle,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.flag_outlined),
+                title: Text(l10n.reportContentOption),
+                onTap: () {
+                  Navigator.of(sheetContext).pop();
+                  _openReportDialog(context, 'CONTENT', fairytaleId);
+                },
+              ),
+              if (owner != null)
+                ListTile(
+                  leading: const Icon(Icons.person_off_outlined),
+                  title: Text(l10n.reportUserOption),
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    _openReportDialog(context, 'USER', owner);
+                  },
+                ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white.withValues(alpha: 0.92),
+      shape: const CircleBorder(),
+      child: IconButton(
+        tooltip: l10n.reportButtonLabel,
+        onPressed: () => _openMenu(context),
+        icon: const Icon(Icons.flag_outlined, color: Color(0xFF777777)),
+        iconSize: 18,
+        constraints: const BoxConstraints.tightFor(width: 34, height: 34),
         padding: EdgeInsets.zero,
       ),
     );

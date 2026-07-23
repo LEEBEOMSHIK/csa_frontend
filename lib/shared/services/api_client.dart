@@ -96,6 +96,15 @@ class ApiClient {
     }
   }
 
+  Future<dynamic> patch(String path, {Object? data}) async {
+    try {
+      final response = await _dio.patch(path, data: data);
+      return response.data;
+    } on DioException catch (e) {
+      throw _mapError(e);
+    }
+  }
+
   /// 원격 파일(이미지/오디오)을 로컬 경로로 다운로드한다.
   /// 오프라인 저장 등 바이너리 다운로드 전용. [url] 은 절대 URL 이어야 한다.
   Future<void> downloadFile(

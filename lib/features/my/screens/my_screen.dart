@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
+import 'package:csa_frontend/features/admin/screens/admin_home_screen.dart';
 import 'package:csa_frontend/features/my/models/user_settings.dart';
 import 'package:csa_frontend/features/my/screens/offline_storage_screen.dart';
 import 'package:csa_frontend/features/my/screens/premium_purchase_screen.dart';
@@ -271,6 +272,43 @@ class _MyScreenState extends State<MyScreen> {
                     ),
                   ),
                   const _ThickDivider(),
+                  // 관리자 진입점 — ADMIN role일 때만 노출
+                  ValueListenableBuilder<bool>(
+                    valueListenable: isAdminNotifier,
+                    builder: (_, isAdmin, _) {
+                      if (!isAdmin) return const SizedBox.shrink();
+                      return Column(
+                        children: [
+                          _SettingRow(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const AdminHomeScreen(),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  l10n.adminMenuTitle,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF333333),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.chevron_right_rounded,
+                                  color: Color(0xFFCCCCCC),
+                                  size: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const _ThickDivider(),
+                        ],
+                      );
+                    },
+                  ),
                   // 활동 내역 섹션
                   _SectionHeader(title: l10n.settingsSectionActivity),
                   _SubRow(
