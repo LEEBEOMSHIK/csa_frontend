@@ -4,9 +4,9 @@ import 'package:csa_frontend/features/admin/models/admin_page_response.dart';
 import 'package:csa_frontend/features/admin/models/admin_report.dart';
 import 'package:csa_frontend/features/admin/screens/admin_report_detail_screen.dart';
 import 'package:csa_frontend/features/admin/services/admin_report_service.dart';
+import 'package:csa_frontend/features/admin/widgets/admin_nav_bar.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/shared/services/api_client.dart';
-import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 
 class AdminReportListScreen extends StatefulWidget {
   const AdminReportListScreen({super.key});
@@ -51,7 +51,7 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
       backgroundColor: const Color(0xFFFFFDF5),
       body: Column(
         children: [
-          AppTopBar(title: l10n.adminReportsTitle),
+          const AdminNavBar(current: AdminSection.reports),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Row(

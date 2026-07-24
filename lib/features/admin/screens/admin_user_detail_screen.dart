@@ -95,7 +95,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
       backgroundColor: const Color(0xFFFFFDF5),
       body: Column(
         children: [
-          AppTopBar(title: l10n.adminUserDetailTitle),
+          AppTopBar(title: l10n.adminUserDetailTitle, showBack: true),
           Expanded(
             child: FutureBuilder<AdminUser>(
               future: _future,

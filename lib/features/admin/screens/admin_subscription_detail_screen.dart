@@ -41,7 +41,10 @@ class _AdminSubscriptionDetailScreenState
       backgroundColor: const Color(0xFFFFFDF5),
       body: Column(
         children: [
-          AppTopBar(title: l10n.adminSubscriptionDetailTitle),
+          AppTopBar(
+            title: l10n.adminSubscriptionDetailTitle,
+            showBack: true,
+          ),
           Expanded(
             child: FutureBuilder<AdminSubscription>(
               future: _future,

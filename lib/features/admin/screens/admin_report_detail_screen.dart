@@ -87,7 +87,7 @@ class _AdminReportDetailScreenState extends State<AdminReportDetailScreen> {
       backgroundColor: const Color(0xFFFFFDF5),
       body: Column(
         children: [
-          AppTopBar(title: l10n.adminReportDetailTitle),
+          AppTopBar(title: l10n.adminReportDetailTitle, showBack: true),
           Expanded(
             child: FutureBuilder<AdminReport>(
               future: _future,

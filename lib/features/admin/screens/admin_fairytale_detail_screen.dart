@@ -137,7 +137,7 @@ class _AdminFairytaleDetailScreenState
       backgroundColor: const Color(0xFFFFFDF5),
       body: Column(
         children: [
-          AppTopBar(title: l10n.adminFairytaleDetailTitle),
+          AppTopBar(title: l10n.adminFairytaleDetailTitle, showBack: true),
           Expanded(
             child: FutureBuilder<AdminFairytale>(
               future: _future,

@@ -4,9 +4,9 @@ import 'package:csa_frontend/features/admin/models/admin_fairytale.dart';
 import 'package:csa_frontend/features/admin/models/admin_page_response.dart';
 import 'package:csa_frontend/features/admin/screens/admin_fairytale_detail_screen.dart';
 import 'package:csa_frontend/features/admin/services/admin_fairytale_service.dart';
+import 'package:csa_frontend/features/admin/widgets/admin_nav_bar.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/shared/services/api_client.dart';
-import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
 
 class AdminFairytaleListScreen extends StatefulWidget {
   const AdminFairytaleListScreen({super.key});
@@ -76,7 +76,7 @@ class _AdminFairytaleListScreenState extends State<AdminFairytaleListScreen> {
       backgroundColor: const Color(0xFFFFFDF5),
       body: Column(
         children: [
-          AppTopBar(title: l10n.adminFairytalesTitle),
+          const AdminNavBar(current: AdminSection.fairytales),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: TextField(
