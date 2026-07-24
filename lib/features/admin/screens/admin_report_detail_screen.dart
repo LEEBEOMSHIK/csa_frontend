@@ -44,7 +44,9 @@ class _AdminReportDetailScreenState extends State<AdminReportDetailScreen> {
   }
 
   void _reload() {
-    setState(() => _future = _load());
+    setState(() {
+      _future = _load();
+    });
   }
 
   Future<void> _resolve(String status) async {

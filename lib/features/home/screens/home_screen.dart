@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:csa_frontend/features/fairytale_list/screens/fairytale_list_screen.dart';
 import 'package:csa_frontend/features/home/models/fairytale.dart';
 import 'package:csa_frontend/features/home/models/fairytale_category.dart';
 import 'package:csa_frontend/features/home/screens/fairytale_detail_screen.dart';
@@ -63,7 +64,18 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
                 const Spacer(),
-                const Icon(Icons.search, color: Color(0xFF333333), size: 20),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const FairytaleListScreen(),
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.search,
+                    color: Color(0xFF333333),
+                    size: 20,
+                  ),
+                ),
               ],
             ),
           ),

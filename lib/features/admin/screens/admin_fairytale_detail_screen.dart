@@ -32,11 +32,11 @@ class _AdminFairytaleDetailScreenState
   }
 
   void _reload() {
-    setState(
-      () => _future = AdminFairytaleService.instance.fetchFairytale(
+    setState(() {
+      _future = AdminFairytaleService.instance.fetchFairytale(
         widget.fairytaleId,
-      ),
-    );
+      );
+    });
   }
 
   Future<void> _unshare() async {

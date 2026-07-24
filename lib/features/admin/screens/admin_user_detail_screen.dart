@@ -28,9 +28,9 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   }
 
   void _reload() {
-    setState(
-      () => _future = AdminUserService.instance.fetchUser(widget.userId),
-    );
+    setState(() {
+      _future = AdminUserService.instance.fetchUser(widget.userId);
+    });
   }
 
   Future<void> _toggleStatus(AdminUser user) async {
