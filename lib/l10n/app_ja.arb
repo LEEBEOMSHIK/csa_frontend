@@ -409,6 +409,12 @@
   "adminLoginFailed": "ログインに失敗しました",
   "adminLogout": "ログアウト",
 
+  "adminDashboardTotalUsers": "全ユーザー",
+  "adminDashboardTotalFairytales": "全どうわ",
+  "adminDashboardActiveSubscriptions": "有効なサブスク",
+  "adminDashboardPendingReports": "対応待ちの通報",
+  "adminDashboardLoadFailed": "読み込めませんでした",
+
   "reportButtonLabel": "通報する",
   "reportDialogTitle": "通報する",
   "reportReasonLabel": "通報理由",

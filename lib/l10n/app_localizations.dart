@@ -2144,6 +2144,36 @@ abstract class AppLocalizations {
   /// **'로그아웃'**
   String get adminLogout;
 
+  /// No description provided for @adminDashboardTotalUsers.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 유저'**
+  String get adminDashboardTotalUsers;
+
+  /// No description provided for @adminDashboardTotalFairytales.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 동화'**
+  String get adminDashboardTotalFairytales;
+
+  /// No description provided for @adminDashboardActiveSubscriptions.
+  ///
+  /// In ko, this message translates to:
+  /// **'활성 구독'**
+  String get adminDashboardActiveSubscriptions;
+
+  /// No description provided for @adminDashboardPendingReports.
+  ///
+  /// In ko, this message translates to:
+  /// **'대기중 신고'**
+  String get adminDashboardPendingReports;
+
+  /// No description provided for @adminDashboardLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'불러오지 못했어요'**
+  String get adminDashboardLoadFailed;
+
   /// No description provided for @reportButtonLabel.
   ///
   /// In ko, this message translates to:

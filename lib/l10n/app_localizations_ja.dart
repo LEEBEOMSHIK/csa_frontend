@@ -1050,6 +1050,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get adminLogout => 'ログアウト';
 
   @override
+  String get adminDashboardTotalUsers => '全ユーザー';
+
+  @override
+  String get adminDashboardTotalFairytales => '全どうわ';
+
+  @override
+  String get adminDashboardActiveSubscriptions => '有効なサブスク';
+
+  @override
+  String get adminDashboardPendingReports => '対応待ちの通報';
+
+  @override
+  String get adminDashboardLoadFailed => '読み込めませんでした';
+
+  @override
   String get reportButtonLabel => '通報する';
 
   @override

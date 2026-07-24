@@ -1050,6 +1050,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get adminLogout => '로그아웃';
 
   @override
+  String get adminDashboardTotalUsers => '전체 유저';
+
+  @override
+  String get adminDashboardTotalFairytales => '전체 동화';
+
+  @override
+  String get adminDashboardActiveSubscriptions => '활성 구독';
+
+  @override
+  String get adminDashboardPendingReports => '대기중 신고';
+
+  @override
+  String get adminDashboardLoadFailed => '불러오지 못했어요';
+
+  @override
   String get reportButtonLabel => '신고하기';
 
   @override

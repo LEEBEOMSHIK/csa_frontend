@@ -409,6 +409,12 @@
   "adminLoginFailed": "로그인에 실패했습니다",
   "adminLogout": "로그아웃",
 
+  "adminDashboardTotalUsers": "전체 유저",
+  "adminDashboardTotalFairytales": "전체 동화",
+  "adminDashboardActiveSubscriptions": "활성 구독",
+  "adminDashboardPendingReports": "대기중 신고",
+  "adminDashboardLoadFailed": "불러오지 못했어요",
+
   "reportButtonLabel": "신고하기",
   "reportDialogTitle": "신고하기",
   "reportReasonLabel": "신고 사유",
