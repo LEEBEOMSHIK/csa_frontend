@@ -836,12 +836,6 @@ abstract class AppLocalizations {
   /// **'📚 유명 동화'**
   String get fairytaleTabClassic;
 
-  /// No description provided for @fairytaleTabAi.
-  ///
-  /// In ko, this message translates to:
-  /// **'🤖 AI 동화'**
-  String get fairytaleTabAi;
-
   /// No description provided for @fairytaleTabShared.
   ///
   /// In ko, this message translates to:

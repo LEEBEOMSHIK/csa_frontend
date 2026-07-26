@@ -384,9 +384,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fairytaleTabClassic => '📚 めいさくどうわ';
 
   @override
-  String get fairytaleTabAi => '🤖 AIどうわ';
-
-  @override
   String get fairytaleTabShared => '🌟 みんなのどうわ';
 
   @override

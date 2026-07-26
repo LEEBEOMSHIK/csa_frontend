@@ -30,7 +30,7 @@ class FairytaleListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
@@ -52,7 +52,6 @@ class FairytaleListScreen extends StatelessWidget {
             ),
             tabs: [
               Tab(text: l10n.fairytaleTabClassic),
-              Tab(text: l10n.fairytaleTabAi),
               Tab(text: l10n.fairytaleTabShared),
             ],
           ),
@@ -62,7 +61,6 @@ class FairytaleListScreen extends StatelessWidget {
             _ClassicFairytaleGrid(
               service: catalogService ?? FairytaleService.instance,
             ),
-            _FairytaleGrid(items: _aiTales),
             _SharedFairytaleGrid(
               service: service ?? MyFairytaleService.instance,
               downloadManager: downloadManager ?? DownloadManager.instance,
@@ -70,114 +68,6 @@ class FairytaleListScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _FairytaleGrid extends StatelessWidget {
-  final List<_FairytaleItem> items;
-  const _FairytaleGrid({required this.items});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: items.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.75,
-      ),
-      itemBuilder: (context, index) {
-        final item = items[index];
-        return GestureDetector(
-          onTap: () {},
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(18),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.07),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: item.color.withValues(alpha: 0.18),
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(18),
-                      ),
-                    ),
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(item.emoji, style: const TextStyle(fontSize: 52)),
-                        const SizedBox(height: 4),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _VoiceBadge(
-                              label: l10n.voiceDad,
-                              badgeText: l10n.voiceBadge(l10n.voiceDad),
-                              color: item.color,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.favorite_border_rounded,
-                            size: 12,
-                            color: AppColors.favorites,
-                          ),
-                          const SizedBox(width: 3),
-                          Text(
-                            '${item.likes}',
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
@@ -1260,42 +1150,3 @@ class _VoiceBadge extends StatelessWidget {
   }
 }
 
-class _FairytaleItem {
-  final String emoji;
-  final String title;
-  final Color color;
-  final int likes;
-  const _FairytaleItem({
-    required this.emoji,
-    required this.title,
-    required this.color,
-    required this.likes,
-  });
-}
-
-const List<_FairytaleItem> _aiTales = [
-  _FairytaleItem(
-    emoji: '🚀',
-    title: '우주를 여행한 토끼',
-    color: Color(0xFF073B4C),
-    likes: 42,
-  ),
-  _FairytaleItem(
-    emoji: '🦄',
-    title: '무지개 유니콘의 모험',
-    color: Color(0xFF9B5DE5),
-    likes: 38,
-  ),
-  _FairytaleItem(
-    emoji: '🌊',
-    title: '바닷속 작은 물고기',
-    color: Color(0xFF118AB2),
-    likes: 29,
-  ),
-  _FairytaleItem(
-    emoji: '🏔️',
-    title: '산을 넘는 작은 곰',
-    color: Color(0xFFFFAA5E),
-    likes: 21,
-  ),
-];

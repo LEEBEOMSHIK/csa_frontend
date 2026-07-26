@@ -384,9 +384,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fairytaleTabClassic => '📚 유명 동화';
 
   @override
-  String get fairytaleTabAi => '🤖 AI 동화';
-
-  @override
   String get fairytaleTabShared => '🌟 공유 동화';
 
   @override
