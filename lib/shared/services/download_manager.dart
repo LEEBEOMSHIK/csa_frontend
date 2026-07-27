@@ -4,14 +4,20 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:csa_frontend/features/home/models/curated_slides_manifest.dart';
+import 'package:csa_frontend/features/home/services/fairytale_service.dart';
 import 'package:csa_frontend/features/my/services/my_fairytale_service.dart';
 import 'package:csa_frontend/features/offline/models/offline_meta_entry.dart';
 import 'package:csa_frontend/features/offline/models/offline_slide_entry.dart';
 import 'package:csa_frontend/features/offline/services/offline_store.dart';
 import 'package:csa_frontend/shared/services/api_client.dart';
 
-/// 슬라이드 형식 동화의 오프라인 다운로드/저장/삭제/조회를 담당하는 서비스.
+/// 슬라이드 형식 동화(AI 생성 + 큐레이션)의 오프라인 다운로드/저장/삭제/조회를 담당하는 서비스.
 /// 영상(video) 형식은 후속 단계 — 현재 범위에 포함되지 않는다.
+///
+/// AI 동화(`AiFairytale`)와 큐레이션 동화(`Fairytale`)는 서버 id 시퀀스가 서로 달라
+/// 값이 겹칠 수 있으므로, 큐레이션 저장분은 Hive key를 `curated-{id}`로 접두해
+/// AI 동화 저장분과 충돌하지 않게 한다(`_curatedKey` 참고).
 class DownloadManager {
   DownloadManager({
     MyFairytaleService? fairytaleService,
@@ -24,11 +30,17 @@ class DownloadManager {
     })?
     fileDownloader,
     Future<Directory> Function()? documentsDirProvider,
+    Future<CuratedSlidesManifest> Function(int id)? fetchCuratedSlides,
+    Future<void> Function(int fairytaleId, String targetType, String format)?
+    reportDownload,
   }) : _fairytaleService = fairytaleService ?? MyFairytaleService.instance,
        _store = store ?? OfflineStore.instance,
        _fileDownloader = fileDownloader ?? _defaultFileDownloader,
        _documentsDirProvider =
-           documentsDirProvider ?? getApplicationDocumentsDirectory;
+           documentsDirProvider ?? getApplicationDocumentsDirectory,
+       _fetchCuratedSlides =
+           fetchCuratedSlides ?? FairytaleService.instance.getCuratedSlides,
+       _reportDownload = reportDownload ?? _defaultReportDownload;
 
   static final DownloadManager instance = DownloadManager();
 
@@ -45,6 +57,9 @@ class DownloadManager {
   })
   _fileDownloader;
   final Future<Directory> Function() _documentsDirProvider;
+  final Future<CuratedSlidesManifest> Function(int id) _fetchCuratedSlides;
+  final Future<void> Function(int fairytaleId, String targetType, String format)
+  _reportDownload;
 
   final Map<String, StreamController<double>> _progressControllers = {};
 
@@ -67,6 +82,35 @@ class DownloadManager {
       cancelToken: cancelToken,
     );
   }
+
+  static Future<void> _defaultReportDownload(
+    int fairytaleId,
+    String targetType,
+    String format,
+  ) {
+    return ApiClient.instance.post(
+      '/fairytale/$fairytaleId/downloads',
+      data: {'targetType': targetType, 'format': format},
+    );
+  }
+
+  /// 다운로드 완료 이벤트를 서버에 보고한다(통계 집계용 부가 기능).
+  /// 네트워크 실패 등으로 실패해도 오프라인 저장 자체는 이미 성공했으므로 조용히 무시한다.
+  Future<void> _reportDownloadSafely(
+    int fairytaleId,
+    String targetType,
+    String format,
+  ) async {
+    try {
+      await _reportDownload(fairytaleId, targetType, format);
+    } catch (_) {
+      // 통계 집계 실패는 오프라인 저장 성공 여부에 영향을 주지 않는다.
+    }
+  }
+
+  /// 큐레이션(`Fairytale`) 저장분 전용 Hive key.
+  /// AI 동화와 id 시퀀스가 겹칠 수 있어 접두어로 구분한다.
+  String _curatedKey(int fairytaleId) => 'curated-$fairytaleId';
 
   /// 진행률(0.0~1.0) 스트림. 다운로드 시작 시점에 구독하면 진행 상황을 받는다.
   Stream<double> progressStream(String fairytaleId) {
@@ -342,6 +386,7 @@ class DownloadManager {
         ),
       );
       controller.add(1.0);
+      await _reportDownloadSafely(fairytaleId, 'AI_FAIRYTALE', 'slide');
     } catch (e) {
       final cancelled = cancelToken.isCancelled || e is _CancelledException;
       // 부분 저장 파일 정리 (방치 금지 규칙 준수).
@@ -371,6 +416,210 @@ class DownloadManager {
       _cancelTokens.remove(id);
     }
   }
+
+  /// 큐레이션 동화(카테고리 보유, `Fairytale`)를 오프라인 저장한다.
+  /// `CuratedSlidesManifest`는 AI 동화 슬라이드 응답과 달리 텍스트가 ko/ja 로컬라이즈드,
+  /// 오디오는 voiceType→locale 중첩 맵이라 다운로드 시점에 언어/목소리를 확정해 평문 텍스트와
+  /// 단일 오디오 경로로 변환해 저장한다. manifest에 title이 없어 호출자가 전달한다.
+  Future<void> downloadCuratedSlide({
+    required int fairytaleId,
+    required String title,
+    required String voiceType,
+    required String language,
+  }) {
+    final id = _curatedKey(fairytaleId);
+    // 큐 대기 중에도 취소가 가능하도록 토큰을 시작 시점에 등록한다.
+    final token = _cancelTokens.putIfAbsent(id, CancelToken.new);
+
+    final result = _queue.then(
+      (_) => _runDownloadCuratedSlide(
+        fairytaleId: fairytaleId,
+        title: title,
+        voiceType: voiceType,
+        language: language,
+        cancelToken: token,
+      ),
+    );
+    _queue = result.catchError((_) {});
+    return result;
+  }
+
+  Future<void> _runDownloadCuratedSlide({
+    required int fairytaleId,
+    required String title,
+    required String voiceType,
+    required String language,
+    required CancelToken cancelToken,
+  }) async {
+    final id = _curatedKey(fairytaleId);
+    final controller = _controllerFor(id);
+    controller.add(0.0);
+
+    final dir = await _offlineDir(id);
+    final voiceKey = '${voiceType}_$language';
+
+    _store.metaBox.put(
+      id,
+      OfflineMetaEntry(
+        fairytaleId: id,
+        format: 'slide',
+        totalSizeBytes: 0,
+        downloadedAt: DateTime.now(),
+        expiresAt: DateTime.now().add(ttl),
+        status: DownloadStatus.downloading,
+        voiceType: voiceType,
+        language: language,
+        contentOrigin: OfflineContentOrigin.curated,
+      ),
+    );
+
+    try {
+      if (cancelToken.isCancelled) {
+        throw _CancelledException();
+      }
+      final manifest = await _fetchCuratedSlides(fairytaleId);
+      final pages = manifest.pages;
+
+      final tasks = <_DownloadTask>[];
+      for (final page in pages) {
+        final imageUrl = page.imageUrl.trim();
+        if (imageUrl.isNotEmpty) {
+          tasks.add(
+            _DownloadTask(
+              url: imageUrl,
+              savePath: '${dir.path}/page_${page.pageIndex}.png',
+            ),
+          );
+        }
+        final audioUrl = page
+            .audioUrlFor(voiceType: voiceType, locale: language)
+            ?.trim();
+        if (audioUrl != null && audioUrl.isNotEmpty) {
+          tasks.add(
+            _DownloadTask(
+              url: audioUrl,
+              savePath:
+                  '${dir.path}/page_${page.pageIndex}_${voiceType}_$language.mp3',
+            ),
+          );
+        }
+      }
+
+      final total = tasks.isEmpty ? 1 : tasks.length;
+      var done = 0;
+      for (final task in tasks) {
+        await _fileDownloader(
+          task.url,
+          task.savePath,
+          cancelToken: cancelToken,
+        );
+        done++;
+        controller.add(done / total);
+      }
+
+      final localPages = <OfflineSlidePage>[];
+      for (final page in pages) {
+        final imagePath = '${dir.path}/page_${page.pageIndex}.png';
+        final audioUrl = page
+            .audioUrlFor(voiceType: voiceType, locale: language)
+            ?.trim();
+        final audioPaths = <String, String>{};
+        if (audioUrl != null && audioUrl.isNotEmpty) {
+          audioPaths[voiceKey] =
+              '${dir.path}/page_${page.pageIndex}_${voiceType}_$language.mp3';
+        }
+        localPages.add(
+          OfflineSlidePage(
+            pageIndex: page.pageIndex,
+            text: page.text.forLocale(language),
+            localImagePath: page.imageUrl.trim().isNotEmpty ? imagePath : '',
+            localAudioPaths: audioPaths,
+          ),
+        );
+      }
+
+      final totalBytes = await _dirSizeBytes(dir);
+
+      await _store.slideBox.put(
+        id,
+        OfflineSlideEntry(
+          fairytaleId: id,
+          title: title,
+          thumbnailLocalPath: localPages.isNotEmpty
+              ? localPages.first.localImagePath
+              : '',
+          pages: localPages,
+          downloadedAt: DateTime.now(),
+        ),
+      );
+
+      await _store.metaBox.put(
+        id,
+        OfflineMetaEntry(
+          fairytaleId: id,
+          format: 'slide',
+          totalSizeBytes: totalBytes,
+          downloadedAt: DateTime.now(),
+          expiresAt: DateTime.now().add(ttl),
+          status: DownloadStatus.completed,
+          voiceType: voiceType,
+          language: language,
+          contentOrigin: OfflineContentOrigin.curated,
+        ),
+      );
+      controller.add(1.0);
+      await _reportDownloadSafely(fairytaleId, 'FAIRYTALE', 'slide');
+    } catch (e) {
+      final cancelled = cancelToken.isCancelled || e is _CancelledException;
+      await _deleteFiles(id);
+      await _store.slideBox.delete(id);
+      if (cancelled) {
+        await _store.metaBox.delete(id);
+        if (!controller.isClosed) controller.add(0.0);
+        return;
+      }
+      await _store.metaBox.put(
+        id,
+        OfflineMetaEntry(
+          fairytaleId: id,
+          format: 'slide',
+          totalSizeBytes: 0,
+          downloadedAt: DateTime.now(),
+          status: DownloadStatus.failed,
+          voiceType: voiceType,
+          language: language,
+          contentOrigin: OfflineContentOrigin.curated,
+        ),
+      );
+      controller.addError(e);
+      rethrow;
+    } finally {
+      _cancelTokens.remove(id);
+    }
+  }
+
+  /// 큐레이션 동화가 오프라인 저장(완료·미만료) 상태인지 여부.
+  bool isCuratedOfflineAvailable(int fairytaleId) {
+    if (!_store.isInitialized) return false;
+    final id = _curatedKey(fairytaleId);
+    final meta = _store.metaBox.get(id);
+    if (meta == null || !meta.isCompleted) return false;
+    if (meta.contentOrigin != OfflineContentOrigin.curated) return false;
+    if (meta.isExpired(DateTime.now())) return false;
+    return _store.slideBox.containsKey(id);
+  }
+
+  bool isCuratedDownloading(int fairytaleId) =>
+      isDownloading(_curatedKey(fairytaleId));
+
+  Stream<double> curatedProgressStream(int fairytaleId) =>
+      progressStream(_curatedKey(fairytaleId));
+
+  Future<void> cancelCuratedDownload(int fairytaleId) =>
+      cancel(_curatedKey(fairytaleId));
+
+  Future<void> deleteCurated(int fairytaleId) =>
+      delete(_curatedKey(fairytaleId));
 
   Future<void> delete(String fairytaleId) async {
     await _deleteFiles(fairytaleId);

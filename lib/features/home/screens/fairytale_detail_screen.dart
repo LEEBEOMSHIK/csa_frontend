@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/features/favorites/services/favorite_service.dart';
 import 'package:csa_frontend/features/home/models/fairytale.dart';
@@ -5,6 +7,7 @@ import 'package:csa_frontend/features/home/models/fairytale_detail.dart';
 import 'package:csa_frontend/features/home/screens/curated_reader_screen.dart';
 import 'package:csa_frontend/features/home/services/fairytale_service.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
+import 'package:csa_frontend/shared/services/download_manager.dart';
 import 'package:csa_frontend/shared/services/tts_service.dart';
 import 'package:csa_frontend/utils/locale_provider.dart';
 
@@ -388,7 +391,12 @@ class _FairytaleDetailScreenState extends State<FairytaleDetailScreen> {
                         const Divider(color: Color(0xFFEEEEEE)),
                         const SizedBox(height: 16),
                         // OfflineSaveSection
-                        const _OfflineSaveSection(),
+                        _OfflineSaveSection(
+                          fairytaleId: widget.item.id,
+                          title: title,
+                          lang: lang,
+                          pickVoice: () => _pickVoice(l10n),
+                        ),
                         const SizedBox(height: 16),
                         const Divider(color: Color(0xFFEEEEEE)),
                         const SizedBox(height: 16),
@@ -578,12 +586,138 @@ class _InfoChip extends StatelessWidget {
 // Offline Save Section
 // ─────────────────────────────────────────────
 
-class _OfflineSaveSection extends StatelessWidget {
-  const _OfflineSaveSection();
+class _OfflineSaveSection extends StatefulWidget {
+  final int fairytaleId;
+  final String title;
+  final String lang;
+  final Future<String?> Function() pickVoice;
+
+  const _OfflineSaveSection({
+    required this.fairytaleId,
+    required this.title,
+    required this.lang,
+    required this.pickVoice,
+  });
+
+  @override
+  State<_OfflineSaveSection> createState() => _OfflineSaveSectionState();
+}
+
+class _OfflineSaveSectionState extends State<_OfflineSaveSection> {
+  final DownloadManager _downloadManager = DownloadManager.instance;
+  StreamSubscription<double>? _progressSub;
+  bool _downloading = false;
+  double _progress = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _downloading = _downloadManager.isCuratedDownloading(widget.fairytaleId);
+    if (_downloading) _listenProgress();
+  }
+
+  @override
+  void didUpdateWidget(covariant _OfflineSaveSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.fairytaleId != widget.fairytaleId) {
+      _progressSub?.cancel();
+      _progressSub = null;
+      _downloading = _downloadManager.isCuratedDownloading(widget.fairytaleId);
+      _progress = 0;
+      if (_downloading) _listenProgress();
+    }
+  }
+
+  @override
+  void dispose() {
+    _progressSub?.cancel();
+    super.dispose();
+  }
+
+  void _listenProgress() {
+    _progressSub = _downloadManager
+        .curatedProgressStream(widget.fairytaleId)
+        .listen((value) {
+          if (!mounted) return;
+          setState(() => _progress = value);
+        });
+  }
+
+  Future<void> _startFlow() async {
+    final selected = await showModalBottomSheet<_DownloadFormat>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => const _DownloadModal(),
+    );
+    if (selected != _DownloadFormat.slide || !mounted) return;
+    final voiceType = await widget.pickVoice();
+    if (voiceType == null || !mounted) return;
+    await _download(voiceType);
+  }
+
+  Future<void> _download(String voiceType) async {
+    final l10n = AppLocalizations.of(context)!;
+    setState(() {
+      _downloading = true;
+      _progress = 0;
+    });
+    _listenProgress();
+    try {
+      await _downloadManager.downloadCuratedSlide(
+        fairytaleId: widget.fairytaleId,
+        title: widget.title,
+        voiceType: voiceType,
+        language: widget.lang,
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.offlineSaveSuccess)));
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.offlineSaveFailed)));
+    } finally {
+      await _progressSub?.cancel();
+      _progressSub = null;
+      if (mounted) setState(() => _downloading = false);
+    }
+  }
+
+  Future<void> _cancelDownload() async {
+    final l10n = AppLocalizations.of(context)!;
+    try {
+      await _downloadManager.cancelCuratedDownload(widget.fairytaleId);
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.offlineCancelSuccess)));
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.offlineCancelFailed)));
+    }
+  }
+
+  Future<void> _delete() async {
+    final l10n = AppLocalizations.of(context)!;
+    await _downloadManager.deleteCurated(widget.fairytaleId);
+    if (!mounted) return;
+    setState(() {});
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.offlineDeleteSuccess)));
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isOffline =
+        !_downloading &&
+        _downloadManager.isCuratedOfflineAvailable(widget.fairytaleId);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -606,43 +740,105 @@ class _OfflineSaveSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        GestureDetector(
-          onTap: () => showModalBottomSheet(
-            context: context,
-            backgroundColor: Colors.transparent,
-            isScrollControlled: true,
-            builder: (_) => const _DownloadModal(),
+        if (_downloading) ...[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: _progress > 0 ? _progress : null,
+              minHeight: 8,
+              backgroundColor: const Color(0xFFEEEEEE),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                Color(0xFF7EC8C8),
+              ),
+            ),
           ),
-          child: Container(
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${l10n.detailDownloadProgress} ${(_progress * 100).toStringAsFixed(0)}%',
+                style: const TextStyle(fontSize: 12, color: Color(0xFF888888)),
+              ),
+              TextButton(
+                onPressed: _cancelDownload,
+                child: Text(l10n.offlineCancelAction),
+              ),
+            ],
+          ),
+        ] else if (isOffline) ...[
+          Container(
             height: 48,
             width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 14),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: const Color(0xFFF0FBF9),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFEEEEEE)),
+              border: Border.all(color: const Color(0xFF7EC8C8)),
             ),
-            alignment: Alignment.center,
             child: Row(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(
-                  Icons.save_alt_outlined,
-                  size: 18,
-                  color: Color(0xFF7EC8C8),
+                  Icons.offline_pin_rounded,
+                  size: 20,
+                  color: Color(0xFF3AA79A),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  l10n.detailDownloadSaveBtn,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF555555),
+                Expanded(
+                  child: Text(
+                    l10n.offlineSavedLabel,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF3AA79A),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  tooltip: l10n.offlineDeleteAction,
+                  onPressed: _delete,
+                  icon: const Icon(
+                    Icons.delete_outline_rounded,
+                    size: 20,
+                    color: Color(0xFF999999),
                   ),
                 ),
               ],
             ),
           ),
-        ),
+        ] else
+          GestureDetector(
+            onTap: _startFlow,
+            child: Container(
+              height: 48,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFEEEEEE)),
+              ),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.save_alt_outlined,
+                    size: 18,
+                    color: Color(0xFF7EC8C8),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    l10n.detailDownloadSaveBtn,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF555555),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -730,6 +926,39 @@ class _DownloadModalState extends State<_DownloadModal> {
             onTap: () => setState(() => _selected = _DownloadFormat.slide),
           ),
           const SizedBox(height: 20),
+          // Save button — confirms the selected format and starts the download flow
+          GestureDetector(
+            onTap: () => Navigator.pop(context, _selected),
+            child: Container(
+              height: 48,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFA7A7),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.save_alt_outlined,
+                    size: 18,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    l10n.detailDownloadSaveBtn,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
           // Cancel button
           GestureDetector(
             onTap: () => Navigator.pop(context),

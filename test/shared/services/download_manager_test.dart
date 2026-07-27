@@ -12,10 +12,12 @@ import 'package:hive/src/hive_impl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_response.dart';
+import 'package:csa_frontend/features/home/models/curated_slides_manifest.dart';
 import 'package:csa_frontend/features/my/services/my_fairytale_service.dart';
 import 'package:csa_frontend/features/offline/models/offline_meta_entry.dart';
 import 'package:csa_frontend/features/offline/models/offline_slide_entry.dart';
 import 'package:csa_frontend/features/offline/services/offline_store.dart';
+import 'package:csa_frontend/shared/services/api_client.dart';
 import 'package:csa_frontend/shared/services/download_manager.dart';
 
 class _FakeApi implements MyFairytaleApiClient {
@@ -78,6 +80,9 @@ void main() {
         await File(savePath).create(recursive: true);
         await File(savePath).writeAsString('bytes');
       },
+      // 실제 ApiClient(FlutterSecureStorage 플랫폼 채널)를 타지 않도록 스텁으로 대체 —
+      // 테스트 환경에서 바인딩 미초기화로 인한 행/타임아웃을 방지한다.
+      reportDownload: (id, targetType, format) async {},
     );
   });
 
@@ -130,6 +135,7 @@ void main() {
               await File(savePath).create(recursive: true);
               await File(savePath).writeAsString('bytes');
             },
+        reportDownload: (id, targetType, format) async {},
       );
 
       await sharedManager.downloadSlide(
@@ -321,6 +327,7 @@ void main() {
               await File(savePath).create(recursive: true);
               await File(savePath).writeAsString('bytes');
             },
+        reportDownload: (id, targetType, format) async {},
       );
 
       final future = cancelManager.downloadSlide(
@@ -359,6 +366,7 @@ void main() {
         await File(savePath).create(recursive: true);
         await File(savePath).writeAsString('bytes');
       },
+      reportDownload: (id, targetType, format) async {},
     );
 
     final errors = <Object>[];
@@ -398,6 +406,7 @@ void main() {
         await File(savePath).create(recursive: true);
         await File(savePath).writeAsString('bytes');
       },
+      reportDownload: (id, targetType, format) async {},
     );
 
     final first = cancelManager.downloadSlide(
@@ -459,6 +468,7 @@ void main() {
         await File(savePath).create(recursive: true);
         await File(savePath).writeAsString('bytes');
       },
+      reportDownload: (id, targetType, format) async {},
     );
 
     final first = cancelManager.downloadSlide(
@@ -576,6 +586,196 @@ void main() {
       expect(reopened.language, 'ja');
     },
   );
+
+  group('downloadCuratedSlide', () {
+    CuratedSlidesManifest manifestFor(int id) {
+      return CuratedSlidesManifest.fromJson({
+        'fairytaleId': id,
+        'contentVersion': 'v1',
+        'characterSupported': false,
+        'characterRenderMode': 'LOCAL_OVERLAY',
+        'pages': [
+          {
+            'pageIndex': 1,
+            'imageUrl': 'https://cdn.example.com/curated-p1.png',
+            'text': {'ko': '첫 장면', 'ja': '最初のシーン'},
+            'audioUrls': {
+              'dad': {
+                'ko': 'https://cdn.example.com/curated-p1-dad-ko.mp3',
+                'ja': 'https://cdn.example.com/curated-p1-dad-ja.mp3',
+              },
+            },
+          },
+          {
+            'pageIndex': 2,
+            'imageUrl': 'https://cdn.example.com/curated-p2.png',
+            'text': {'ko': '둘째 장면', 'ja': '二番目のシーン'},
+            'audioUrls': <String, dynamic>{},
+          },
+        ],
+      });
+    }
+
+    test(
+      'saves files under curated-{id} key, localizes text and records meta',
+      () async {
+        final reported = <(int, String, String)>[];
+        final curatedManager = DownloadManager(
+          fairytaleService: MyFairytaleService(api: _FakeApi()),
+          store: OfflineStore.instance,
+          documentsDirProvider: () async => tempDir,
+          fileDownloader:
+              (url, savePath, {onReceiveProgress, cancelToken}) async {
+                savedPaths.add(savePath);
+                await File(savePath).create(recursive: true);
+                await File(savePath).writeAsString('bytes');
+              },
+          fetchCuratedSlides: (id) async => manifestFor(id),
+          reportDownload: (id, targetType, format) async {
+            reported.add((id, targetType, format));
+          },
+        );
+
+        await curatedManager.downloadCuratedSlide(
+          fairytaleId: 77,
+          title: '큐레이션 동화',
+          voiceType: 'dad',
+          language: 'ko',
+        );
+
+        expect(
+          savedPaths.any((p) => p.endsWith('offline/curated-77/page_1.png')),
+          isTrue,
+        );
+        expect(
+          savedPaths.any(
+            (p) => p.endsWith('offline/curated-77/page_1_dad_ko.mp3'),
+          ),
+          isTrue,
+        );
+        // 2페이지는 dad/ko 오디오가 없으므로 오디오 파일은 저장되지 않는다.
+        expect(
+          savedPaths.any((p) => p.contains('page_2') && p.endsWith('.mp3')),
+          isFalse,
+        );
+
+        expect(curatedManager.isCuratedOfflineAvailable(77), isTrue);
+        final slide = curatedManager.getCuratedSlide('curated-77');
+        expect(slide, isNotNull);
+        expect(slide!.title, '큐레이션 동화');
+        expect(slide.pages.first.text, '첫 장면'); // ko 로컬라이즈드 텍스트 저장
+
+        final meta = metaBox.get('curated-77')!;
+        expect(meta.status, DownloadStatus.completed);
+        expect(meta.contentOrigin, OfflineContentOrigin.curated);
+        expect(meta.voiceType, 'dad');
+        expect(meta.language, 'ko');
+
+        // 다운로드 완료 보고가 FAIRYTALE targetType으로 전송됐는지 확인.
+        expect(reported, [(77, 'FAIRYTALE', 'slide')]);
+      },
+    );
+
+    test(
+      'does not collide with an AI fairytale offline entry sharing the same numeric id',
+      () async {
+        final curatedManager = DownloadManager(
+          fairytaleService: MyFairytaleService(api: _FakeApi()),
+          store: OfflineStore.instance,
+          documentsDirProvider: () async => tempDir,
+          fileDownloader:
+              (url, savePath, {onReceiveProgress, cancelToken}) async {
+                await File(savePath).create(recursive: true);
+                await File(savePath).writeAsString('bytes');
+              },
+          fetchCuratedSlides: (id) async => manifestFor(id),
+          reportDownload: (id, targetType, format) async {},
+        );
+
+        // AI 동화 id=42 를 먼저 저장한다 (기존 _FakeApi 는 42를 반환).
+        await curatedManager.downloadSlide(
+          fairytaleId: 42,
+          voiceType: 'dad',
+          language: 'ko',
+        );
+        // 같은 숫자 id(42)를 갖는 큐레이션 동화를 저장해도 AI 동화 저장분을 덮어쓰지 않는다.
+        await curatedManager.downloadCuratedSlide(
+          fairytaleId: 42,
+          title: '큐레이션 동화(같은 id)',
+          voiceType: 'dad',
+          language: 'ko',
+        );
+
+        expect(curatedManager.isOfflineAvailable('42'), isTrue);
+        expect(curatedManager.isCuratedOfflineAvailable(42), isTrue);
+        expect(curatedManager.getSlide('42')!.title, '오프라인 동화');
+        expect(
+          curatedManager.getCuratedSlide('curated-42')!.title,
+          '큐레이션 동화(같은 id)',
+        );
+      },
+    );
+
+    test(
+      'report failure does not fail the offline save itself',
+      () async {
+        final curatedManager = DownloadManager(
+          fairytaleService: MyFairytaleService(api: _FakeApi()),
+          store: OfflineStore.instance,
+          documentsDirProvider: () async => tempDir,
+          fileDownloader:
+              (url, savePath, {onReceiveProgress, cancelToken}) async {
+                await File(savePath).create(recursive: true);
+                await File(savePath).writeAsString('bytes');
+              },
+          fetchCuratedSlides: (id) async => manifestFor(id),
+          reportDownload: (id, targetType, format) async {
+            throw const ApiException(type: ApiExceptionType.network);
+          },
+        );
+
+        await curatedManager.downloadCuratedSlide(
+          fairytaleId: 88,
+          title: '보고 실패 케이스',
+          voiceType: 'dad',
+          language: 'ko',
+        );
+
+        expect(curatedManager.isCuratedOfflineAvailable(88), isTrue);
+      },
+    );
+
+    test('deleteCurated removes the curated-prefixed entry only', () async {
+      final curatedManager = DownloadManager(
+        fairytaleService: MyFairytaleService(api: _FakeApi()),
+        store: OfflineStore.instance,
+        documentsDirProvider: () async => tempDir,
+        fileDownloader: (url, savePath, {onReceiveProgress, cancelToken}) async {
+          await File(savePath).create(recursive: true);
+          await File(savePath).writeAsString('bytes');
+        },
+        fetchCuratedSlides: (id) async => manifestFor(id),
+        reportDownload: (id, targetType, format) async {},
+      );
+
+      await curatedManager.downloadSlide(
+        fairytaleId: 42,
+        voiceType: 'dad',
+        language: 'ko',
+      );
+      await curatedManager.downloadCuratedSlide(
+        fairytaleId: 42,
+        title: '큐레이션 동화(같은 id)',
+        voiceType: 'dad',
+        language: 'ko',
+      );
+
+      await curatedManager.deleteCurated(42);
+
+      expect(curatedManager.isCuratedOfflineAvailable(42), isFalse);
+      expect(curatedManager.isOfflineAvailable('42'), isTrue);
+    });
+  });
 }
 
 class _RecordingApi implements MyFairytaleApiClient {
