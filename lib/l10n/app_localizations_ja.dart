@@ -455,7 +455,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settingsFavoriteHistory => 'お気に入り履歴';
 
   @override
-  String get settingsFairytaleConfig => 'どうわ設定';
+  String get settingsFairytaleConfig => 'マイ童話管理';
 
   @override
   String get settingsSectionNoti => '特典とイベント通知';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/my/models/user_settings.dart';
+import 'package:csa_frontend/features/my/screens/my_fairytale_list_screen.dart';
 import 'package:csa_frontend/features/my/screens/offline_storage_screen.dart';
 import 'package:csa_frontend/features/my/screens/premium_purchase_screen.dart';
 import 'package:csa_frontend/features/my/services/user_settings_service.dart';
@@ -283,9 +284,13 @@ class _MyScreenState extends State<MyScreen> {
                   ),
                   _SubRow(label: l10n.settingsFavoriteHistory, onTap: () {}),
                   const _ThickDivider(),
-                  // 동화 설정
+                  // 동화 설정 (내가 만든 동화 목록)
                   _SettingRow(
-                    onTap: () {},
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const MyFairytaleListScreen(),
+                      ),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

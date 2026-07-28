@@ -455,7 +455,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settingsFavoriteHistory => '찜 목록 내역';
 
   @override
-  String get settingsFairytaleConfig => '동화 설정';
+  String get settingsFairytaleConfig => '내 동화 관리';
 
   @override
   String get settingsSectionNoti => '혜택 및 이벤트 알림';

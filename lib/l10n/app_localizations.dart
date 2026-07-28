@@ -977,7 +977,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsFairytaleConfig.
   ///
   /// In ko, this message translates to:
-  /// **'동화 설정'**
+  /// **'내 동화 관리'**
   String get settingsFairytaleConfig;
 
   /// No description provided for @settingsSectionNoti.
