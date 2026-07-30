@@ -5,10 +5,15 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_response.dart';
 import 'package:csa_frontend/features/fairytale_create/screens/fairytale_slide_screen.dart';
+import 'package:csa_frontend/features/report/widgets/report_button.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/shared/services/audio_narration_service.dart';
 
-Widget _wrap(FairytaleGenerateResponse response) {
+Widget _wrap(
+  FairytaleGenerateResponse response, {
+  int? reportFairytaleId,
+  int? reportOwnerId,
+}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -21,6 +26,8 @@ Widget _wrap(FairytaleGenerateResponse response) {
       fairytale: response,
       lang: 'ko',
       voiceType: 'dad',
+      reportFairytaleId: reportFairytaleId,
+      reportOwnerId: reportOwnerId,
     ),
   );
 }
@@ -146,5 +153,59 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
 
     expect(find.text(l10nKo.detailReadBtn), findsOneWidget);
+  });
+
+  testWidgets('hides report button when report target is not provided',
+      (tester) async {
+    final response = FairytaleGenerateResponse(
+      id: 4,
+      title: '내 동화',
+      pages: const [FairytalePageResponse(pageIndex: 1, text: '내 동화 페이지.')],
+    );
+
+    await tester.pumpWidget(_wrap(response));
+
+    expect(find.byType(ReportButton), findsNothing);
+  });
+
+  testWidgets('shows report options when report target is provided',
+      (tester) async {
+    final l10nKo = await AppLocalizations.delegate.load(const Locale('ko'));
+    final response = FairytaleGenerateResponse(
+      id: 5,
+      title: '공유 동화',
+      pages: const [FairytalePageResponse(pageIndex: 1, text: '공유 동화 페이지.')],
+    );
+
+    await tester.pumpWidget(
+      _wrap(response, reportFairytaleId: 5, reportOwnerId: 42),
+    );
+
+    expect(find.byType(ReportButton), findsOneWidget);
+
+    await tester.tap(find.byType(ReportButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10nKo.reportMenuTitle), findsOneWidget);
+    expect(find.text(l10nKo.reportContentOption), findsOneWidget);
+    expect(find.text(l10nKo.reportUserOption), findsOneWidget);
+  });
+
+  testWidgets('hides author report option when owner is unknown',
+      (tester) async {
+    final l10nKo = await AppLocalizations.delegate.load(const Locale('ko'));
+    final response = FairytaleGenerateResponse(
+      id: 6,
+      title: '작성자 미상',
+      pages: const [FairytalePageResponse(pageIndex: 1, text: '공유 동화 페이지.')],
+    );
+
+    await tester.pumpWidget(_wrap(response, reportFairytaleId: 6));
+
+    await tester.tap(find.byType(ReportButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10nKo.reportContentOption), findsOneWidget);
+    expect(find.text(l10nKo.reportUserOption), findsNothing);
   });
 }

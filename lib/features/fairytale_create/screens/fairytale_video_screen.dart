@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import 'package:csa_frontend/features/report/widgets/report_button.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/utils/app_colors.dart';
 
@@ -10,10 +11,19 @@ class FairytaleVideoScreen extends StatefulWidget {
   final String title;
   final String videoUrl;
 
+  /// 신고 대상 동화 id. 남의 공유 동화를 열 때만 전달하며, null이면(내 동화·
+  /// 오프라인 열람) 상단 바에 신고 버튼을 노출하지 않는다.
+  final int? reportFairytaleId;
+
+  /// 신고 대상 동화의 작성자 id. null이면 작성자 신고 항목을 감춘다.
+  final int? reportOwnerId;
+
   const FairytaleVideoScreen({
     super.key,
     required this.title,
     required this.videoUrl,
+    this.reportFairytaleId,
+    this.reportOwnerId,
   });
 
   @override
@@ -115,6 +125,18 @@ class _FairytaleVideoScreenState extends State<FairytaleVideoScreen> {
     }
   }
 
+  /// 신고 대상 정보가 전달된 경우(= 남의 공유 동화)에만 신고 버튼을 만든다.
+  Widget? _buildReportButton(AppLocalizations l10n) {
+    final fairytaleId = widget.reportFairytaleId;
+    if (fairytaleId == null) return null;
+    return ReportButton(
+      l10n: l10n,
+      fairytaleId: fairytaleId,
+      ownerId: widget.reportOwnerId,
+      variant: ReportButtonVariant.topBar,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -128,6 +150,7 @@ class _FairytaleVideoScreenState extends State<FairytaleVideoScreen> {
             _VideoTopBar(
               title: widget.title,
               closeLabel: materialL10n.closeButtonTooltip,
+              reportButton: _buildReportButton(l10n),
             ),
             Expanded(child: _buildBody(l10n)),
           ],
@@ -198,13 +221,19 @@ class _FairytaleVideoScreenState extends State<FairytaleVideoScreen> {
 class _VideoTopBar extends StatelessWidget {
   final String title;
   final String closeLabel;
+  final Widget? reportButton;
 
-  const _VideoTopBar({required this.title, required this.closeLabel});
+  const _VideoTopBar({
+    required this.title,
+    required this.closeLabel,
+    this.reportButton,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final report = reportButton;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 16, 8),
+      padding: EdgeInsets.fromLTRB(12, 8, report == null ? 16 : 4, 8),
       child: Row(
         children: [
           IconButton(
@@ -223,6 +252,7 @@ class _VideoTopBar extends StatelessWidget {
               ),
             ),
           ),
+          ?report,
         ],
       ),
     );
