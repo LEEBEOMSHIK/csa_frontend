@@ -75,3 +75,18 @@ Thumbs.db
 # Assets (large / generated)
 assets/audio/
 assets/character_parts/generated/
+
+# 에셋 분할 스크립트의 입력 원본과 산출물.
+# 스크립트(split_*.py)는 추적하되 결과물은 재생성 가능하므로 제외한다.
+# pubspec이 선언한 base/eyes/nose/mouth는 앱 필수 에셋이라 추적 대상이다.
+assets/images/before/
+assets/character_parts/*/debug/
+assets/character_parts/남자아이/
+
+# 디자인 시안 생성물
+design/images/generated-*.png
+
+# 로컬 전용 도구/스크래치
+.claude/
+run_dev.ps1
+test/*.png
