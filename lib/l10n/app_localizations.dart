@@ -1705,6 +1705,42 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'작성자 신고'**
   String get reportUserOption;
+
+  /// No description provided for @playFormatTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'어떻게 볼까요?'**
+  String get playFormatTitle;
+
+  /// No description provided for @playFormatUnavailable.
+  ///
+  /// In ko, this message translates to:
+  /// **'재생할 수 있는 내용이 없어요'**
+  String get playFormatUnavailable;
+
+  /// No description provided for @videoPlayerPlay.
+  ///
+  /// In ko, this message translates to:
+  /// **'재생'**
+  String get videoPlayerPlay;
+
+  /// No description provided for @videoPlayerPause.
+  ///
+  /// In ko, this message translates to:
+  /// **'일시정지'**
+  String get videoPlayerPause;
+
+  /// No description provided for @videoPlayerError.
+  ///
+  /// In ko, this message translates to:
+  /// **'영상을 재생하지 못했어요'**
+  String get videoPlayerError;
+
+  /// No description provided for @videoPlayerRetry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get videoPlayerRetry;
 }
 
 class _AppLocalizationsDelegate

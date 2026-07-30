@@ -25,6 +25,10 @@ class MyFairytale {
 
   bool get isCompleted => status == 'COMPLETED';
 
+  /// 열람 가능 여부. 영상 합성이 실패해도 페이지가 남아 있으면 슬라이드로 열 수 있다.
+  bool get isPlayable =>
+      isCompleted || (format == 'video' && status == 'FAILED' && pageCount > 0);
+
   factory MyFairytale.fromJson(Map<String, dynamic> json) {
     return MyFairytale(
       id: json['id'] as int,

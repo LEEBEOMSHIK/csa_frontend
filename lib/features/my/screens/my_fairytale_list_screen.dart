@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:csa_frontend/features/fairytale_create/models/fairytale_generate_response.dart';
 import 'package:csa_frontend/features/fairytale_create/screens/fairytale_slide_screen.dart';
+import 'package:csa_frontend/features/fairytale_create/screens/fairytale_video_screen.dart';
 import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/features/my/models/my_fairytale.dart';
 import 'package:csa_frontend/features/my/services/my_fairytale_service.dart';
@@ -9,6 +10,7 @@ import 'package:csa_frontend/shared/services/api_client.dart';
 import 'package:csa_frontend/shared/services/connectivity_service.dart';
 import 'package:csa_frontend/shared/services/download_manager.dart';
 import 'package:csa_frontend/shared/widgets/app_top_bar.dart';
+import 'package:csa_frontend/shared/widgets/play_format_sheet.dart';
 import 'package:csa_frontend/utils/locale_provider.dart';
 
 class MyFairytaleListScreen extends StatefulWidget {
@@ -272,8 +274,55 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
     ).showSnackBar(SnackBar(content: Text(l10n.offlineDeleteSuccess)));
   }
 
+  /// 재생 전 형식 선택. 슬라이드와 영상이 모두 가능할 때만 선택지를 띄우고,
+  /// 한쪽만 가능하면 바로 그 형식으로 연다.
+  Future<void> _openResponse(
+    FairytaleGenerateResponse response, {
+    required String fallbackLang,
+  }) async {
+    final l10n = AppLocalizations.of(context)!;
+    final hasVideo = response.hasVideo;
+    final hasSlides = response.hasSlides;
+    if (!hasVideo && !hasSlides) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.playFormatUnavailable)));
+      return;
+    }
+
+    PlayFormat format;
+    if (hasVideo && hasSlides) {
+      final selected = await showPlayFormatSheet(context);
+      if (selected == null || !mounted) return;
+      format = selected;
+    } else {
+      format = hasVideo ? PlayFormat.video : PlayFormat.slide;
+    }
+
+    if (format == PlayFormat.video) {
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => FairytaleVideoScreen(
+            title: response.title,
+            videoUrl: response.videoUrl ?? '',
+          ),
+        ),
+      );
+      return;
+    }
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => FairytaleSlideScreen(
+          fairytale: response,
+          lang: response.language.isNotEmpty ? response.language : fallbackLang,
+          voiceType: response.voiceType,
+        ),
+      ),
+    );
+  }
+
   Future<void> _onOpen(MyFairytale item) async {
-    if (!item.isCompleted || item.format != 'slide') return;
+    if (!item.isPlayable) return;
     final l10n = AppLocalizations.of(context)!;
 
     // 오프라인 저장본이 있으면 로컬 파일로 재생한다.
@@ -308,23 +357,7 @@ class _MyFairytaleListScreenState extends State<MyFairytaleListScreen> {
     try {
       final response = await _service.fetchSlides(item.id);
       if (!mounted) return;
-      if (response.pages.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.ttsNoContent)));
-        return;
-      }
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => FairytaleSlideScreen(
-            fairytale: response,
-            lang: response.language.isNotEmpty
-                ? response.language
-                : item.language,
-            voiceType: response.voiceType,
-          ),
-        ),
-      );
+      await _openResponse(response, fallbackLang: item.language);
     } on ApiException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(
@@ -436,7 +469,7 @@ class _FairytaleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final canOpen = item.isCompleted && item.format == 'slide';
+    final canOpen = item.isPlayable;
     return GestureDetector(
       onTap: canOpen ? onOpen : null,
       child: Container(
@@ -569,7 +602,11 @@ class _OfflineButton extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               CircularProgressIndicator(strokeWidth: 2, color: accent),
-              const Icon(Icons.close_rounded, size: 12, color: Color(0xFF888888)),
+              const Icon(
+                Icons.close_rounded,
+                size: 12,
+                color: Color(0xFF888888),
+              ),
             ],
           ),
         ),

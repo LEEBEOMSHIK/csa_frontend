@@ -7,13 +7,28 @@ class FairytaleGenerateResponse {
   final String voiceType;
   final List<FairytalePageResponse> pages;
 
+  /// 영상 형식으로 합성된 결과물 URL. 슬라이드 동화이거나 합성이 실패하면 null.
+  final String? videoUrl;
+
   const FairytaleGenerateResponse({
     required this.id,
     required this.title,
     this.language = 'ko',
     this.voiceType = 'dad',
     required this.pages,
+    this.videoUrl,
   });
+
+  /// 슬라이드로 재생 가능한지 여부.
+  bool get hasSlides => pages.isNotEmpty;
+
+  /// 영상으로 재생 가능한지 여부. http/https URL만 허용한다.
+  bool get hasVideo {
+    final url = videoUrl?.trim();
+    if (url == null || url.isEmpty) return false;
+    final uri = Uri.tryParse(url);
+    return uri != null && (uri.scheme == 'http' || uri.scheme == 'https');
+  }
 
   factory FairytaleGenerateResponse.fromJson(Map<String, dynamic> json) {
     return FairytaleGenerateResponse(
@@ -24,6 +39,7 @@ class FairytaleGenerateResponse {
       pages: (json['pages'] as List<dynamic>)
           .map((p) => FairytalePageResponse.fromJson(p as Map<String, dynamic>))
           .toList(),
+      videoUrl: json['videoUrl'] as String?,
     );
   }
 
@@ -45,8 +61,9 @@ class FairytaleGenerateResponse {
             (p) => FairytalePageResponse(
               pageIndex: p.pageIndex,
               text: p.text,
-              localImagePath:
-                  p.localImagePath.isNotEmpty ? p.localImagePath : null,
+              localImagePath: p.localImagePath.isNotEmpty
+                  ? p.localImagePath
+                  : null,
               localAudioPath: p.localAudioPaths[voiceKey],
             ),
           )

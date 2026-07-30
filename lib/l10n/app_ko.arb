@@ -329,5 +329,12 @@
   "reportError": "신고 접수에 실패했어요",
   "reportMenuTitle": "신고하기",
   "reportContentOption": "콘텐츠 신고",
-  "reportUserOption": "작성자 신고"
+  "reportUserOption": "작성자 신고",
+
+  "playFormatTitle": "어떻게 볼까요?",
+  "playFormatUnavailable": "재생할 수 있는 내용이 없어요",
+  "videoPlayerPlay": "재생",
+  "videoPlayerPause": "일시정지",
+  "videoPlayerError": "영상을 재생하지 못했어요",
+  "videoPlayerRetry": "다시 시도"
 }

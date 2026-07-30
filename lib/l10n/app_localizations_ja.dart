@@ -829,4 +829,22 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get reportUserOption => '作成者を通報';
+
+  @override
+  String get playFormatTitle => 'どうやって見る？';
+
+  @override
+  String get playFormatUnavailable => '再生できる内容がありません';
+
+  @override
+  String get videoPlayerPlay => '再生';
+
+  @override
+  String get videoPlayerPause => '一時停止';
+
+  @override
+  String get videoPlayerError => '動画を再生できませんでした';
+
+  @override
+  String get videoPlayerRetry => 'もう一度試す';
 }

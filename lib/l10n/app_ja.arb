@@ -328,5 +328,12 @@
   "reportError": "通報の送信に失敗しました",
   "reportMenuTitle": "通報する",
   "reportContentOption": "コンテンツを通報",
-  "reportUserOption": "作成者を通報"
+  "reportUserOption": "作成者を通報",
+
+  "playFormatTitle": "どうやって見る？",
+  "playFormatUnavailable": "再生できる内容がありません",
+  "videoPlayerPlay": "再生",
+  "videoPlayerPause": "一時停止",
+  "videoPlayerError": "動画を再生できませんでした",
+  "videoPlayerRetry": "もう一度試す"
 }

@@ -829,4 +829,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get reportUserOption => '작성자 신고';
+
+  @override
+  String get playFormatTitle => '어떻게 볼까요?';
+
+  @override
+  String get playFormatUnavailable => '재생할 수 있는 내용이 없어요';
+
+  @override
+  String get videoPlayerPlay => '재생';
+
+  @override
+  String get videoPlayerPause => '일시정지';
+
+  @override
+  String get videoPlayerError => '영상을 재생하지 못했어요';
+
+  @override
+  String get videoPlayerRetry => '다시 시도';
 }
