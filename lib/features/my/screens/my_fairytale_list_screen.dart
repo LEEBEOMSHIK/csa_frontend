@@ -522,7 +522,7 @@ class _FairytaleCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      _StatusBadge(item: item, l10n: l10n),
+                      Flexible(child: _StatusBadge(item: item, l10n: l10n)),
                     ],
                   ),
                 ],
@@ -734,6 +734,10 @@ class _StatusBadge extends StatelessWidget {
     if (item.status == 'GENERATING') {
       return _chip(l10n.myFairytaleStatusGenerating, const Color(0xFFFFAA5E));
     }
+    if (item.isVideoAssemblyFailed) {
+      // 영상 합성만 실패 — 슬라이드로는 열람 가능하므로 실패 색상과 구분한다
+      return _chip(l10n.myFairytaleStatusVideoFailed, const Color(0xFF5B8DEF));
+    }
     return _chip(l10n.myFairytaleStatusFailed, const Color(0xFFFF6B6B));
   }
 
@@ -746,6 +750,8 @@ class _StatusBadge extends StatelessWidget {
       ),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w700,

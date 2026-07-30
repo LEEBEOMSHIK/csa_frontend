@@ -1322,6 +1322,12 @@ abstract class AppLocalizations {
   /// **'생성 실패'**
   String get myFairytaleStatusFailed;
 
+  /// No description provided for @myFairytaleStatusVideoFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'슬라이드로 보기'**
+  String get myFairytaleStatusVideoFailed;
+
   /// No description provided for @myFairytalePageCount.
   ///
   /// In ko, this message translates to:

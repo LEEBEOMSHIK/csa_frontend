@@ -243,6 +243,7 @@
   "myFairytaleCancel": "キャンセル",
   "myFairytaleStatusGenerating": "生成中",
   "myFairytaleStatusFailed": "生成失敗",
+  "myFairytaleStatusVideoFailed": "スライドで見る",
   "myFairytalePageCount": "{count}ページ",
   "@myFairytalePageCount": {
     "placeholders": {

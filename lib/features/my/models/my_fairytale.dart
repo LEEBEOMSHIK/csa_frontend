@@ -25,9 +25,12 @@ class MyFairytale {
 
   bool get isCompleted => status == 'COMPLETED';
 
+  /// 영상 합성만 실패한 상태. 텍스트/이미지/TTS는 정상 생성돼 슬라이드로는 열람할 수 있다.
+  bool get isVideoAssemblyFailed =>
+      format == 'video' && status == 'FAILED' && pageCount > 0;
+
   /// 열람 가능 여부. 영상 합성이 실패해도 페이지가 남아 있으면 슬라이드로 열 수 있다.
-  bool get isPlayable =>
-      isCompleted || (format == 'video' && status == 'FAILED' && pageCount > 0);
+  bool get isPlayable => isCompleted || isVideoAssemblyFailed;
 
   factory MyFairytale.fromJson(Map<String, dynamic> json) {
     return MyFairytale(

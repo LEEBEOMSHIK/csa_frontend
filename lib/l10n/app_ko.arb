@@ -243,6 +243,7 @@
   "myFairytaleCancel": "취소",
   "myFairytaleStatusGenerating": "생성 중",
   "myFairytaleStatusFailed": "생성 실패",
+  "myFairytaleStatusVideoFailed": "슬라이드로 보기",
   "myFairytalePageCount": "{count}페이지",
   "@myFairytalePageCount": {
     "placeholders": {

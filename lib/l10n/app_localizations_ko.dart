@@ -631,6 +631,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get myFairytaleStatusFailed => '생성 실패';
 
   @override
+  String get myFairytaleStatusVideoFailed => '슬라이드로 보기';
+
+  @override
   String myFairytalePageCount(int count) {
     return '$count페이지';
   }

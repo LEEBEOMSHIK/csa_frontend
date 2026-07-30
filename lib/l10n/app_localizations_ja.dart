@@ -631,6 +631,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get myFairytaleStatusFailed => '生成失敗';
 
   @override
+  String get myFairytaleStatusVideoFailed => 'スライドで見る';
+
+  @override
   String myFairytalePageCount(int count) {
     return '$countページ';
   }
