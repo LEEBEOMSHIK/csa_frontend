@@ -9,7 +9,12 @@ abstract class CatalogService {
   Future<List<FairytaleCategory>> getCategories();
 }
 
-class FairytaleService implements CatalogService {
+abstract class HomeCatalogService {
+  Future<List<FairytaleCategory>> getCategories();
+  Future<HomePageData> getHomePage({String? categoryKey, String? lang});
+}
+
+class FairytaleService implements CatalogService, HomeCatalogService {
   FairytaleService._();
   static final FairytaleService instance = FairytaleService._();
 
@@ -21,6 +26,7 @@ class FairytaleService implements CatalogService {
         .toList();
   }
 
+  @override
   Future<HomePageData> getHomePage({String? categoryKey, String? lang}) async {
     final params = <String, dynamic>{};
     if (categoryKey != null) params['category'] = categoryKey;

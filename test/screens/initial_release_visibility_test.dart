@@ -15,4 +15,14 @@ void main() {
     expect(mainScreen, isNot(contains('FairytaleCreateScreen')));
     expect(localeProvider, contains('ValueNotifier<int>(1)'));
   });
+
+  test('remaining navigation tabs use the same four-column layout', () {
+    final mainScreen = File('lib/screens/main_screen.dart').readAsStringSync();
+
+    expect(RegExp(r'_NavItem\(').allMatches(mainScreen), hasLength(5));
+    expect(mainScreen, contains('label: l10n.navHome'));
+    expect(mainScreen, isNot(contains('BoxShape.circle')));
+    expect(mainScreen, isNot(contains('FloatingActionButton')));
+    expect(mainScreen, isNot(contains('BottomAppBar')));
+  });
 }

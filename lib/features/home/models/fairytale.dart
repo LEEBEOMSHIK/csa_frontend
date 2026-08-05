@@ -38,11 +38,20 @@ class FairytaleItem {
     );
   }
 
-  String titleFor(String lang) =>
-      lang == 'ja' && titleJa != null ? titleJa! : title;
+  String titleFor(String lang) {
+    final localizedTitle = lang == 'ja' ? titleJa : title;
+    return localizedTitle != null && localizedTitle.trim().isNotEmpty
+        ? localizedTitle
+        : title;
+  }
 
-  String? descriptionFor(String lang) =>
-      lang == 'ja' && descriptionJa != null ? descriptionJa : description;
+  String? descriptionFor(String lang) {
+    final localizedDescription = lang == 'ja' ? descriptionJa : description;
+    return localizedDescription != null &&
+            localizedDescription.trim().isNotEmpty
+        ? localizedDescription
+        : description;
+  }
 }
 
 class HomePageData {
@@ -55,6 +64,8 @@ class HomePageData {
     required this.newItems,
     required this.recommended,
   });
+
+  bool get isEmpty => themes.isEmpty && newItems.isEmpty && recommended.isEmpty;
 
   factory HomePageData.fromJson(Map<String, dynamic> json) {
     return HomePageData(

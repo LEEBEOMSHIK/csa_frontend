@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:csa_frontend/l10n/app_localizations.dart';
+
 import 'package:csa_frontend/features/character/screens/character_screen.dart';
-import 'package:csa_frontend/features/home/screens/home_screen.dart';
 import 'package:csa_frontend/features/favorites/screens/favorites_screen.dart';
 import 'package:csa_frontend/features/favorites/services/favorite_service.dart';
+import 'package:csa_frontend/features/home/screens/home_screen.dart';
 import 'package:csa_frontend/features/my/screens/my_screen.dart';
 import 'package:csa_frontend/features/my/services/user_settings_service.dart';
+import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/utils/locale_provider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -102,47 +103,14 @@ class _BottomNav extends StatelessWidget {
                 activeColor: _activeColor,
                 inactiveColor: _inactiveColor,
               ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => onTap(1),
-                  behavior: HitTestBehavior.opaque,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 52,
-                        height: 52,
-                        decoration: BoxDecoration(
-                          color: _activeColor,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: _activeColor.withValues(alpha: 0.45),
-                              blurRadius: 10,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.home_rounded,
-                          color: Colors.white,
-                          size: 26,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        l10n.navHome,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: currentIndex == 1
-                              ? FontWeight.w700
-                              : FontWeight.w500,
-                          color: _activeColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              _NavItem(
+                icon: Icons.home_rounded,
+                label: l10n.navHome,
+                index: 1,
+                currentIndex: currentIndex,
+                onTap: onTap,
+                activeColor: _activeColor,
+                inactiveColor: _inactiveColor,
               ),
               _NavItem(
                 icon: Icons.favorite_rounded,
@@ -193,27 +161,35 @@ class _NavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final isSelected = currentIndex == index;
     return Expanded(
-      child: GestureDetector(
-        onTap: () => onTap(index),
-        behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 22,
-              color: isSelected ? activeColor : inactiveColor,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+      child: Semantics(
+        selected: isSelected,
+        button: true,
+        label: label,
+        excludeSemantics: true,
+        child: GestureDetector(
+          onTap: () => onTap(index),
+          behavior: HitTestBehavior.opaque,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 22,
                 color: isSelected ? activeColor : inactiveColor,
               ),
-            ),
-          ],
+              const SizedBox(height: 2),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  color: isSelected ? activeColor : inactiveColor,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

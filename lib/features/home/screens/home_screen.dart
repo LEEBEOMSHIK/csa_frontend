@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+
 import 'package:csa_frontend/features/fairytale_list/screens/fairytale_list_screen.dart';
 import 'package:csa_frontend/features/home/models/fairytale.dart';
 import 'package:csa_frontend/features/home/models/fairytale_category.dart';
@@ -9,7 +10,9 @@ import 'package:csa_frontend/l10n/app_localizations.dart';
 import 'package:csa_frontend/utils/locale_provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, this.service});
+
+  final HomeCatalogService? service;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -105,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen>
             child: TabBarView(
               controller: _tabController,
               children: [
-                const _StoryTab(),
+                _StoryTab(service: widget.service ?? FairytaleService.instance),
                 Center(
                   child: Text(
                     l10n.homeTabPicture,
@@ -126,7 +129,9 @@ class _HomeScreenState extends State<HomeScreen>
 }
 
 class _StoryTab extends StatefulWidget {
-  const _StoryTab();
+  const _StoryTab({required this.service});
+
+  final HomeCatalogService service;
 
   @override
   State<_StoryTab> createState() => _StoryTabState();
@@ -137,6 +142,8 @@ class _StoryTabState extends State<_StoryTab> {
   String? _selectedCategory;
   HomePageData? _homeData;
   bool _loading = true;
+  bool _hasError = false;
+  int _requestId = 0;
 
   @override
   void initState() {
@@ -156,27 +163,41 @@ class _StoryTabState extends State<_StoryTab> {
   }
 
   Future<void> _loadAll(String? categoryKey) async {
-    setState(() => _loading = true);
+    final requestId = ++_requestId;
+    setState(() {
+      _loading = true;
+      _hasError = false;
+    });
     final lang = localeNotifier.value.languageCode;
     try {
-      final results = await Future.wait([
-        if (_categories.isEmpty) FairytaleService.instance.getCategories(),
-        FairytaleService.instance.getHomePage(
-          categoryKey: categoryKey,
-          lang: lang,
-        ),
+      final Future<List<FairytaleCategory>?> categoriesRequest =
+          _categories.isEmpty
+          ? widget.service.getCategories().then<List<FairytaleCategory>?>(
+              (categories) => categories,
+              onError: (Object _) => null,
+            )
+          : Future<List<FairytaleCategory>?>.value();
+      final results = await Future.wait<Object?>([
+        categoriesRequest,
+        widget.service.getHomePage(categoryKey: categoryKey, lang: lang),
       ]);
-      if (!mounted) return;
+      if (!mounted || requestId != _requestId) return;
       setState(() {
-        if (_categories.isEmpty) {
-          _categories = results[0] as List<FairytaleCategory>;
+        final categories = results.first as List<FairytaleCategory>?;
+        if (_categories.isEmpty && categories != null) {
+          _categories = categories;
         }
         _homeData = results.last as HomePageData;
         _loading = false;
+        _hasError = false;
       });
     } catch (_) {
-      if (!mounted) return;
-      setState(() => _loading = false);
+      if (!mounted || requestId != _requestId) return;
+      setState(() {
+        _homeData = null;
+        _loading = false;
+        _hasError = true;
+      });
     }
   }
 
@@ -200,9 +221,33 @@ class _StoryTabState extends State<_StoryTab> {
       valueListenable: localeNotifier,
       builder: (context, locale, _) {
         final lang = locale.languageCode;
+
+        if (_hasError) {
+          return _HomeStatus(
+            icon: Icons.cloud_off_rounded,
+            message: l10n.fairytaleListError,
+            actionLabel: l10n.fairytaleListRetry,
+            onAction: () => _loadAll(_selectedCategory),
+          );
+        }
+
         final themes = _homeData?.themes ?? [];
         final newItems = _homeData?.newItems ?? [];
         final recommended = _homeData?.recommended ?? [];
+
+        if (_homeData?.isEmpty ?? true) {
+          return Column(
+            children: [
+              _buildCategoryList(lang),
+              Expanded(
+                child: _HomeStatus(
+                  icon: Icons.auto_stories_outlined,
+                  message: l10n.fairytaleListEmpty,
+                ),
+              ),
+            ],
+          );
+        }
 
         return Stack(
           children: [
@@ -211,28 +256,7 @@ class _StoryTabState extends State<_StoryTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 카테고리 태그
-                  SizedBox(
-                    height: 50,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      itemCount: _categories.length,
-                      separatorBuilder: (context, idx) =>
-                          const SizedBox(width: 8),
-                      itemBuilder: (_, i) {
-                        final cat = _categories[i];
-                        final selected = _selectedCategory == cat.categoryKey;
-                        return _TagChip(
-                          label: '#${lang == 'ja' ? cat.nameJa : cat.nameKo}',
-                          selected: selected,
-                          onTap: () => _onCategoryTap(cat.categoryKey),
-                        );
-                      },
-                    ),
-                  ),
+                  _buildCategoryList(lang),
 
                   // 테마 섹션
                   if (themes.isNotEmpty) ...[
@@ -351,6 +375,76 @@ class _StoryTabState extends State<_StoryTab> {
       },
     );
   }
+
+  Widget _buildCategoryList(String lang) {
+    return SizedBox(
+      height: 50,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        itemCount: _categories.length,
+        separatorBuilder: (context, index) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final category = _categories[index];
+          final selected = _selectedCategory == category.categoryKey;
+          return _TagChip(
+            label: '#${lang == 'ja' ? category.nameJa : category.nameKo}',
+            selected: selected,
+            onTap: () => _onCategoryTap(category.categoryKey),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _HomeStatus extends StatelessWidget {
+  const _HomeStatus({
+    required this.icon,
+    required this.message,
+    this.actionLabel,
+    this.onAction,
+  });
+
+  final IconData icon;
+  final String message;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 40, color: const Color(0xFFAAAAAA)),
+            const SizedBox(height: 12),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Color(0xFF777777),
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (actionLabel != null && onAction != null) ...[
+              const SizedBox(height: 16),
+              FilledButton(
+                onPressed: onAction,
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFFFE9EC7),
+                ),
+                child: Text(actionLabel!),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _TagChip extends StatelessWidget {
@@ -456,7 +550,7 @@ class _ThemeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (item.themeTag != null)
+                if (lang != 'ja' && item.themeTag != null)
                   Text(
                     item.themeTag!,
                     style: const TextStyle(fontSize: 10, color: Colors.white70),
